@@ -292,8 +292,8 @@
     align-items: start;
   }
   @media (max-width: 880px) { .thesis-grid { grid-template-columns: 1fr; gap: 48px; } }
-  .thesis-headline .line { white-space: nowrap; }
-  @media (max-width: 880px) { .thesis-headline .line { white-space: normal; } }
+  .line { white-space: nowrap; }
+  @media (max-width: 880px) { .line { white-space: normal; } }
 
   .thesis-headline {
     font-family: var(--font-display);
@@ -947,8 +947,8 @@
     <div class="ecosystem-header in-view-target">
       <div>
         <h2 class="ecosystem-title">
-          A robust ecosystem.<br>
-          <em style="color: var(--ventures);">One application.</em>
+          <span class="line">A robust ecosystem.</span><br>
+          <em style="color: var(--ventures);" class="line">One application.</em>
         </h2>
       </div>
       <p class="ecosystem-intro">
