@@ -424,11 +424,11 @@
     background: rgba(255,255,255,0.03);
     border: 1px solid var(--line);
     border-radius: 24px;
-    padding: 36px 32px 32px;
+    padding: 36px 32px 28px;
     overflow: hidden;
     transition: all 0.4s cubic-bezier(.2,.8,.2,1);
     display: flex; flex-direction: column;
-    min-height: 420px;
+    min-height: 320px;
   }
   .card::before {
     content: '';
@@ -464,6 +464,11 @@
     font-size: 11px;
     letter-spacing: 0.16em;
     text-transform: uppercase;
+  }
+  .card-link {
+    margin-top: 20px;
+    display: flex; justify-content: flex-end; align-items: center;
+    color: var(--card-accent);
   }
   .card-name {
     font-family: var(--font-display);
@@ -944,15 +949,14 @@
       <!-- Card 2: Group -->
       <a href="https://www.matchplaygroup.com" target="_blank" rel="noopener" class="card card-2">
         <div class="card-orb"></div>
-        <div class="card-num">
-          <span></span>
-          <span class="card-arrow"><span class="card-arrow-label">Learn more</span> ↗</span>
-        </div>
         <h3 class="card-name">MatchPlay Group</h3>
         <p class="card-tagline">Syndicate of funds.</p>
         <p class="card-body">
           Vetted investor network of 200+ funds powered by MatchPlay's Due Diligence, designed for founders to connect to funders.
         </p>
+        <div class="card-link">
+          <span class="card-arrow"><span class="card-arrow-label">Learn more</span> ↗</span>
+        </div>
       </a>
 
       <!-- Card 3: Navigator (hidden) -->
