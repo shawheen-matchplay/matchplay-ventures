@@ -287,11 +287,13 @@
 
   .thesis-grid {
     display: grid;
-    grid-template-columns: 1fr 1.2fr;
+    grid-template-columns: 1.4fr 1fr;
     gap: 80px;
     align-items: start;
   }
   @media (max-width: 880px) { .thesis-grid { grid-template-columns: 1fr; gap: 48px; } }
+  .thesis-headline .line { white-space: nowrap; }
+  @media (max-width: 880px) { .thesis-headline .line { white-space: normal; } }
 
   .thesis-headline {
     font-family: var(--font-display);
@@ -897,8 +899,8 @@
     <div class="thesis-grid in-view-target">
       <div>
         <h2 class="thesis-headline">
-          Investing in <em>outliers</em>.<br>
-          Backed with <em>conviction</em>.
+          <span class="line">Investing in <em>outliers</em>.</span><br>
+          <span class="line">Backed with <em>conviction</em>.</span>
         </h2>
       </div>
       <div class="thesis-body">
