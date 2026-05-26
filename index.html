@@ -457,6 +457,13 @@
     font-size: 20px;
     color: rgba(255,255,255,0.4);
     transition: all 0.3s ease;
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .card-arrow-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
   }
   .card-name {
     font-family: var(--font-display);
@@ -939,7 +946,7 @@
         <div class="card-orb"></div>
         <div class="card-num">
           <span></span>
-          <span class="card-arrow">↗</span>
+          <span class="card-arrow"><span class="card-arrow-label">Learn more</span> ↗</span>
         </div>
         <h3 class="card-name">MatchPlay Group</h3>
         <p class="card-tagline">Syndicate of funds.</p>
@@ -1033,7 +1040,6 @@
           A few of the founders<br><em>we back.</em>
         </h2>
       </div>
-      <a href="#" class="btn btn-secondary">View full portfolio →</a>
     </div>
 
     <div class="portfolio-grid in-view-target">
