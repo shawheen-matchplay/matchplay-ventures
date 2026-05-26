@@ -325,6 +325,17 @@
   @media (max-width: 880px) { .thesis-cols { grid-template-columns: 1fr; gap: 48px; } }
   .thesis-col .sector-name { margin-bottom: 20px; }
 
+  .thesis-summary {
+    max-width: 720px;
+    margin: 72px auto 0;
+    text-align: center;
+    font-size: 17px;
+    line-height: 1.65;
+    color: var(--ink-soft);
+  }
+  .thesis-summary p + p { margin-top: 18px; }
+  .thesis-summary strong { font-weight: 600; }
+
   .sector-row {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -909,6 +920,26 @@
         <div class="thesis-body">
           <p>Consensus is already priced in. Our diligence is built to find conviction, not crowd it. We pressure-test the founder, the wedge, and the path to scale. When the evidence holds, we don't hedge. We commit.</p>
         </div>
+      </div>
+    </div>
+
+    <div class="thesis-summary in-view-target">
+      <p>MatchPlay Ventures is an early-stage investor focused on <strong>Life Sciences, FinTech, and B2B SaaS</strong>. We integrate deep sector expertise with a rigorous diligence process, backing companies with validated business models, strong leadership, and a path to scale.</p>
+      <p>Our mission is to identify and nurture early-stage outliers, founders driving real innovation, while generating consistent, long-term value for our investors. We bring conviction, capital, and a hands-on partnership model.</p>
+    </div>
+
+    <div class="sector-row in-view-target">
+      <div class="sector">
+        <h3 class="sector-name">Life Sciences</h3>
+        <p class="sector-desc">Breakthrough therapeutics, medical devices, and digital health: technologies extending what's possible in human care.</p>
+      </div>
+      <div class="sector">
+        <h3 class="sector-name">FinTech</h3>
+        <p class="sector-desc">Solutions advancing financial access, transparency, and efficiency for consumers, businesses, and the rails between.</p>
+      </div>
+      <div class="sector">
+        <h3 class="sector-name">B2B SaaS</h3>
+        <p class="sector-desc">Data-driven platforms with recurring revenue, strong retention, and clear product-led pull from enterprise buyers.</p>
       </div>
     </div>
   </div>
