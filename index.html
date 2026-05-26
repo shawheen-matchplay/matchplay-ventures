@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>MatchPlay Ventures — Backing early-stage outliers</title>
+<title>MatchPlay Ventures: Backing early-stage outliers</title>
 <meta name="description" content="MatchPlay Ventures is an early-stage investor in Life Sciences, FinTech, and B2B SaaS. Part of the MatchPlay Group ecosystem." />
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -25,7 +25,7 @@
     --muted-dark: rgba(255,255,255,0.55);
     --muted-light: rgba(10,10,10,0.55);
 
-    /* Brand accents — used as functional color-coding */
+    /* Brand accents: used as functional color-coding */
     --ventures: #FF7A45;   /* orange */
     --group:    #1FCFCF;   /* cyan/teal */
     --navigator:#E94F8A;   /* magenta */
@@ -314,6 +314,16 @@
   }
   .thesis-body p + p { margin-top: 18px; }
   .thesis-body strong { font-weight: 600; }
+
+  .thesis-cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    margin-top: 64px;
+    align-items: start;
+  }
+  @media (max-width: 880px) { .thesis-cols { grid-template-columns: 1fr; gap: 48px; } }
+  .thesis-col .sector-name { margin-bottom: 20px; }
 
   .sector-row {
     display: grid;
@@ -884,38 +894,22 @@
 <!-- ========== THESIS ========== -->
 <section id="thesis" class="section section-light">
   <div class="container">
-    <div class="thesis-grid in-view-target">
-      <div>
-        <h2 class="thesis-headline">
-          Investing where <em>outliers</em> emerge.
-        </h2>
+    <h2 class="thesis-headline in-view-target">
+      Outliers, backed with <em>conviction</em>.
+    </h2>
+    <div class="thesis-cols in-view-target">
+      <div class="thesis-col">
+        <h3 class="sector-name">Outliers</h3>
+        <div class="thesis-body">
+          <p>We back the companies that break the pattern. AI rewriting how clinical trials run. Modern software entering industries that never had it. Breakthroughs that reset what a category costs. The advantage compounds because the rest of the field can't follow.</p>
+        </div>
       </div>
-      <div class="thesis-body">
-        <p>
-          MatchPlay Ventures is an early-stage investor focused on <strong>Life Sciences, FinTech, and B2B SaaS</strong>. We integrate deep sector expertise with a rigorous diligence process — backing companies with validated business models, strong leadership, and a path to scale.
-        </p>
-        <p>
-          Our mission is to identify and nurture early-stage outliers — founders driving real innovation — while generating consistent, long-term value for our investors. We bring conviction, capital, and a hands-on partnership model.
-        </p>
+      <div class="thesis-col">
+        <h3 class="sector-name">Conviction</h3>
+        <div class="thesis-body">
+          <p>Consensus is already priced in. Our diligence is built to find conviction, not crowd it. We pressure-test the founder, the wedge, and the path to scale. When the evidence holds, we don't hedge. We commit.</p>
+        </div>
       </div>
-    </div>
-
-    <div class="sector-row in-view-target">
-      <div class="sector">
-        <h3 class="sector-name">Life Sciences</h3>
-        <p class="sector-desc">Breakthrough therapeutics, medical devices, and digital health — technologies extending what's possible in human care.</p>
-      </div>
-      <div class="sector">
-        <h3 class="sector-name">FinTech</h3>
-        <p class="sector-desc">Solutions advancing financial access, transparency, and efficiency — for consumers, businesses, and the rails between.</p>
-      </div>
-      <div class="sector">
-        <h3 class="sector-name">B2B SaaS</h3>
-        <p class="sector-desc">Data-driven platforms with recurring revenue, strong retention, and clear product-led pull from enterprise buyers.</p>
-      </div>
-    </div>
-    <div class="in-view-target" style="text-align:center; margin-top:40px;">
-      <a href="#portfolio" class="sector-link">View portfolio →</a>
     </div>
   </div>
 </section>
@@ -931,7 +925,7 @@
         </h2>
       </div>
       <p class="ecosystem-intro">
-        Whether you're ready for a check, a syndicate match, or a structured runway to fundability — there's a path through MatchPlay. We meet founders where they are.
+        Whether you're ready for a check, a syndicate match, or a structured runway to fundability, there's a path through MatchPlay. We meet founders where they are.
       </p>
     </div>
 
@@ -969,7 +963,7 @@
         <h3 class="card-name">Navigator</h3>
         <p class="card-tagline">Founder program.</p>
         <p class="card-body">
-          A paid program for founders building toward fundability. Personalized roadmaps, coaching, and access to investor networks — designed for founders not yet ready for direct investment.
+          A paid program for founders building toward fundability. Personalized roadmaps, coaching, and access to investor networks, designed for founders not yet ready for direct investment.
         </p>
         <div class="card-foot">
           <span>Mentorship to get fundable</span>
@@ -1018,12 +1012,12 @@
           <div class="funnel-path funnel-path-2">
             <div class="funnel-path-tag">Path B · Group</div>
             <h4 class="funnel-path-name">Syndicate match</h4>
-            <p class="funnel-path-desc">For founders ready to raise — matched to vetted investors actively deploying capital.</p>
+            <p class="funnel-path-desc">For founders ready to raise, matched to vetted investors actively deploying capital.</p>
           </div>
           <div class="funnel-path funnel-path-3">
             <div class="funnel-path-tag">Path C · Navigator</div>
             <h4 class="funnel-path-name">Founder program</h4>
-            <p class="funnel-path-desc">For founders building toward fundability — structured roadmap and investor access.</p>
+            <p class="funnel-path-desc">For founders building toward fundability: structured roadmap and investor access.</p>
           </div>
         </div>
 
