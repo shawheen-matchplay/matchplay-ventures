@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>MatchPlay Ventures — Backing early-stage outliers</title>
+<title>MatchPlay Ventures: Backing early-stage outliers</title>
 <meta name="description" content="MatchPlay Ventures is an early-stage investor in Life Sciences, FinTech, and B2B SaaS. Part of the MatchPlay Group ecosystem." />
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -25,7 +25,7 @@
     --muted-dark: rgba(255,255,255,0.55);
     --muted-light: rgba(10,10,10,0.55);
 
-    /* Brand accents — used as functional color-coding */
+    /* Brand accents: used as functional color-coding */
     --ventures: #FF7A45;   /* orange */
     --group:    #1FCFCF;   /* cyan/teal */
     --navigator:#E94F8A;   /* magenta */
@@ -287,11 +287,13 @@
 
   .thesis-grid {
     display: grid;
-    grid-template-columns: 1fr 1.2fr;
+    grid-template-columns: 1.4fr 1fr;
     gap: 80px;
     align-items: start;
   }
   @media (max-width: 880px) { .thesis-grid { grid-template-columns: 1fr; gap: 48px; } }
+  .line { white-space: nowrap; }
+  @media (max-width: 880px) { .line { white-space: normal; } }
 
   .thesis-headline {
     font-family: var(--font-display);
@@ -314,6 +316,52 @@
   }
   .thesis-body p + p { margin-top: 18px; }
   .thesis-body strong { font-weight: 600; }
+
+  .thesis-header { display: block; }
+  .thesis-intro {
+    margin-top: 32px;
+    max-width: 880px;
+    font-size: 17px;
+    line-height: 1.65;
+    color: var(--ink-soft);
+  }
+  .thesis-intro p + p { margin-top: 18px; }
+  .thesis-intro strong { font-weight: 600; }
+
+  .thesis-band { margin-top: 40px; }
+  .thesis-band .section-label { margin-bottom: 20px; letter-spacing: 0.18em; }
+  .thesis-band .sector-row { margin-top: 0; }
+
+  .thesis-cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border-top: 1px solid var(--line-dark);
+    border-bottom: 1px solid var(--line-dark);
+  }
+  .thesis-col {
+    padding: 48px 28px 40px;
+    border-right: 1px solid var(--line-dark);
+    transition: background 0.3s ease;
+    position: relative;
+    cursor: pointer;
+  }
+  .thesis-col:last-child { border-right: none; }
+  .thesis-col:hover { background: rgba(0,0,0,0.03); }
+  @media (max-width: 880px) {
+    .thesis-cols { grid-template-columns: 1fr; }
+    .thesis-col { border-right: none; border-bottom: 1px solid var(--line-dark); }
+    .thesis-col:last-child { border-bottom: none; }
+  }
+  .thesis-col-num {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ventures);
+    letter-spacing: 0.18em;
+    margin-bottom: 16px;
+  }
+  .thesis-col .sector-name { font-size: 30px; margin-bottom: 16px; }
 
   .sector-row {
     display: grid;
@@ -884,38 +932,53 @@
 <!-- ========== THESIS ========== -->
 <section id="thesis" class="section section-light">
   <div class="container">
-    <div class="thesis-grid in-view-target">
-      <div>
-        <h2 class="thesis-headline">
-          Investing where <em>outliers</em> emerge.
-        </h2>
-      </div>
-      <div class="thesis-body">
-        <p>
-          MatchPlay Ventures is an early-stage investor focused on <strong>Life Sciences, FinTech, and B2B SaaS</strong>. We integrate deep sector expertise with a rigorous diligence process — backing companies with validated business models, strong leadership, and a path to scale.
-        </p>
-        <p>
-          Our mission is to identify and nurture early-stage outliers — founders driving real innovation — while generating consistent, long-term value for our investors. We bring conviction, capital, and a hands-on partnership model.
-        </p>
+    <div class="thesis-header in-view-target">
+      <h2 class="thesis-headline">
+        <span class="line">Investing in <em>outliers</em>.</span><br>
+        <span class="line">Backed with <em>conviction</em>.</span>
+      </h2>
+      <div class="thesis-intro">
+        <p>MatchPlay Ventures is an early-stage investor focused on <strong>Life Sciences, FinTech, and B2B SaaS</strong>. We integrate deep sector expertise with a rigorous diligence process, backing companies with validated business models, strong leadership, and a path to scale.</p>
+        <p>Our mission is to identify and nurture early-stage outliers, founders driving real innovation, while generating consistent, long-term value for our investors. We bring conviction, capital, and a hands-on partnership model.</p>
       </div>
     </div>
 
-    <div class="sector-row in-view-target">
-      <div class="sector">
-        <h3 class="sector-name">Life Sciences</h3>
-        <p class="sector-desc">Breakthrough therapeutics, medical devices, and digital health — technologies extending what's possible in human care.</p>
-      </div>
-      <div class="sector">
-        <h3 class="sector-name">FinTech</h3>
-        <p class="sector-desc">Solutions advancing financial access, transparency, and efficiency — for consumers, businesses, and the rails between.</p>
-      </div>
-      <div class="sector">
-        <h3 class="sector-name">B2B SaaS</h3>
-        <p class="sector-desc">Data-driven platforms with recurring revenue, strong retention, and clear product-led pull from enterprise buyers.</p>
+    <div class="thesis-band in-view-target">
+      <div class="section-label">The Reasons</div>
+      <div class="thesis-cols">
+        <div class="thesis-col">
+          <div class="thesis-col-num">01</div>
+          <h3 class="sector-name">Outliers</h3>
+          <div class="thesis-body">
+            <p>We back the companies that break the pattern. AI rewriting how clinical trials run. Modern software entering industries that never had it. Breakthroughs that reset what a category costs. The advantage compounds because the rest of the field can't follow.</p>
+          </div>
+        </div>
+        <div class="thesis-col">
+          <div class="thesis-col-num">02</div>
+          <h3 class="sector-name">Conviction</h3>
+          <div class="thesis-body">
+            <p>Consensus is already priced in. Our diligence is built to find conviction, not crowd it. We pressure-test the founder, the wedge, and the path to scale. When the evidence holds, we don't hedge. We commit.</p>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="in-view-target" style="text-align:center; margin-top:40px;">
-      <a href="#portfolio" class="sector-link">View portfolio →</a>
+
+    <div class="thesis-band in-view-target">
+      <div class="section-label">The Sectors</div>
+      <div class="sector-row">
+        <div class="sector">
+          <h3 class="sector-name">Life Sciences</h3>
+          <p class="sector-desc">Breakthrough therapeutics, medical devices, and digital health: technologies extending what's possible in human care.</p>
+        </div>
+        <div class="sector">
+          <h3 class="sector-name">FinTech</h3>
+          <p class="sector-desc">Solutions advancing financial access, transparency, and efficiency for consumers, businesses, and the rails between.</p>
+        </div>
+        <div class="sector">
+          <h3 class="sector-name">B2B SaaS</h3>
+          <p class="sector-desc">Data-driven platforms with recurring revenue, strong retention, and clear product-led pull from enterprise buyers.</p>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -926,12 +989,12 @@
     <div class="ecosystem-header in-view-target">
       <div>
         <h2 class="ecosystem-title">
-          A robust ecosystem.<br>
-          <em style="color: var(--ventures);">One application.</em>
+          <span class="line">A robust ecosystem.</span><br>
+          <em style="color: var(--ventures);" class="line">One application.</em>
         </h2>
       </div>
       <p class="ecosystem-intro">
-        Whether you're ready for a check, a syndicate match, or a structured runway to fundability — there's a path through MatchPlay. We meet founders where they are.
+        Whether you're ready for a check, a syndicate match, or a structured runway to fundability, there's a path through MatchPlay. We meet founders where they are.
       </p>
     </div>
 
@@ -969,7 +1032,7 @@
         <h3 class="card-name">Navigator</h3>
         <p class="card-tagline">Founder program.</p>
         <p class="card-body">
-          A paid program for founders building toward fundability. Personalized roadmaps, coaching, and access to investor networks — designed for founders not yet ready for direct investment.
+          A paid program for founders building toward fundability. Personalized roadmaps, coaching, and access to investor networks, designed for founders not yet ready for direct investment.
         </p>
         <div class="card-foot">
           <span>Mentorship to get fundable</span>
@@ -1018,12 +1081,12 @@
           <div class="funnel-path funnel-path-2">
             <div class="funnel-path-tag">Path B · Group</div>
             <h4 class="funnel-path-name">Syndicate match</h4>
-            <p class="funnel-path-desc">For founders ready to raise — matched to vetted investors actively deploying capital.</p>
+            <p class="funnel-path-desc">For founders ready to raise, matched to vetted investors actively deploying capital.</p>
           </div>
           <div class="funnel-path funnel-path-3">
             <div class="funnel-path-tag">Path C · Navigator</div>
             <h4 class="funnel-path-name">Founder program</h4>
-            <p class="funnel-path-desc">For founders building toward fundability — structured roadmap and investor access.</p>
+            <p class="funnel-path-desc">For founders building toward fundability: structured roadmap and investor access.</p>
           </div>
         </div>
 
