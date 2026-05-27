@@ -26,7 +26,7 @@
     --muted-light: rgba(10,10,10,0.55);
 
     /* Brand accents: used as functional color-coding */
-    --ventures: #FF7A45;   /* orange */
+    --ventures: #F97D4A;   /* orange */
     --group:    #1FCFCF;   /* cyan/teal */
     --navigator:#E94F8A;   /* magenta */
     --lime:     #C6F25E;
@@ -127,7 +127,7 @@
     position: absolute; z-index: 0;
     width: 800px; height: 800px;
     left: 50%; top: 30%; transform: translate(-50%, -30%);
-    background: radial-gradient(circle, rgba(255,122,69,0.12) 0%, transparent 60%);
+    background: radial-gradient(circle, rgba(249,125,74,0.12) 0%, transparent 60%);
     filter: blur(40px);
     pointer-events: none;
   }
@@ -148,8 +148,8 @@
     animation: pulse 2.4s ease-in-out infinite;
   }
   @keyframes pulse {
-    0%,100% { opacity: 1; box-shadow: 0 0 0 0 rgba(255,122,69,0.6); }
-    50% { opacity: 0.6; box-shadow: 0 0 0 6px rgba(255,122,69,0); }
+    0%,100% { opacity: 1; box-shadow: 0 0 0 0 rgba(249,125,74,0.6); }
+    50% { opacity: 0.6; box-shadow: 0 0 0 6px rgba(249,125,74,0); }
   }
 
   .hero-content { position: relative; z-index: 2; text-align: center; display: flex; flex-direction: column; align-items: center; }
@@ -627,7 +627,7 @@
     cursor: pointer;
   }
   .funnel-path:hover { border-color: var(--path-accent); background: var(--path-bg); }
-  .funnel-path-1 { --path-accent: var(--ventures); --path-bg: rgba(255,122,69,0.04); }
+  .funnel-path-1 { --path-accent: var(--ventures); --path-bg: rgba(249,125,74,0.04); }
   .funnel-path-2 { --path-accent: var(--group); --path-bg: rgba(31,207,207,0.04); }
   .funnel-path-3 { --path-accent: var(--navigator); --path-bg: rgba(233,79,138,0.04); }
 
