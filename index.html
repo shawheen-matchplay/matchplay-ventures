@@ -154,13 +154,19 @@
 
   .hero-content { position: relative; z-index: 2; text-align: center; display: flex; flex-direction: column; align-items: center; }
 
+  .hero-logo {
+    display: block;
+    width: clamp(100px, 18vw, 260px);
+    height: auto;
+    margin: 0 0 28px;
+  }
   .hero-eyebrow {
     font-family: var(--font-display);
     font-style: italic;
     font-weight: 400;
     font-size: clamp(18px, 2vw, 22px);
     color: rgba(255,255,255,0.78);
-    margin: 0 0 20px;
+    margin: 24px 0 0;
     letter-spacing: -0.01em;
   }
   .hero-eyebrow span { color: var(--ventures); font-style: normal; font-family: var(--font-body); font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; padding: 6px 14px; border: 1px solid var(--ventures); border-radius: 999px; vertical-align: middle; display: inline-block; transition: background-color 0.25s ease, border-color 0.25s ease; }
@@ -908,16 +914,18 @@
 
   <div class="container">
     <div class="hero-content">
-      <p class="hero-eyebrow reveal reveal-2">
+      <img class="hero-logo reveal reveal-1" src="logo/logo.png" alt="Matchplay Ventures">
+
+      <h1 class="hero-title reveal reveal-2">
+        MatchPlay<br>
+        <span class="ital">Ventures<span class="accent">.</span></span>
+      </h1>
+
+      <p class="hero-eyebrow reveal reveal-3">
         <a href="https://www.matchplaygroup.com" target="_blank" rel="noopener">
           <span>Part of MatchPlay Group</span>
         </a>
       </p>
-
-      <h1 class="hero-title reveal reveal-3">
-        MatchPlay<br>
-        <span class="ital">Ventures<span class="accent">.</span></span>
-      </h1>
 
       <div class="hero-sub-row reveal reveal-4">
         <p class="hero-sub">
