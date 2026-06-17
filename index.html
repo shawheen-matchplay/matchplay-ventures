@@ -176,8 +176,8 @@
   .hero-title {
     font-family: var(--font-display);
     font-weight: 600;
-    font-size: clamp(64px, 13vw, 180px);
-    line-height: 0.88;
+    font-size: clamp(48px, 9vw, 120px);
+    line-height: 0.92;
     letter-spacing: -0.04em;
     margin: 0;
     color: #fff;
@@ -204,7 +204,7 @@
   .hero-sub {
     font-size: clamp(17px, 1.6vw, 21px);
     line-height: 1.45;
-    max-width: 620px;
+    max-width: 920px;
     color: rgba(255,255,255,0.85);
     font-weight: 400;
     text-align: center;
@@ -273,7 +273,12 @@
   }
 
   /* ---------- THESIS SECTION ---------- */
-  .section { padding: 120px 0; position: relative; }
+  .section {
+    padding: 120px 0; position: relative;
+    min-height: 100vh;
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  .section > .container { width: 100%; }
   .section-light {
     background: var(--bg-light);
     color: var(--ink);
@@ -786,6 +791,8 @@
     text-align: center;
     position: relative;
     overflow: hidden;
+    min-height: 100vh;
+    display: flex; flex-direction: column; justify-content: center;
   }
   .final-cta-dots {
     position: absolute; inset: 0;
