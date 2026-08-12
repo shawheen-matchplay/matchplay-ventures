@@ -749,6 +749,7 @@
   .cell-4 { --cell-accent: var(--lime); }
   .cell-5 { --cell-accent: var(--gold); }
   .cell-6 { --cell-accent: var(--group); }
+  .cell-6 { --cell-accent: var(--group); }
   .cell-7 { --cell-accent: var(--navigator); }
   .cell-8 { --cell-accent: var(--gold); }
 
@@ -1039,19 +1040,32 @@
     color: var(--muted-light);
   }
 
-  .portco-modal-cta {
-    display: inline-flex; align-items: center; gap: 8px;
+  .portco-modal-ctas {
     margin-top: 32px;
+    display: flex; flex-wrap: wrap; gap: 12px;
+  }
+  .portco-modal-cta,
+  .portco-modal-website {
+    display: inline-flex; align-items: center; gap: 8px;
     padding: 12px 22px;
-    background: var(--ink);
-    color: #fff;
     border-radius: 999px;
     font-family: var(--font-body);
     font-size: 13.5px; font-weight: 500;
     text-decoration: none;
-    transition: background 0.2s ease;
+    transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  }
+  .portco-modal-cta {
+    background: var(--ink);
+    color: #fff;
   }
   .portco-modal-cta:hover { background: var(--ventures); }
+  .portco-modal-website {
+    background: transparent;
+    color: var(--ink);
+    border: 1px solid var(--line-dark);
+    padding: 11px 21px;
+  }
+  .portco-modal-website:hover { border-color: var(--ink); background: rgba(0,0,0,0.03); }
 
   @media (max-width: 560px) {
     .portco-modal-card { padding: 40px 24px 32px; }
@@ -1292,14 +1306,17 @@
         <div class="portfolio-logo"><img src="portco-logos/solution.png" alt="SOLUtion Medical"></div>
         <div class="portfolio-meta"><span class="portfolio-meta-tag">●</span> Drug Delivery</div>
       </button>
-      <div class="portfolio-cell portfolio-cell-empty" aria-hidden="true"></div>
+      <button type="button" class="portfolio-cell cell-6" data-company="kbo">
+        <div class="portfolio-logo"><img src="portco-logos/kbo.png" alt="KBO Systems"></div>
+        <div class="portfolio-meta"><span class="portfolio-meta-tag">●</span> Neuro Monitoring</div>
+      </button>
       <div class="portfolio-cell portfolio-cell-empty" aria-hidden="true"></div>
       <div class="portfolio-cell portfolio-cell-empty" aria-hidden="true"></div>
     </div>
 
     <div class="stats in-view-target">
       <div class="stat">
-        <div class="stat-num">5</div>
+        <div class="stat-num">6</div>
         <div class="stat-label">Investments to date</div>
       </div>
       <div class="stat">
@@ -1394,7 +1411,10 @@
         </div>
       </div>
     </div>
-    <a class="portco-modal-cta" href="#" target="_blank" rel="opener" data-blog>Read our thesis on this company →</a>
+    <div class="portco-modal-ctas">
+      <a class="portco-modal-cta" href="#" target="_blank" rel="opener" data-blog>Read our thesis on this company →</a>
+      <a class="portco-modal-website" href="#" target="_blank" rel="noopener" data-website>Visit website →</a>
+    </div>
   </div>
 </div>
 
@@ -1466,6 +1486,19 @@
       },
       blog: 'blog/solution.html',
     },
+    kbo: {
+      name: 'KBO Systems',
+      site: 'https://www.kbosystems.com/',
+      siteLabel: 'kbosystems.com',
+      logo: 'portco-logos/kbo.png',
+      tag: 'Neuro Monitoring',
+      desc: "Brain complications during and after surgery cost the U.S. an estimated $82 billion a year. Existing monitors haven't solved it, in part because they generate no billable revenue for the provider. KBO changes that by combining multi-region EEG, auditory evoked potentials, and proprietary machine learning to monitor the brain across the full surgical journey.",
+      founder: {
+        name: 'Kevin Goehl',
+        title: 'CEO',
+        photo: 'assets/founders/kevin-goehl.png',
+      },
+    },
   };
 
   (function () {
@@ -1483,6 +1516,7 @@
     const founderTitle = modal.querySelector('.portco-modal-founder-title');
     const founderSubhead = modal.querySelector('.portco-modal-subhead');
     const ctaEl = modal.querySelector('[data-blog]');
+    const ctaWebsite = modal.querySelector('[data-website]');
     let lastTrigger = null;
 
     function open(key, trigger) {
@@ -1514,7 +1548,14 @@
         founderCard.classList.remove('is-shown');
         founderSubhead.style.display = 'none';
       }
-      ctaEl.href = d.blog;
+      if (d.blog) {
+        ctaEl.href = d.blog;
+        ctaEl.style.display = '';
+      } else {
+        ctaEl.href = '#';
+        ctaEl.style.display = 'none';
+      }
+      ctaWebsite.href = d.site;
       modal.classList.add('is-open');
       modal.setAttribute('aria-hidden', 'false');
       document.body.style.overflow = 'hidden';
