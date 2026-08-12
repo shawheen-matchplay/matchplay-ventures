@@ -1412,8 +1412,7 @@
       siteLabel: 'neurovrd.com',
       logo: 'portco-logos/neurovrd.png',
       tag: 'MedTech',
-      desc: 'Placeholder description of NeuroVRD. A short paragraph that will describe what the company does and why it matters in the market.',
-      founders: 'Placeholder founder information. Names, backgrounds, and prior experience relevant to this venture will live here.',
+      desc: 'NeuroVRD is pioneering the Sentinel AI-IONM Platform, an AI-enabled software solution to detect the onset of neurovascular irritation during high-risk surgeries. Our mission is to make IONM available universally to all high-risk surgeries.',
       blog: 'blog/neurovrd.html',
     },
     tenzr: {
@@ -1422,8 +1421,12 @@
       siteLabel: 'tenzrhealth.com',
       logo: 'portco-logos/tenzr.png',
       tag: 'Digital Health',
-      desc: 'Placeholder description of Tenzr Health. A short paragraph that will describe what the company does and why it matters in the market.',
-      founders: 'Placeholder founder information. Names, backgrounds, and prior experience relevant to this venture will live here.',
+      desc: "Tenzr Health helps physical medicine providers turn physical rehab into a multi-level game, think \"Duolingo for Recovery.\" It's a B2B SaaS Gamified Care Management Platform used by clinics to manage their patient population, maximize clinic revenue, and increase therapist efficiency so they can keep up with soaring patient demand.",
+      founder: {
+        name: 'Lukas-Karim Merhi',
+        title: 'CEO',
+        photo: 'assets/founders/lukas-karim-merhi.jpeg',
+      },
       blog: 'blog/tenzr.html',
     },
     geneial: {
@@ -1432,8 +1435,12 @@
       siteLabel: 'geneial.com',
       logo: 'portco-logos/geneial.svg',
       tag: 'Genomics',
-      desc: 'Placeholder description of Geneial. A short paragraph that will describe what the company does and why it matters in the market.',
-      founders: 'Placeholder founder information. Names, backgrounds, and prior experience relevant to this venture will live here.',
+      desc: 'Geneial is an AI-powered data platform for precision medicine, uniting patients, clinicians, and researchers through secure, privacy-preserving infrastructure. Our architecture combines genetics expertise, privacy-enhancing technology, and AI-driven standardization to transform messy data into interoperable, research-ready evidence, creating a trusted foundation for accelerating science and clinical innovation.',
+      founder: {
+        name: 'Adam Hansen',
+        title: 'CEO',
+        photo: 'assets/founders/adam-hansen.png',
+      },
       blog: 'blog/geneial.html',
     },
   };
@@ -1451,6 +1458,7 @@
     const founderPhoto = modal.querySelector('.portco-modal-founder-photo');
     const founderName = modal.querySelector('.portco-modal-founder-name');
     const founderTitle = modal.querySelector('.portco-modal-founder-title');
+    const founderSubhead = modal.querySelector('.portco-modal-subhead');
     const ctaEl = modal.querySelector('[data-blog]');
     let lastTrigger = null;
 
@@ -1471,10 +1479,17 @@
         founderTitle.textContent = d.founder.title;
         founderCard.classList.add('is-shown');
         foundersEl.style.display = 'none';
-      } else {
-        foundersEl.textContent = d.founders || '';
+        founderSubhead.style.display = '';
+      } else if (d.founders) {
+        foundersEl.textContent = d.founders;
         foundersEl.style.display = '';
         founderCard.classList.remove('is-shown');
+        founderSubhead.style.display = '';
+      } else {
+        foundersEl.textContent = '';
+        foundersEl.style.display = 'none';
+        founderCard.classList.remove('is-shown');
+        founderSubhead.style.display = 'none';
       }
       ctaEl.href = d.blog;
       modal.classList.add('is-open');
