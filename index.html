@@ -707,8 +707,17 @@
     transition: background 0.3s ease, transform 0.3s ease;
     cursor: pointer;
     text-decoration: none;
+    border: none;
+    font: inherit;
+    color: inherit;
+    text-align: inherit;
+    appearance: none;
+    width: 100%;
   }
+  .portfolio-cell:focus-visible { outline: 2px solid var(--ventures); outline-offset: -2px; }
   .portfolio-cell:hover { background: #f5f5f5; }
+  .portfolio-cell-empty { cursor: default; }
+  .portfolio-cell-empty:hover { background: #fff; }
   .portfolio-logo {
     display: flex; align-items: center; justify-content: center;
     width: 100%; height: 100%;
@@ -738,7 +747,8 @@
   .cell-2 { --cell-accent: var(--ventures); }
   .cell-3 { --cell-accent: var(--group); }
   .cell-4 { --cell-accent: var(--lime); }
-  .cell-5 { --cell-accent: var(--ventures); }
+  .cell-5 { --cell-accent: var(--gold); }
+  .cell-6 { --cell-accent: var(--group); }
   .cell-6 { --cell-accent: var(--group); }
   .cell-7 { --cell-accent: var(--navigator); }
   .cell-8 { --cell-accent: var(--gold); }
@@ -899,6 +909,169 @@
   /* In-view triggered animations for sections */
   .in-view-target { opacity: 0; transform: translateY(20px); transition: opacity 0.8s ease, transform 0.8s ease; }
   .in-view-target.visible { opacity: 1; transform: translateY(0); }
+
+  /* ---------- PORTFOLIO MODAL ---------- */
+  .portco-modal {
+    position: fixed; inset: 0; z-index: 100;
+    display: none;
+    align-items: center; justify-content: center;
+    padding: 24px;
+  }
+  .portco-modal.is-open { display: flex; }
+  .portco-modal-backdrop {
+    position: absolute; inset: 0;
+    background: rgba(6,6,6,0.72);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    animation: portcoFade 0.2s ease;
+  }
+  .portco-modal-card {
+    position: relative;
+    background: #fff;
+    color: var(--ink);
+    border-radius: 20px;
+    max-width: 640px;
+    width: 100%;
+    max-height: 88vh;
+    overflow-y: auto;
+    padding: 48px 44px 40px;
+    box-shadow: 0 24px 80px rgba(0,0,0,0.5);
+    animation: portcoRise 0.28s cubic-bezier(.2,.8,.2,1);
+  }
+  @keyframes portcoFade { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes portcoRise {
+    from { opacity: 0; transform: translateY(12px) scale(0.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  .portco-modal-close {
+    position: absolute; top: 16px; right: 16px;
+    width: 36px; height: 36px;
+    display: flex; align-items: center; justify-content: center;
+    background: transparent;
+    border: 1px solid var(--line-dark);
+    border-radius: 999px;
+    font-size: 20px; line-height: 1;
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  }
+  .portco-modal-close:hover { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .portco-modal-header {
+    display: flex; flex-direction: column; align-items: stretch;
+    margin-bottom: 24px;
+  }
+  .portco-modal-logo {
+    width: 100%;
+    aspect-ratio: 16/9;
+    display: flex; align-items: center; justify-content: center;
+    background: #fff;
+    border: 1px solid var(--line-dark);
+    border-radius: 14px;
+    padding: 32px;
+    margin-bottom: 24px;
+  }
+  .portco-modal-logo img {
+    max-width: 70%; max-height: 100%;
+    width: auto; height: auto;
+    object-fit: contain;
+  }
+  .portco-modal-headings h3 {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 28px;
+    letter-spacing: -0.02em;
+    margin: 0 0 6px;
+    color: var(--ink);
+  }
+  .portco-modal-meta {
+    display: flex; align-items: center; gap: 12px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted-light);
+  }
+  .portco-modal-site {
+    color: var(--ventures);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+  .portco-modal-site:hover { color: var(--ink); }
+  .portco-modal-body {
+    color: var(--ink-soft);
+    font-size: 15.5px;
+    line-height: 1.65;
+  }
+  .portco-modal-body p { margin: 0 0 16px; }
+  .portco-modal-subhead {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ventures);
+    margin: 28px 0 10px;
+  }
+  .portco-modal-founder {
+    display: none;
+    align-items: center;
+    gap: 14px;
+  }
+  .portco-modal-founder.is-shown { display: flex; }
+  .portco-modal-founder-photo {
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+    background: var(--line-dark);
+  }
+  .portco-modal-founder-name {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 1.2;
+    color: var(--ink);
+    margin-bottom: 2px;
+  }
+  .portco-modal-founder-title {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted-light);
+  }
+
+  .portco-modal-ctas {
+    margin-top: 32px;
+    display: flex; flex-wrap: wrap; gap: 12px;
+  }
+  .portco-modal-cta,
+  .portco-modal-website {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 12px 22px;
+    border-radius: 999px;
+    font-family: var(--font-body);
+    font-size: 13.5px; font-weight: 500;
+    text-decoration: none;
+    transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  }
+  .portco-modal-cta {
+    background: var(--ink);
+    color: #fff;
+  }
+  .portco-modal-cta:hover { background: var(--ventures); }
+  .portco-modal-website {
+    background: transparent;
+    color: var(--ink);
+    border: 1px solid var(--line-dark);
+    padding: 11px 21px;
+  }
+  .portco-modal-website:hover { border-color: var(--ink); background: rgba(0,0,0,0.03); }
+
+  @media (max-width: 560px) {
+    .portco-modal-card { padding: 40px 24px 32px; }
+    .portco-modal-header { flex-direction: column; align-items: flex-start; gap: 16px; }
+    .portco-modal-logo { width: 72px; height: 72px; }
+  }
 </style>
 </head>
 <body>
@@ -1113,35 +1286,45 @@
     </div>
 
     <div class="portfolio-grid in-view-target">
-      <a class="portfolio-cell cell-1" href="https://jeevatrials.com/" target="_blank" rel="noopener">
+      <button type="button" class="portfolio-cell cell-1" data-company="jeeva">
         <div class="portfolio-logo"><img src="portco-logos/jeeva.avif" alt="Jeeva Clinical Trials"></div>
         <div class="portfolio-meta"><span class="portfolio-meta-tag">●</span> Clinical Trials</div>
-      </a>
-      <a class="portfolio-cell cell-2" href="https://www.neurovrd.com/" target="_blank" rel="noopener">
+      </button>
+      <button type="button" class="portfolio-cell cell-2" data-company="neurovrd">
         <div class="portfolio-logo"><img src="portco-logos/neurovrd.png" alt="NeuroVRD"></div>
         <div class="portfolio-meta"><span class="portfolio-meta-tag">●</span> MedTech</div>
-      </a>
-      <a class="portfolio-cell cell-3" href="https://www.tenzrhealth.com/" target="_blank" rel="noopener">
+      </button>
+      <button type="button" class="portfolio-cell cell-3" data-company="tenzr">
         <div class="portfolio-logo"><img src="portco-logos/tenzr.png" alt="Tenzr Health"></div>
         <div class="portfolio-meta"><span class="portfolio-meta-tag">●</span> Digital Health</div>
-      </a>
-      <a class="portfolio-cell cell-4" href="https://www.geneial.com/" target="_blank" rel="noopener">
+      </button>
+      <button type="button" class="portfolio-cell cell-4" data-company="geneial">
         <div class="portfolio-logo"><img src="portco-logos/geneial.svg" alt="Geneial"></div>
         <div class="portfolio-meta"><span class="portfolio-meta-tag">●</span> Genomics</div>
-      </a>
+      </button>
+      <button type="button" class="portfolio-cell cell-5" data-company="solution">
+        <div class="portfolio-logo"><img src="portco-logos/solution.png" alt="SOLUtion Medical"></div>
+        <div class="portfolio-meta"><span class="portfolio-meta-tag">●</span> Drug Delivery</div>
+      </button>
+      <button type="button" class="portfolio-cell cell-6" data-company="kbo">
+        <div class="portfolio-logo"><img src="portco-logos/kbo.png" alt="KBO Systems"></div>
+        <div class="portfolio-meta"><span class="portfolio-meta-tag">●</span> Neuro Monitoring</div>
+      </button>
+      <div class="portfolio-cell portfolio-cell-empty" aria-hidden="true"></div>
+      <div class="portfolio-cell portfolio-cell-empty" aria-hidden="true"></div>
     </div>
 
     <div class="stats in-view-target">
       <div class="stat">
-        <div class="stat-num">4</div>
+        <div class="stat-num">6</div>
         <div class="stat-label">Investments to date</div>
       </div>
       <div class="stat">
-        <div class="stat-num">500<span class="unit">+</span></div>
+        <div class="stat-num">600<span class="unit">+</span></div>
         <div class="stat-label">Founders in the ecosystem</div>
       </div>
       <div class="stat">
-        <div class="stat-num">200<span class="unit">+</span></div>
+        <div class="stat-num">250<span class="unit">+</span></div>
         <div class="stat-label">Funds in the syndicate</div>
       </div>
     </div>
@@ -1198,6 +1381,211 @@
     });
   }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
   document.querySelectorAll('.in-view-target').forEach(el => io.observe(el));
+</script>
+
+<!-- ========== PORTCO MODAL ========== -->
+<div id="portco-modal" class="portco-modal" role="dialog" aria-modal="true" aria-labelledby="portco-modal-name" aria-hidden="true">
+  <div class="portco-modal-backdrop" data-close></div>
+  <div class="portco-modal-card">
+    <button type="button" class="portco-modal-close" data-close aria-label="Close">×</button>
+    <div class="portco-modal-header">
+      <div class="portco-modal-logo"><img alt=""></div>
+      <div class="portco-modal-headings">
+        <h3 id="portco-modal-name"></h3>
+        <div class="portco-modal-meta">
+          <span class="portco-modal-tag"></span>
+          <span>·</span>
+          <a class="portco-modal-site" target="_blank" rel="noopener"></a>
+        </div>
+      </div>
+    </div>
+    <div class="portco-modal-body">
+      <p class="portco-modal-desc"></p>
+      <div class="portco-modal-subhead">Founder</div>
+      <p class="portco-modal-founders"></p>
+      <div class="portco-modal-founder">
+        <img class="portco-modal-founder-photo" alt="">
+        <div class="portco-modal-founder-info">
+          <div class="portco-modal-founder-name"></div>
+          <div class="portco-modal-founder-title"></div>
+        </div>
+      </div>
+    </div>
+    <div class="portco-modal-ctas">
+      <a class="portco-modal-cta" href="#" target="_blank" rel="opener" data-blog>Read our thesis on this company →</a>
+      <a class="portco-modal-website" href="#" target="_blank" rel="noopener" data-website>Visit website →</a>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Portfolio modal data
+  const PORTCOS = {
+    jeeva: {
+      name: 'Jeeva Clinical Trials',
+      site: 'https://jeevatrials.com/',
+      siteLabel: 'jeevatrials.com',
+      logo: 'portco-logos/jeeva.avif',
+      tag: 'Clinical Trials',
+      desc: "Jeeva Clinical Trials has reinvented the digital infrastructure with embedded AI for clinical trials to help biopharmaceutical sponsors save 3+ years in drug development timelines. Our B2B SaaS per-user-per-month pricing is FDA-ready from day #1 & collapses 10 fragmented point solutions into one and streamlines the manual process of CROs.",
+      founder: {
+        name: 'Dr. Harsha K Rajasimha',
+        title: 'CEO',
+        photo: 'assets/founders/harsha-rajasimha.png',
+      },
+      blog: 'blog/jeeva.html',
+    },
+    neurovrd: {
+      name: 'NeuroVRD',
+      site: 'https://www.neurovrd.com/',
+      siteLabel: 'neurovrd.com',
+      logo: 'portco-logos/neurovrd.png',
+      tag: 'MedTech',
+      desc: 'NeuroVRD is pioneering the Sentinel AI-IONM Platform, an AI-enabled software solution to detect the onset of neurovascular irritation during high-risk surgeries. Our mission is to make IONM available universally to all high-risk surgeries.',
+      blog: 'blog/neurovrd.html',
+    },
+    tenzr: {
+      name: 'Tenzr Health',
+      site: 'https://www.tenzrhealth.com/',
+      siteLabel: 'tenzrhealth.com',
+      logo: 'portco-logos/tenzr.png',
+      tag: 'Digital Health',
+      desc: "Tenzr Health helps physical medicine providers turn physical rehab into a multi-level game, think \"Duolingo for Recovery.\" It's a B2B SaaS Gamified Care Management Platform used by clinics to manage their patient population, maximize clinic revenue, and increase therapist efficiency so they can keep up with soaring patient demand.",
+      founder: {
+        name: 'Lukas-Karim Merhi',
+        title: 'CEO',
+        photo: 'assets/founders/lukas-karim-merhi.jpeg',
+      },
+      blog: 'blog/tenzr.html',
+    },
+    geneial: {
+      name: 'Geneial',
+      site: 'https://www.geneial.com/',
+      siteLabel: 'geneial.com',
+      logo: 'portco-logos/geneial.svg',
+      tag: 'Genomics',
+      desc: 'Geneial is an AI-powered data platform for precision medicine, uniting patients, clinicians, and researchers through secure, privacy-preserving infrastructure. Our architecture combines genetics expertise, privacy-enhancing technology, and AI-driven standardization to transform messy data into interoperable, research-ready evidence, creating a trusted foundation for accelerating science and clinical innovation.',
+      founder: {
+        name: 'Adam Hansen',
+        title: 'CEO',
+        photo: 'assets/founders/adam-hansen.png',
+      },
+      blog: 'blog/geneial.html',
+    },
+    solution: {
+      name: 'SOLUtion Medical',
+      site: 'https://www.solutionmedco.com/',
+      siteLabel: 'solutionmedco.com',
+      logo: 'portco-logos/solution.png',
+      tag: 'Drug Delivery',
+      desc: 'SOLUtion Medical is a de-risked, IP-backed pharmaceutical company addressing adrenal crisis through TwistJECT, a point-of-care drug mixing platform eliminating cold chain and simplifying emergency care. Founded by a patient and backed by a team with 200+ products, they have reimbursement clarity, 21+ patents, abbreviated pathway, and a 4-product $10B+ pipeline.',
+      founder: {
+        name: 'Julia Anthony',
+        title: 'Founder',
+        photo: 'assets/founders/julia-anthony.png',
+      },
+      blog: 'blog/solution.html',
+    },
+    kbo: {
+      name: 'KBO Systems',
+      site: 'https://www.kbosystems.com/',
+      siteLabel: 'kbosystems.com',
+      logo: 'portco-logos/kbo.png',
+      tag: 'Neuro Monitoring',
+      desc: "Brain complications during and after surgery cost the U.S. an estimated $82 billion a year. Existing monitors haven't solved it, in part because they generate no billable revenue for the provider. KBO changes that by combining multi-region EEG, auditory evoked potentials, and proprietary machine learning to monitor the brain across the full surgical journey.",
+      founder: {
+        name: 'Kevin Goehl',
+        title: 'CEO',
+        photo: 'assets/founders/kevin-goehl.png',
+      },
+    },
+  };
+
+  (function () {
+    const modal = document.getElementById('portco-modal');
+    if (!modal) return;
+    const logoImg = modal.querySelector('.portco-modal-logo img');
+    const nameEl = modal.querySelector('.portco-modal-name, #portco-modal-name');
+    const tagEl = modal.querySelector('.portco-modal-tag');
+    const siteEl = modal.querySelector('.portco-modal-site');
+    const descEl = modal.querySelector('.portco-modal-desc');
+    const foundersEl = modal.querySelector('.portco-modal-founders');
+    const founderCard = modal.querySelector('.portco-modal-founder');
+    const founderPhoto = modal.querySelector('.portco-modal-founder-photo');
+    const founderName = modal.querySelector('.portco-modal-founder-name');
+    const founderTitle = modal.querySelector('.portco-modal-founder-title');
+    const founderSubhead = modal.querySelector('.portco-modal-subhead');
+    const ctaEl = modal.querySelector('[data-blog]');
+    const ctaWebsite = modal.querySelector('[data-website]');
+    let lastTrigger = null;
+
+    function open(key, trigger) {
+      const d = PORTCOS[key];
+      if (!d) return;
+      logoImg.src = d.logo;
+      logoImg.alt = d.name + ' logo';
+      nameEl.textContent = d.name;
+      tagEl.textContent = d.tag;
+      siteEl.textContent = d.siteLabel;
+      siteEl.href = d.site;
+      descEl.textContent = d.desc;
+      if (d.founder) {
+        founderPhoto.src = d.founder.photo;
+        founderPhoto.alt = d.founder.name;
+        founderName.textContent = d.founder.name;
+        founderTitle.textContent = d.founder.title;
+        founderCard.classList.add('is-shown');
+        foundersEl.style.display = 'none';
+        founderSubhead.style.display = '';
+      } else if (d.founders) {
+        foundersEl.textContent = d.founders;
+        foundersEl.style.display = '';
+        founderCard.classList.remove('is-shown');
+        founderSubhead.style.display = '';
+      } else {
+        foundersEl.textContent = '';
+        foundersEl.style.display = 'none';
+        founderCard.classList.remove('is-shown');
+        founderSubhead.style.display = 'none';
+      }
+      if (d.blog) {
+        ctaEl.href = d.blog;
+        ctaEl.style.display = '';
+      } else {
+        ctaEl.href = '#';
+        ctaEl.style.display = 'none';
+      }
+      ctaWebsite.href = d.site;
+      modal.classList.add('is-open');
+      modal.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+      lastTrigger = trigger || null;
+    }
+    function close() {
+      modal.classList.remove('is-open');
+      modal.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+      if (lastTrigger) lastTrigger.focus();
+    }
+
+    document.querySelectorAll('.portfolio-cell[data-company]').forEach(cell => {
+      cell.addEventListener('click', () => open(cell.dataset.company, cell));
+    });
+    modal.querySelectorAll('[data-close]').forEach(el => {
+      el.addEventListener('click', close);
+    });
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && modal.classList.contains('is-open')) close();
+    });
+    // Ensure the CTA opens the blog as a script-opened window so window.close()
+    // reliably works in the child tab (the back-link uses window.close()).
+    ctaEl.addEventListener('click', e => {
+      if (ctaEl.href && ctaEl.href !== '#') {
+        e.preventDefault();
+        window.open(ctaEl.href, '_blank');
+      }
+    });
+  })();
 </script>
 
 </body>
