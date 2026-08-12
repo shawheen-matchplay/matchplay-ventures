@@ -688,7 +688,7 @@
   }
   .portfolio-grid {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap: 1px;
     background: var(--line);
     border: 1px solid var(--line);
@@ -716,6 +716,8 @@
   }
   .portfolio-cell:focus-visible { outline: 2px solid var(--ventures); outline-offset: -2px; }
   .portfolio-cell:hover { background: #f5f5f5; }
+  .portfolio-cell-empty { cursor: default; }
+  .portfolio-cell-empty:hover { background: #fff; }
   .portfolio-logo {
     display: flex; align-items: center; justify-content: center;
     width: 100%; height: 100%;
@@ -1290,6 +1292,9 @@
         <div class="portfolio-logo"><img src="portco-logos/solution.png" alt="SOLUtion Medical"></div>
         <div class="portfolio-meta"><span class="portfolio-meta-tag">●</span> Drug Delivery</div>
       </button>
+      <div class="portfolio-cell portfolio-cell-empty" aria-hidden="true"></div>
+      <div class="portfolio-cell portfolio-cell-empty" aria-hidden="true"></div>
+      <div class="portfolio-cell portfolio-cell-empty" aria-hidden="true"></div>
     </div>
 
     <div class="stats in-view-target">
@@ -1453,7 +1458,12 @@
       siteLabel: 'solutionmedco.com',
       logo: 'portco-logos/solution.png',
       tag: 'Drug Delivery',
-      desc: 'SOLUtion Medical develops drug-device combinations that simplify the preparation and administration of medicines requiring point-of-use reconstitution. Its first application is emergency hydrocortisone for adrenal crisis, delivered through the TwistJECT prefilled syringe and autoinjector formats.',
+      desc: 'SOLUtion Medical is a de-risked, IP-backed pharmaceutical company addressing adrenal crisis through TwistJECT, a point-of-care drug mixing platform eliminating cold chain and simplifying emergency care. Founded by a patient and backed by a team with 200+ products, they have reimbursement clarity, 21+ patents, abbreviated pathway, and a 4-product $10B+ pipeline.',
+      founder: {
+        name: 'Julia Anthony',
+        title: 'Founder',
+        photo: 'assets/founders/julia-anthony.png',
+      },
       blog: 'blog/solution.html',
     },
   };
