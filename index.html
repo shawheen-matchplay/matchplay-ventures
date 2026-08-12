@@ -1008,6 +1008,35 @@
     color: var(--ventures);
     margin: 28px 0 10px;
   }
+  .portco-modal-founder {
+    display: none;
+    align-items: center;
+    gap: 14px;
+  }
+  .portco-modal-founder.is-shown { display: flex; }
+  .portco-modal-founder-photo {
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+    background: var(--line-dark);
+  }
+  .portco-modal-founder-name {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 1.2;
+    color: var(--ink);
+    margin-bottom: 2px;
+  }
+  .portco-modal-founder-title {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted-light);
+  }
+
   .portco-modal-cta {
     display: inline-flex; align-items: center; gap: 8px;
     margin-top: 32px;
@@ -1346,8 +1375,15 @@
     </div>
     <div class="portco-modal-body">
       <p class="portco-modal-desc"></p>
-      <div class="portco-modal-subhead">Founders</div>
+      <div class="portco-modal-subhead">Founder</div>
       <p class="portco-modal-founders"></p>
+      <div class="portco-modal-founder">
+        <img class="portco-modal-founder-photo" alt="">
+        <div class="portco-modal-founder-info">
+          <div class="portco-modal-founder-name"></div>
+          <div class="portco-modal-founder-title"></div>
+        </div>
+      </div>
     </div>
     <a class="portco-modal-cta" href="#" target="_blank" rel="opener" data-blog>Read our thesis on this company →</a>
   </div>
@@ -1362,8 +1398,12 @@
       siteLabel: 'jeevatrials.com',
       logo: 'portco-logos/jeeva.avif',
       tag: 'Clinical Trials',
-      desc: 'Placeholder description of Jeeva Clinical Trials. A short paragraph that will describe what the company does and why it matters in the market.',
-      founders: 'Placeholder founder information. Names, backgrounds, and prior experience relevant to this venture will live here.',
+      desc: "Jeeva Clinical Trials has reinvented the digital infrastructure with embedded AI for clinical trials to help biopharmaceutical sponsors save 3+ years in drug development timelines. Our B2B SaaS per-user-per-month pricing is FDA-ready from day #1 & collapses 10 fragmented point solutions into one and streamlines the manual process of CROs.",
+      founder: {
+        name: 'Dr. Harsha K Rajasimha',
+        title: 'CEO',
+        photo: 'assets/founders/harsha-rajasimha.png',
+      },
       blog: 'blog/jeeva.html',
     },
     neurovrd: {
@@ -1407,6 +1447,10 @@
     const siteEl = modal.querySelector('.portco-modal-site');
     const descEl = modal.querySelector('.portco-modal-desc');
     const foundersEl = modal.querySelector('.portco-modal-founders');
+    const founderCard = modal.querySelector('.portco-modal-founder');
+    const founderPhoto = modal.querySelector('.portco-modal-founder-photo');
+    const founderName = modal.querySelector('.portco-modal-founder-name');
+    const founderTitle = modal.querySelector('.portco-modal-founder-title');
     const ctaEl = modal.querySelector('[data-blog]');
     let lastTrigger = null;
 
@@ -1420,7 +1464,18 @@
       siteEl.textContent = d.siteLabel;
       siteEl.href = d.site;
       descEl.textContent = d.desc;
-      foundersEl.textContent = d.founders;
+      if (d.founder) {
+        founderPhoto.src = d.founder.photo;
+        founderPhoto.alt = d.founder.name;
+        founderName.textContent = d.founder.name;
+        founderTitle.textContent = d.founder.title;
+        founderCard.classList.add('is-shown');
+        foundersEl.style.display = 'none';
+      } else {
+        foundersEl.textContent = d.founders || '';
+        foundersEl.style.display = '';
+        founderCard.classList.remove('is-shown');
+      }
       ctaEl.href = d.blog;
       modal.classList.add('is-open');
       modal.setAttribute('aria-hidden', 'false');
