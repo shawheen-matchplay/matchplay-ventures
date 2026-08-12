@@ -71,7 +71,8 @@ a { color: inherit; text-decoration: none; }
   .nav-brand { padding-right: 12px; }
 }
 
-.container { max-width: 720px; margin: 0 auto; padding: 140px 24px 120px; }
+.container { max-width: 820px; margin: 0 auto; padding: 140px 24px 120px; }
+@media (max-width: 640px) { .container { padding-top: 120px; } }
 .back-link {
   display: inline-flex; align-items: center; gap: 8px;
   font-family: var(--font-mono);
@@ -121,6 +122,7 @@ h1 {
   margin-bottom: 48px;
   padding-bottom: 32px;
   border-bottom: 1px solid var(--line);
+  display: flex; flex-direction: column; gap: 6px;
 }
 article .lede { font-size: 19px; color: var(--ink); margin: 0 0 28px; }
 article p { color: var(--ink-soft); margin: 0 0 20px; }

@@ -1349,7 +1349,7 @@
       <div class="portco-modal-subhead">Founders</div>
       <p class="portco-modal-founders"></p>
     </div>
-    <a class="portco-modal-cta" href="#" data-blog>Read our thesis on this company →</a>
+    <a class="portco-modal-cta" href="#" target="_blank" rel="opener" data-blog>Read our thesis on this company →</a>
   </div>
 </div>
 
@@ -1442,6 +1442,14 @@
     });
     document.addEventListener('keydown', e => {
       if (e.key === 'Escape' && modal.classList.contains('is-open')) close();
+    });
+    // Ensure the CTA opens the blog as a script-opened window so window.close()
+    // reliably works in the child tab (the back-link uses window.close()).
+    ctaEl.addEventListener('click', e => {
+      if (ctaEl.href && ctaEl.href !== '#') {
+        e.preventDefault();
+        window.open(ctaEl.href, '_blank');
+      }
     });
   })();
 </script>
