@@ -688,7 +688,7 @@
   }
   .portfolio-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     gap: 1px;
     background: var(--line);
     border: 1px solid var(--line);
@@ -745,7 +745,7 @@
   .cell-2 { --cell-accent: var(--ventures); }
   .cell-3 { --cell-accent: var(--group); }
   .cell-4 { --cell-accent: var(--lime); }
-  .cell-5 { --cell-accent: var(--ventures); }
+  .cell-5 { --cell-accent: var(--gold); }
   .cell-6 { --cell-accent: var(--group); }
   .cell-7 { --cell-accent: var(--navigator); }
   .cell-8 { --cell-accent: var(--gold); }
@@ -1286,11 +1286,15 @@
         <div class="portfolio-logo"><img src="portco-logos/geneial.svg" alt="Geneial"></div>
         <div class="portfolio-meta"><span class="portfolio-meta-tag">●</span> Genomics</div>
       </button>
+      <button type="button" class="portfolio-cell cell-5" data-company="solution">
+        <div class="portfolio-logo"><img src="portco-logos/solution.png" alt="SOLUtion Medical"></div>
+        <div class="portfolio-meta"><span class="portfolio-meta-tag">●</span> Drug Delivery</div>
+      </button>
     </div>
 
     <div class="stats in-view-target">
       <div class="stat">
-        <div class="stat-num">4</div>
+        <div class="stat-num">5</div>
         <div class="stat-label">Investments to date</div>
       </div>
       <div class="stat">
@@ -1442,6 +1446,15 @@
         photo: 'assets/founders/adam-hansen.png',
       },
       blog: 'blog/geneial.html',
+    },
+    solution: {
+      name: 'SOLUtion Medical',
+      site: 'https://www.solutionmedco.com/',
+      siteLabel: 'solutionmedco.com',
+      logo: 'portco-logos/solution.png',
+      tag: 'Drug Delivery',
+      desc: 'SOLUtion Medical develops drug-device combinations that simplify the preparation and administration of medicines requiring point-of-use reconstitution. Its first application is emergency hydrocortisone for adrenal crisis, delivered through the TwistJECT prefilled syringe and autoinjector formats.',
+      blog: 'blog/solution.html',
     },
   };
 
