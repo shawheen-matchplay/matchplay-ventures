@@ -1,0 +1,89 @@
+:root {
+  --bg-light: #F5F2EC;
+  --bg-cream: #EDE8DD;
+  --paper: #FFFFFF;
+  --ink: #0A0A0A;
+  --ink-soft: #2A2A2A;
+  --muted: rgba(10,10,10,0.55);
+  --line: rgba(10,10,10,0.10);
+  --ventures: #F97D4A;
+  --font-display: "Sora", "Helvetica Neue", Arial, sans-serif;
+  --font-body: "Geist", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+body {
+  margin: 0;
+  background: var(--bg-light);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.65;
+}
+.container { max-width: 720px; margin: 0 auto; padding: 48px 24px 120px; }
+.back-link {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-decoration: none;
+  margin-bottom: 64px;
+  transition: color 0.2s ease;
+}
+.back-link:hover { color: var(--ventures); }
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ventures);
+  margin-bottom: 20px;
+  display: inline-flex; align-items: center; gap: 10px;
+}
+.eyebrow::before { content: ''; width: 32px; height: 2px; background: var(--ventures); }
+h1 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(36px, 5vw, 56px);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  margin: 0 0 24px;
+}
+.meta {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 48px;
+  padding-bottom: 32px;
+  border-bottom: 1px solid var(--line);
+}
+article p { color: var(--ink-soft); margin: 0 0 20px; }
+article h2 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 26px;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin: 48px 0 16px;
+}
+article a { color: var(--ventures); text-decoration: none; border-bottom: 1px solid rgba(249,125,74,0.4); }
+article a:hover { border-bottom-color: var(--ventures); }
+.footer-link {
+  display: inline-flex; align-items: center; gap: 8px;
+  margin-top: 56px;
+  padding-top: 32px;
+  border-top: 1px solid var(--line);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-decoration: none;
+}
+.footer-link:hover { color: var(--ventures); }
