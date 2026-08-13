@@ -806,29 +806,36 @@
     margin-bottom: 72px;
   }
   @media (max-width: 880px) { .team-header { grid-template-columns: 1fr; gap: 24px; margin-bottom: 48px; } }
+  #team .ecosystem-title { color: var(--ink); }
+  #team .ecosystem-intro { color: var(--ink-soft); }
   .team-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 48px 32px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 56px 48px;
   }
-  @media (max-width: 1024px) { .team-grid { grid-template-columns: repeat(2, 1fr); gap: 48px 32px; } }
-  @media (max-width: 560px) { .team-grid { grid-template-columns: 1fr; gap: 40px; } }
-  .team-card { text-align: left; }
+  @media (max-width: 640px) { .team-grid { grid-template-columns: 1fr; gap: 40px; } }
+  .team-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 24px;
+    text-align: left;
+  }
   .team-photo {
-    width: 140px; height: 140px;
+    width: 128px; height: 128px;
     border-radius: 50%;
     object-fit: cover;
     display: block;
-    margin-bottom: 22px;
-    background: rgba(255,255,255,0.04);
+    flex-shrink: 0;
+    background: rgba(10,10,10,0.06);
   }
+  .team-info { min-width: 0; }
   .team-name {
     font-family: var(--font-display);
     font-weight: 500;
     font-size: 22px;
     line-height: 1.15;
     letter-spacing: -0.02em;
-    color: #fff;
+    color: var(--ink);
     margin: 0 0 6px;
   }
   .team-title {
@@ -842,8 +849,12 @@
   .team-bio {
     font-size: 15px;
     line-height: 1.6;
-    color: rgba(255,255,255,0.65);
+    color: var(--ink-soft);
     margin: 0;
+  }
+  @media (max-width: 480px) {
+    .team-card { flex-direction: column; align-items: flex-start; gap: 16px; }
+    .team-photo { width: 96px; height: 96px; }
   }
 
   /* ---------- FINAL CTA ---------- */
@@ -1383,7 +1394,7 @@
 </section>
 
 <!-- ========== TEAM ========== -->
-<section id="team" class="section section-dark">
+<section id="team" class="section section-light">
   <div class="container">
     <div class="team-header in-view-target">
       <h2 class="ecosystem-title">
@@ -1397,27 +1408,35 @@
     <div class="team-grid in-view-target">
       <div class="team-card">
         <img class="team-photo" src="assets/team/mahesh-narayanan.jpeg" alt="Mahesh Narayanan">
-        <h3 class="team-name">Mahesh Narayanan</h3>
-        <div class="team-title">Managing Partner</div>
-        <p class="team-bio">Serial founder, investor, and mentor with 15+ years in biotech. Founded two startups with one exit. Experienced accelerator director.</p>
+        <div class="team-info">
+          <h3 class="team-name">Mahesh Narayanan</h3>
+          <div class="team-title">Managing Partner</div>
+          <p class="team-bio">Serial founder, investor, and mentor with 15+ years in biotech. Founded two startups with one exit. Experienced accelerator director.</p>
+        </div>
       </div>
       <div class="team-card">
         <img class="team-photo" src="assets/team/steven-richer.jpeg" alt="Steven Richer">
-        <h3 class="team-name">Steven Richer</h3>
-        <div class="team-title">Partner</div>
-        <p class="team-bio">Product and program leader with 15+ years supporting startups worldwide through incubator programs.</p>
+        <div class="team-info">
+          <h3 class="team-name">Steven Richer</h3>
+          <div class="team-title">Partner</div>
+          <p class="team-bio">Product and program leader with 15+ years supporting startups worldwide through incubator programs.</p>
+        </div>
       </div>
       <div class="team-card">
         <img class="team-photo" src="assets/team/shawheen-attar.jpeg" alt="Shawheen Attar">
-        <h3 class="team-name">Shawheen Attar</h3>
-        <div class="team-title">Partner</div>
-        <p class="team-bio">Entrepreneur with engineering, product, and process optimization experience. 8+ years running startups and advising founders.</p>
+        <div class="team-info">
+          <h3 class="team-name">Shawheen Attar</h3>
+          <div class="team-title">Partner</div>
+          <p class="team-bio">Entrepreneur with engineering, product, and process optimization experience. 8+ years running startups and advising founders.</p>
+        </div>
       </div>
       <div class="team-card">
         <img class="team-photo" src="assets/team/aakarsh-malhotra.jpeg" alt="Aakarsh Malhotra">
-        <h3 class="team-name">Aakarsh Malhotra</h3>
-        <div class="team-title">Junior Venture Partner</div>
-        <p class="team-bio">Startup advisor, venture and ecosystem builder, previously accelerator programs and operations lead. 7+ years experience in startups, investments, M&amp;A consulting, and entrepreneurship.</p>
+        <div class="team-info">
+          <h3 class="team-name">Aakarsh Malhotra</h3>
+          <div class="team-title">Junior Venture Partner</div>
+          <p class="team-bio">Startup advisor, venture and ecosystem builder, previously accelerator programs and operations lead. 7+ years experience in startups, investments, M&amp;A consulting, and entrepreneurship.</p>
+        </div>
       </div>
     </div>
   </div>
