@@ -808,24 +808,19 @@
   @media (max-width: 880px) { .team-header { grid-template-columns: 1fr; gap: 24px; margin-bottom: 48px; } }
   .team-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 56px 40px;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 48px 32px;
   }
-  @media (max-width: 880px) { .team-grid { grid-template-columns: repeat(2, 1fr); gap: 48px 32px; } }
+  @media (max-width: 1024px) { .team-grid { grid-template-columns: repeat(2, 1fr); gap: 48px 32px; } }
   @media (max-width: 560px) { .team-grid { grid-template-columns: 1fr; gap: 40px; } }
   .team-card { text-align: left; }
   .team-photo {
     width: 140px; height: 140px;
     border-radius: 50%;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid var(--line);
-    display: flex; align-items: center; justify-content: center;
-    font-family: var(--font-mono);
-    font-size: 18px;
-    font-weight: 500;
-    color: var(--ventures);
-    letter-spacing: 0.1em;
+    object-fit: cover;
+    display: block;
     margin-bottom: 22px;
+    background: rgba(255,255,255,0.04);
   }
   .team-name {
     font-family: var(--font-display);
@@ -1401,40 +1396,28 @@
 
     <div class="team-grid in-view-target">
       <div class="team-card">
-        <div class="team-photo" aria-hidden="true">01</div>
-        <h3 class="team-name">Team Member One</h3>
-        <div class="team-title">Role Placeholder</div>
-        <p class="team-bio">Short bio placeholder. A sentence or two about their background, expertise, and what they bring to the firm.</p>
+        <img class="team-photo" src="assets/team/mahesh-narayanan.jpeg" alt="Mahesh Narayanan">
+        <h3 class="team-name">Mahesh Narayanan</h3>
+        <div class="team-title">Managing Partner</div>
+        <p class="team-bio">Serial founder, investor, and mentor with 15+ years in biotech. Founded two startups with one exit. Experienced accelerator director.</p>
       </div>
       <div class="team-card">
-        <div class="team-photo" aria-hidden="true">02</div>
-        <h3 class="team-name">Team Member Two</h3>
-        <div class="team-title">Role Placeholder</div>
-        <p class="team-bio">Short bio placeholder. A sentence or two about their background, expertise, and what they bring to the firm.</p>
+        <img class="team-photo" src="assets/team/steven-richer.jpeg" alt="Steven Richer">
+        <h3 class="team-name">Steven Richer</h3>
+        <div class="team-title">Partner</div>
+        <p class="team-bio">Product and program leader with 15+ years supporting startups worldwide through incubator programs.</p>
       </div>
       <div class="team-card">
-        <div class="team-photo" aria-hidden="true">03</div>
-        <h3 class="team-name">Team Member Three</h3>
-        <div class="team-title">Role Placeholder</div>
-        <p class="team-bio">Short bio placeholder. A sentence or two about their background, expertise, and what they bring to the firm.</p>
+        <img class="team-photo" src="assets/team/shawheen-attar.jpeg" alt="Shawheen Attar">
+        <h3 class="team-name">Shawheen Attar</h3>
+        <div class="team-title">Partner</div>
+        <p class="team-bio">Entrepreneur with engineering, product, and process optimization experience. 8+ years running startups and advising founders.</p>
       </div>
       <div class="team-card">
-        <div class="team-photo" aria-hidden="true">04</div>
-        <h3 class="team-name">Team Member Four</h3>
-        <div class="team-title">Role Placeholder</div>
-        <p class="team-bio">Short bio placeholder. A sentence or two about their background, expertise, and what they bring to the firm.</p>
-      </div>
-      <div class="team-card">
-        <div class="team-photo" aria-hidden="true">05</div>
-        <h3 class="team-name">Team Member Five</h3>
-        <div class="team-title">Role Placeholder</div>
-        <p class="team-bio">Short bio placeholder. A sentence or two about their background, expertise, and what they bring to the firm.</p>
-      </div>
-      <div class="team-card">
-        <div class="team-photo" aria-hidden="true">06</div>
-        <h3 class="team-name">Team Member Six</h3>
-        <div class="team-title">Role Placeholder</div>
-        <p class="team-bio">Short bio placeholder. A sentence or two about their background, expertise, and what they bring to the firm.</p>
+        <img class="team-photo" src="assets/team/aakarsh-malhotra.jpeg" alt="Aakarsh Malhotra">
+        <h3 class="team-name">Aakarsh Malhotra</h3>
+        <div class="team-title">Junior Venture Partner</div>
+        <p class="team-bio">Startup advisor, venture and ecosystem builder, previously accelerator programs and operations lead. 7+ years experience in startups, investments, M&amp;A consulting, and entrepreneurship.</p>
       </div>
     </div>
   </div>
