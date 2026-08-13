@@ -799,6 +799,58 @@
     color: var(--muted-dark);
   }
 
+  /* ---------- TEAM ---------- */
+  .team-header {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 40px; align-items: end;
+    margin-bottom: 72px;
+  }
+  @media (max-width: 880px) { .team-header { grid-template-columns: 1fr; gap: 24px; margin-bottom: 48px; } }
+  .team-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 56px 40px;
+  }
+  @media (max-width: 880px) { .team-grid { grid-template-columns: repeat(2, 1fr); gap: 48px 32px; } }
+  @media (max-width: 560px) { .team-grid { grid-template-columns: 1fr; gap: 40px; } }
+  .team-card { text-align: left; }
+  .team-photo {
+    width: 140px; height: 140px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--line);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-mono);
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--ventures);
+    letter-spacing: 0.1em;
+    margin-bottom: 22px;
+  }
+  .team-name {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 22px;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: #fff;
+    margin: 0 0 6px;
+  }
+  .team-title {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ventures);
+    margin-bottom: 14px;
+  }
+  .team-bio {
+    font-size: 15px;
+    line-height: 1.6;
+    color: rgba(255,255,255,0.65);
+    margin: 0;
+  }
+
   /* ---------- FINAL CTA ---------- */
   .final-cta {
     padding: 140px 0 100px;
@@ -1089,6 +1141,7 @@
       <a href="#thesis" class="nav-link">Thesis</a>
       <a href="#ecosystem" class="nav-link">Ecosystem</a>
       <a href="#portfolio" class="nav-link">Portfolio</a>
+      <a href="#team" class="nav-link">Team</a>
     </div>
     <a href="https://app.matchplaygroup.com" target="_blank" rel="noopener" class="nav-cta">Apply →</a>
   </nav>
@@ -1329,6 +1382,59 @@
       <div class="stat">
         <div class="stat-num">150<span class="unit">+</span></div>
         <div class="stat-label">Funds in the syndicate</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== TEAM ========== -->
+<section id="team" class="section section-dark">
+  <div class="container">
+    <div class="team-header in-view-target">
+      <h2 class="ecosystem-title">
+        <span class="line">The team.</span>
+      </h2>
+      <p class="ecosystem-intro">
+        The operators, investors, and builders behind MatchPlay Ventures.
+      </p>
+    </div>
+
+    <div class="team-grid in-view-target">
+      <div class="team-card">
+        <div class="team-photo" aria-hidden="true">01</div>
+        <h3 class="team-name">Team Member One</h3>
+        <div class="team-title">Role Placeholder</div>
+        <p class="team-bio">Short bio placeholder. A sentence or two about their background, expertise, and what they bring to the firm.</p>
+      </div>
+      <div class="team-card">
+        <div class="team-photo" aria-hidden="true">02</div>
+        <h3 class="team-name">Team Member Two</h3>
+        <div class="team-title">Role Placeholder</div>
+        <p class="team-bio">Short bio placeholder. A sentence or two about their background, expertise, and what they bring to the firm.</p>
+      </div>
+      <div class="team-card">
+        <div class="team-photo" aria-hidden="true">03</div>
+        <h3 class="team-name">Team Member Three</h3>
+        <div class="team-title">Role Placeholder</div>
+        <p class="team-bio">Short bio placeholder. A sentence or two about their background, expertise, and what they bring to the firm.</p>
+      </div>
+      <div class="team-card">
+        <div class="team-photo" aria-hidden="true">04</div>
+        <h3 class="team-name">Team Member Four</h3>
+        <div class="team-title">Role Placeholder</div>
+        <p class="team-bio">Short bio placeholder. A sentence or two about their background, expertise, and what they bring to the firm.</p>
+      </div>
+      <div class="team-card">
+        <div class="team-photo" aria-hidden="true">05</div>
+        <h3 class="team-name">Team Member Five</h3>
+        <div class="team-title">Role Placeholder</div>
+        <p class="team-bio">Short bio placeholder. A sentence or two about their background, expertise, and what they bring to the firm.</p>
+      </div>
+      <div class="team-card">
+        <div class="team-photo" aria-hidden="true">06</div>
+        <h3 class="team-name">Team Member Six</h3>
+        <div class="team-title">Role Placeholder</div>
+        <p class="team-bio">Short bio placeholder. A sentence or two about their background, expertise, and what they bring to the firm.</p>
       </div>
     </div>
   </div>
