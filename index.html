@@ -957,23 +957,26 @@
   }
   .portco-modal-close:hover { background: var(--ink); color: #fff; border-color: var(--ink); }
   .portco-modal-header {
-    display: flex; flex-direction: column; align-items: stretch;
+    display: flex; align-items: center; gap: 18px;
     margin-bottom: 24px;
   }
   .portco-modal-logo {
-    width: 100%;
-    aspect-ratio: 16/9;
+    width: 88px; height: 88px;
+    flex-shrink: 0;
     display: flex; align-items: center; justify-content: center;
     background: #fff;
     border: 1px solid var(--line-dark);
     border-radius: 14px;
-    padding: 32px;
-    margin-bottom: 24px;
+    padding: 12px;
   }
   .portco-modal-logo img {
-    max-width: 70%; max-height: 100%;
+    max-width: 100%; max-height: 100%;
     width: auto; height: auto;
     object-fit: contain;
+  }
+  .portco-modal-headings { min-width: 0; }
+  @media (max-width: 480px) {
+    .portco-modal-logo { width: 72px; height: 72px; }
   }
   .portco-modal-headings h3 {
     font-family: var(--font-display);
@@ -1433,7 +1436,7 @@
         title: 'CEO',
         photo: 'assets/founders/harsha-rajasimha.png',
       },
-      blog: 'blog/jeeva.html',
+      blog: 'portfolio/jeeva/',
     },
     neurovrd: {
       name: 'NeuroVRD',
@@ -1442,7 +1445,7 @@
       logo: 'portco-logos/neurovrd.png',
       tag: 'MedTech',
       desc: 'NeuroVRD is pioneering the Sentinel AI-IONM Platform, an AI-enabled software solution to detect the onset of neurovascular irritation during high-risk surgeries. Our mission is to make IONM available universally to all high-risk surgeries.',
-      blog: 'blog/neurovrd.html',
+      blog: 'portfolio/neurovrd/',
     },
     tenzr: {
       name: 'Tenzr Health',
@@ -1456,7 +1459,7 @@
         title: 'CEO',
         photo: 'assets/founders/lukas-karim-merhi.jpeg',
       },
-      blog: 'blog/tenzr.html',
+      blog: 'portfolio/tenzr/',
     },
     geneial: {
       name: 'Geneial',
@@ -1470,7 +1473,7 @@
         title: 'CEO',
         photo: 'assets/founders/adam-hansen.png',
       },
-      blog: 'blog/geneial.html',
+      blog: 'portfolio/geneial/',
     },
     solution: {
       name: 'SOLUtion Medical',
@@ -1484,11 +1487,11 @@
         title: 'Founder',
         photo: 'assets/founders/julia-anthony.png',
       },
-      blog: 'blog/solution.html',
+      blog: 'portfolio/solution/',
     },
     kbo: {
       name: 'KBO Systems',
-      site: 'https://www.kbosystems.com/',
+      site: 'https://kbosystems.com/',
       siteLabel: 'kbosystems.com',
       logo: 'portco-logos/kbo.png',
       tag: 'Neuro Monitoring',
