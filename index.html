@@ -808,6 +808,14 @@
   @media (max-width: 880px) { .team-header { grid-template-columns: 1fr; gap: 24px; margin-bottom: 48px; } }
   #team .ecosystem-title { color: var(--ink); }
   #team .ecosystem-intro { color: var(--ink-soft); }
+  .team-card:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+    justify-self: center;
+    max-width: calc(50% - 24px);
+  }
+  @media (max-width: 640px) {
+    .team-card:last-child:nth-child(odd) { max-width: none; }
+  }
   .team-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -1418,7 +1426,7 @@
         <img class="team-photo" src="assets/team/steven-richer.jpeg" alt="Steven Richer">
         <div class="team-info">
           <h3 class="team-name">Steven Richer</h3>
-          <div class="team-title">Partner</div>
+          <div class="team-title">Venture Partner</div>
           <p class="team-bio">Product and program leader with 15+ years supporting startups worldwide through incubator programs.</p>
         </div>
       </div>
@@ -1426,7 +1434,7 @@
         <img class="team-photo" src="assets/team/shawheen-attar.jpeg" alt="Shawheen Attar">
         <div class="team-info">
           <h3 class="team-name">Shawheen Attar</h3>
-          <div class="team-title">Partner</div>
+          <div class="team-title">Venture Partner</div>
           <p class="team-bio">Entrepreneur with engineering, product, and process optimization experience. 8+ years running startups and advising founders.</p>
         </div>
       </div>
@@ -1436,6 +1444,14 @@
           <h3 class="team-name">Aakarsh Malhotra</h3>
           <div class="team-title">Junior Venture Partner</div>
           <p class="team-bio">Startup advisor, venture and ecosystem builder, previously accelerator programs and operations lead. 7+ years experience in startups, investments, M&amp;A consulting, and entrepreneurship.</p>
+        </div>
+      </div>
+      <div class="team-card">
+        <img class="team-photo" src="assets/team/karim-refaey.jpg" alt="Karim ReFaey">
+        <div class="team-info">
+          <h3 class="team-name">Karim ReFaey</h3>
+          <div class="team-title">Venture Partner</div>
+          <p class="team-bio">Physician-scientist and inventor with clinical neuroscience training at Johns Hopkins and Mayo Clinic. Former Scientific Affairs lead at Abbott. Leads MatchPlay's GTM, IP, and regulatory diligence.</p>
         </div>
       </div>
     </div>
