@@ -477,12 +477,42 @@
   @media (max-width: 880px) { .ecosystem-intro { justify-self: start; } }
 
   .cards {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 460px));
-    gap: 16px;
-    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    max-width: 960px;
+    margin: 0 auto;
   }
-  @media (max-width: 1024px) { .cards { grid-template-columns: minmax(0, 460px); } }
+  .audience-group { display: flex; flex-direction: column; }
+  .audience-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted-dark);
+    margin-bottom: 16px;
+    display: inline-flex; align-items: center; gap: 10px;
+  }
+  .audience-label::before {
+    content: ''; width: 32px; height: 2px;
+    background: currentColor;
+  }
+  .audience-label-ventures { color: var(--ventures); }
+  .audience-label-ventures::before { background: var(--ventures); }
+  .audience-label-group { color: var(--group); }
+  .audience-label-group::before { background: var(--group); }
+  .audience-box {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    padding: 20px;
+    border: 1px solid var(--line);
+    border-radius: 24px;
+    background: rgba(255,255,255,0.015);
+  }
+  @media (max-width: 1024px) { .audience-box { grid-template-columns: minmax(0, 1fr); } }
+  .card-standalone { max-width: 460px; }
 
   .card {
     position: relative;
@@ -509,6 +539,7 @@
   .card-1 { --card-accent: var(--ventures); }
   .card-2 { --card-accent: var(--group); }
   .card-3 { --card-accent: var(--navigator); }
+  .card-4 { --card-accent: var(--ventures); }
 
   .card-num {
     font-family: var(--font-mono);
@@ -1245,28 +1276,47 @@
     </div>
 
     <div class="cards in-view-target">
-      <!-- Card 1: Ventures -->
-      <div class="card card-1">
-        <div class="card-orb"></div>
-        <h3 class="card-name">MatchPlay Ventures</h3>
-        <p class="card-tagline">Direct investment.</p>
-        <p class="card-body">
-          Direct investment in early-stage outliers across Life Sciences, FinTech, and Energy. We back conviction bets with capital and hands-on partnership.
-        </p>
+      <!-- For Investors -->
+      <div class="audience-group">
+        <div class="audience-label audience-label-ventures">For Investors</div>
+        <div class="audience-box">
+          <!-- Ventures -->
+          <div class="card card-1">
+            <div class="card-orb"></div>
+            <h3 class="card-name">MatchPlay Ventures</h3>
+            <p class="card-tagline">Direct investment.</p>
+            <p class="card-body">
+              Direct investment in early-stage outliers across Life Sciences, FinTech, and Energy. We back conviction bets with capital and hands-on partnership.
+            </p>
+          </div>
+
+          <!-- Capital Partners (new) -->
+          <div class="card card-4">
+            <div class="card-orb"></div>
+            <h3 class="card-name">MatchPlay Capital Partners</h3>
+            <p class="card-tagline">Placeholder tagline.</p>
+            <p class="card-body">
+              Placeholder description for MatchPlay Capital Partners. A short paragraph explaining what this offering does and who it serves will live here.
+            </p>
+          </div>
+        </div>
       </div>
 
-      <!-- Card 2: Group -->
-      <a href="https://www.matchplaygroup.com" target="_blank" rel="noopener" class="card card-2">
-        <div class="card-orb"></div>
-        <h3 class="card-name">MatchPlay Group</h3>
-        <p class="card-tagline">Syndicate of funds.</p>
-        <p class="card-body">
-          Vetted investor network of 200+ funds powered by MatchPlay's Due Diligence, designed for founders to connect to funders.
-        </p>
-        <div class="card-link">
-          <span class="card-arrow"><span class="card-arrow-label">Learn more</span> ↗</span>
-        </div>
-      </a>
+      <!-- For Founders -->
+      <div class="audience-group">
+        <div class="audience-label audience-label-group">For Founders</div>
+        <a href="https://www.matchplaygroup.com" target="_blank" rel="noopener" class="card card-2 card-standalone">
+          <div class="card-orb"></div>
+          <h3 class="card-name">MatchPlay Group</h3>
+          <p class="card-tagline">Syndicate of funds.</p>
+          <p class="card-body">
+            Vetted investor network of 200+ funds powered by MatchPlay's Due Diligence, designed for founders to connect to funders.
+          </p>
+          <div class="card-link">
+            <span class="card-arrow"><span class="card-arrow-label">Learn more</span> ↗</span>
+          </div>
+        </a>
+      </div>
 
       <!-- Card 3: Navigator (hidden) -->
       <a href="#navigator" class="card card-3" style="display:none;">
