@@ -74,6 +74,7 @@
     transition: all 0.2s ease;
   }
   .nav-link:hover { color: #fff; background: rgba(255,255,255,0.06); }
+  .nav-link[aria-current="page"] { color: #fff; background: rgba(255,255,255,0.08); }
   .nav-cta {
     margin-left: 4px;
     padding: 9px 18px;
@@ -431,6 +432,7 @@
       <a href="../index.html#ecosystem" class="nav-link">Ecosystem</a>
       <a href="../index.html#portfolio" class="nav-link">Portfolio</a>
       <a href="../index.html#team" class="nav-link">Team</a>
+      <a href="./" class="nav-link" aria-current="page">Capital Partners</a>
     </div>
     <a href="#join" class="nav-cta">Join →</a>
   </nav>
