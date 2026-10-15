@@ -84,7 +84,8 @@
     height: 22px; width: auto; display: block;
   }
   .nav-links { display: flex; gap: 4px; }
-  .nav-aux { display: flex; align-items: center; padding-left: 8px; border-left: 1px solid var(--line); }
+  .nav-aux { display: flex; align-items: center; gap: 8px; }
+  .nav-aux::before { content: ''; width: 1px; height: 22px; background: var(--line); }
   .nav-link {
     padding: 8px 14px;
     font-size: 13.5px; font-weight: 500;
@@ -108,7 +109,7 @@
     .nav-links { display: none; }
     .nav { padding: 8px 8px 8px 16px; }
     .nav-brand { padding-right: 12px; }
-    .nav-aux { border-left: none; padding-left: 0; }
+    .nav-aux::before { display: none; }
   }
 
   /* ---------- HERO ---------- */
