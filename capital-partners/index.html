@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Capital Partners: Invest alongside MatchPlay Ventures</title>
+<meta name="description" content="MatchPlay Capital Partners is a co-investment network for accredited investors, family offices, funds, and strategic investors who invest alongside MatchPlay Ventures in diligenced, selectively sponsored opportunities." />
+
+<link rel="icon" type="image/png" href="../assets/favicon.png" />
+<link rel="apple-touch-icon" href="../assets/favicon.png" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@100;200;300;400;500;600;700;800&family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+<style>
+  :root {
+    --bg-dark: #0A0A0A;
+    --bg-light: #F5F2EC;
+    --ink: #0A0A0A;
+    --ink-soft: #2A2A2A;
+    --line: rgba(255,255,255,0.10);
+    --line-dark: rgba(10,10,10,0.10);
+    --muted-dark: rgba(255,255,255,0.55);
+    --muted-light: rgba(10,10,10,0.55);
+    --ventures: #F97D4A;
+    --font-display: "Sora", "Helvetica Neue", Arial, sans-serif;
+    --font-body: "Geist", -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+  body {
+    margin: 0;
+    background: var(--bg-dark);
+    color: #fff;
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.55;
+    overflow-x: hidden;
+  }
+  a { color: inherit; text-decoration: none; }
+  h1, h2, h3, p, ul, ol { margin: 0; }
+  ul, ol { padding: 0; list-style: none; }
+
+  .container { width: 100%; max-width: 1280px; margin: 0 auto; padding: 0 32px; }
+  @media (max-width: 640px) { .container { padding: 0 20px; } }
+
+  /* ---------- NAV (mirrors homepage) ---------- */
+  .nav-wrap {
+    position: fixed; top: 20px; left: 0; right: 0; z-index: 50;
+    display: flex; justify-content: center; pointer-events: none;
+  }
+  .nav {
+    pointer-events: auto;
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 8px 8px 22px;
+    background: rgba(15,15,15,0.72);
+    backdrop-filter: blur(18px) saturate(1.2);
+    -webkit-backdrop-filter: blur(18px) saturate(1.2);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+  }
+  .nav-brand { display: flex; align-items: center; padding-right: 18px; border-right: 1px solid var(--line); }
+  .nav-brand-mark { height: 22px; width: auto; display: block; }
+  .nav-links { display: flex; gap: 4px; }
+  .nav-link {
+    padding: 8px 14px;
+    font-size: 13.5px; font-weight: 500;
+    color: rgba(255,255,255,0.72);
+    border-radius: 999px;
+    transition: all 0.2s ease;
+  }
+  .nav-link:hover { color: #fff; background: rgba(255,255,255,0.06); }
+  .nav-link[aria-current="page"] { color: #fff; background: rgba(255,255,255,0.08); }
+  .nav-cta {
+    margin-left: 4px;
+    padding: 9px 18px;
+    font-size: 13.5px; font-weight: 500;
+    background: var(--ventures); color: #fff;
+    border-radius: 999px;
+    transition: all 0.2s ease;
+  }
+  .nav-cta:hover { background: #fff; color: var(--ink); }
+  @media (max-width: 880px) {
+    .nav-links { display: none; }
+    .nav { padding: 8px 8px 8px 16px; }
+    .nav-brand { padding-right: 12px; }
+  }
+
+  /* ---------- BUTTONS ---------- */
+  .btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 16px 28px;
+    font-size: 14px; font-weight: 500;
+    border-radius: 999px;
+    transition: all 0.25s cubic-bezier(.2,.8,.2,1);
+    white-space: nowrap;
+  }
+  .btn-primary { background: var(--ventures); color: #fff; }
+  .btn-primary:hover { background: #fff; color: var(--ink); transform: translateY(-1px); }
+  .btn-secondary {
+    color: rgba(255,255,255,0.7);
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+    border-radius: 0;
+  }
+  .btn-secondary:hover { color: #fff; border-bottom-color: #fff; }
+  .btn:focus-visible, .nav-cta:focus-visible, .nav-link:focus-visible {
+    outline: 2px solid var(--ventures); outline-offset: 3px;
+  }
+
+  /* ---------- SECTION SHELL ---------- */
+  .section { padding: 120px 0; position: relative; }
+  @media (max-width: 720px) { .section { padding: 80px 0; } }
+  .section-light { background: var(--bg-light); color: var(--ink); }
+  .section-label {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-family: var(--font-mono);
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--ventures);
+    margin-bottom: 28px;
+  }
+  .section-label::before { content: ''; width: 32px; height: 2px; background: currentColor; }
+
+  .cp-title {
+    font-family: var(--font-display);
+    font-size: clamp(36px, 5vw, 64px);
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: -0.03em;
+  }
+  .cp-title em { font-style: italic; font-weight: 400; color: var(--ventures); }
+
+  .cp-header {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 40px; align-items: end;
+    margin-bottom: 64px;
+  }
+  .cp-intro { font-size: 17px; line-height: 1.6; max-width: 460px; justify-self: end; color: rgba(255,255,255,0.7); }
+  .section-light .cp-intro { color: var(--ink-soft); }
+  @media (max-width: 880px) {
+    .cp-header { grid-template-columns: 1fr; gap: 20px; margin-bottom: 48px; }
+    .cp-intro { justify-self: start; }
+  }
+
+  .num {
+    font-family: var(--font-mono);
+    font-size: 12px; font-weight: 500;
+    letter-spacing: 0.16em;
+    color: var(--ventures);
+  }
+
+  /* ---------- HERO ---------- */
+  .cp-hero {
+    position: relative;
+    padding: 200px 0 120px;
+    overflow: hidden;
+  }
+  .cp-hero-dots {
+    position: absolute; inset: 0;
+    background-image: radial-gradient(circle at center, rgba(255,255,255,0.10) 1.2px, transparent 1.5px);
+    background-size: 32px 32px;
+    mask-image: radial-gradient(ellipse 70% 70% at 30% 40%, #000 25%, transparent 80%);
+    -webkit-mask-image: radial-gradient(ellipse 70% 70% at 30% 40%, #000 25%, transparent 80%);
+  }
+  .cp-hero-glow {
+    position: absolute;
+    width: 760px; height: 760px;
+    left: 10%; top: 0;
+    background: radial-gradient(circle, rgba(249,125,74,0.13) 0%, transparent 60%);
+    filter: blur(40px);
+    pointer-events: none;
+  }
+  .cp-hero .container { position: relative; z-index: 1; }
+  .cp-hero-title {
+    font-family: var(--font-display);
+    font-size: clamp(48px, 7.5vw, 104px);
+    font-weight: 600;
+    line-height: 0.95;
+    letter-spacing: -0.04em;
+    max-width: 14ch;
+  }
+  .cp-hero-title em { font-style: italic; font-weight: 400; color: var(--ventures); }
+  .cp-hero-sub {
+    margin-top: 32px;
+    font-size: clamp(17px, 1.5vw, 20px);
+    line-height: 1.5;
+    color: rgba(255,255,255,0.8);
+    max-width: 640px;
+  }
+  .cp-hero-ctas { margin-top: 40px; display: flex; align-items: center; gap: 28px; flex-wrap: wrap; }
+  .cp-hero-for {
+    margin-top: 72px;
+    padding-top: 28px;
+    border-top: 1px solid var(--line);
+    display: flex; align-items: center; gap: 16px 24px; flex-wrap: wrap;
+  }
+  .cp-hero-for-label {
+    font-family: var(--font-mono);
+    font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--muted-dark);
+  }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip {
+    padding: 7px 14px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-size: 13px;
+    color: rgba(255,255,255,0.8);
+  }
+
+  /* ---------- WHY: pillars ---------- */
+  .pillars {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    border-top: 1px solid var(--line-dark);
+    border-bottom: 1px solid var(--line-dark);
+  }
+  .pillar { padding: 40px 28px 40px 0; }
+  .pillar + .pillar { padding-left: 28px; border-left: 1px solid var(--line-dark); }
+  .pillar h3 {
+    font-family: var(--font-display);
+    font-size: 22px; font-weight: 500;
+    letter-spacing: -0.02em; line-height: 1.2;
+    margin: 18px 0 12px;
+  }
+  .pillar p { font-size: 15.5px; line-height: 1.6; color: var(--ink-soft); }
+  @media (max-width: 1024px) {
+    .pillars { grid-template-columns: repeat(2, 1fr); }
+    .pillar, .pillar + .pillar { padding: 36px 24px; border-left: none; }
+    .pillar:nth-child(even) { border-left: 1px solid var(--line-dark); }
+    .pillar:nth-child(n+3) { border-top: 1px solid var(--line-dark); }
+  }
+  @media (max-width: 600px) {
+    .pillars { grid-template-columns: 1fr; }
+    .pillar, .pillar + .pillar, .pillar:nth-child(even) { padding: 32px 0; border-left: none; }
+    .pillar + .pillar { border-top: 1px solid var(--line-dark); }
+  }
+
+  /* ---------- HOW: steps ---------- */
+  .steps { border-top: 1px solid var(--line); }
+  .step {
+    display: grid;
+    grid-template-columns: 80px minmax(180px, 280px) 1fr;
+    gap: 24px;
+    align-items: baseline;
+    padding: 32px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .step h3 {
+    font-family: var(--font-display);
+    font-size: 24px; font-weight: 500;
+    letter-spacing: -0.02em;
+  }
+  .step p { font-size: 16.5px; line-height: 1.6; color: rgba(255,255,255,0.72); max-width: 640px; }
+  .step-you h3 { color: var(--ventures); }
+  @media (max-width: 760px) {
+    .step { grid-template-columns: 48px 1fr; gap: 8px 16px; }
+    .step p { grid-column: 2; }
+  }
+
+  /* ---------- WHAT YOU SEE: items ---------- */
+  .items { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .item {
+    background: #fff;
+    border: 1px solid var(--line-dark);
+    border-radius: 20px;
+    padding: 28px;
+  }
+  .item h3 {
+    font-family: var(--font-display);
+    font-size: 20px; font-weight: 500;
+    letter-spacing: -0.01em;
+    margin: 14px 0 8px;
+  }
+  .item p { font-size: 15.5px; line-height: 1.55; color: var(--ink-soft); }
+  @media (max-width: 1024px) { .items { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 600px) { .items { grid-template-columns: 1fr; } }
+
+  /* ---------- SPV + ECONOMICS: split ---------- */
+  .split { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .panel {
+    border: 1px solid var(--line);
+    border-radius: 24px;
+    background: rgba(255,255,255,0.03);
+    padding: 40px 36px;
+  }
+  .panel h3 {
+    font-family: var(--font-display);
+    font-size: 26px; font-weight: 500;
+    letter-spacing: -0.02em;
+    margin-bottom: 14px;
+  }
+  .panel > p { font-size: 16px; line-height: 1.6; color: rgba(255,255,255,0.72); }
+  .ticks { margin-top: 24px; display: grid; gap: 12px; }
+  .ticks li { display: flex; gap: 12px; font-size: 15.5px; color: rgba(255,255,255,0.85); }
+  .ticks li::before {
+    content: ''; flex-shrink: 0;
+    width: 6px; height: 6px; margin-top: 9px;
+    border-radius: 50%; background: var(--ventures);
+  }
+  .terms { margin-top: 24px; border-top: 1px solid var(--line); }
+  .terms li {
+    display: grid; grid-template-columns: 170px 1fr; gap: 16px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 15px; line-height: 1.5;
+  }
+  .terms strong { font-weight: 500; color: #fff; }
+  .terms span { color: rgba(255,255,255,0.65); }
+  .footnote {
+    margin-top: 20px;
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--muted-dark);
+  }
+  @media (max-width: 880px) { .split { grid-template-columns: 1fr; } }
+  @media (max-width: 480px) {
+    .panel { padding: 32px 24px; }
+    .terms li { grid-template-columns: 1fr; gap: 4px; }
+  }
+
+  /* ---------- AFTER ---------- */
+  .after { display: grid; grid-template-columns: 1.3fr 1fr; gap: 56px; align-items: start; }
+  .after-list { border-top: 1px solid var(--line-dark); }
+  .after-list li {
+    display: grid; grid-template-columns: 200px 1fr; gap: 16px;
+    padding: 22px 0;
+    border-bottom: 1px solid var(--line-dark);
+  }
+  .after-list strong {
+    font-family: var(--font-display);
+    font-size: 18px; font-weight: 500; letter-spacing: -0.01em;
+  }
+  .after-list span { font-size: 15.5px; line-height: 1.55; color: var(--ink-soft); }
+  .callout {
+    position: relative;
+    background: var(--ink);
+    color: #fff;
+    border-radius: 24px;
+    padding: 40px 36px;
+    overflow: hidden;
+  }
+  .callout::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: var(--ventures);
+  }
+  .callout h3 {
+    font-family: var(--font-display);
+    font-size: 28px; font-weight: 500; letter-spacing: -0.02em;
+    margin: 16px 0 14px;
+  }
+  .callout p { font-size: 16px; line-height: 1.6; color: rgba(255,255,255,0.75); }
+  .callout p + p { margin-top: 16px; color: #fff; font-family: var(--font-display); font-style: italic; font-size: 18px; }
+  @media (max-width: 960px) { .after { grid-template-columns: 1fr; gap: 40px; } }
+  @media (max-width: 520px) { .after-list li { grid-template-columns: 1fr; gap: 6px; } }
+
+  /* ---------- FINAL CTA ---------- */
+  .cp-cta {
+    position: relative;
+    padding: 140px 0 120px;
+    text-align: center;
+    overflow: hidden;
+    border-top: 1px solid var(--line);
+  }
+  .cp-cta-dots {
+    position: absolute; inset: 0;
+    background-image: radial-gradient(circle at center, rgba(255,255,255,0.08) 1.2px, transparent 1.5px);
+    background-size: 28px 28px;
+    mask-image: radial-gradient(ellipse 60% 60% at 50% 50%, #000 30%, transparent 80%);
+    -webkit-mask-image: radial-gradient(ellipse 60% 60% at 50% 50%, #000 30%, transparent 80%);
+  }
+  .cp-cta .container { position: relative; z-index: 1; }
+  .cp-cta-title {
+    font-family: var(--font-display);
+    font-size: clamp(48px, 7.5vw, 104px);
+    font-weight: 500;
+    letter-spacing: -0.04em;
+    line-height: 0.95;
+  }
+  .cp-cta-title em { font-style: italic; font-weight: 400; color: var(--ventures); }
+  .cp-cta-sub {
+    margin: 28px auto 0;
+    max-width: 520px;
+    font-size: 18px; line-height: 1.5;
+    color: rgba(255,255,255,0.7);
+  }
+  .cp-cta .chips { justify-content: center; margin: 36px auto 0; max-width: 680px; }
+  .cp-cta-actions { margin-top: 44px; display: flex; justify-content: center; align-items: center; gap: 28px; flex-wrap: wrap; }
+  .btn-large { padding: 22px 44px; font-size: 15px; }
+
+  /* ---------- FOOTER ---------- */
+  footer { border-top: 1px solid var(--line); padding: 64px 0 40px; }
+  .footer-top { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 64px; }
+  @media (max-width: 880px) { .footer-top { grid-template-columns: 1fr 1fr; gap: 40px; } }
+  .footer-brand { font-family: var(--font-display); font-size: 24px; font-weight: 500; letter-spacing: -0.01em; margin-bottom: 16px; }
+  .footer-tag { font-size: 14px; color: var(--muted-dark); line-height: 1.55; max-width: 320px; }
+  .footer-col h4 {
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--muted-dark); margin: 0 0 18px; font-weight: 500;
+  }
+  .footer-col ul { display: flex; flex-direction: column; gap: 10px; }
+  .footer-col a { font-size: 14px; color: rgba(255,255,255,0.85); transition: color 0.2s; }
+  .footer-col a:hover { color: var(--ventures); }
+  .footer-bottom {
+    border-top: 1px solid var(--line); padding-top: 24px;
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; color: var(--muted-dark);
+  }
+
+  /* ---------- REVEAL ---------- */
+  .in-view-target { opacity: 0; transform: translateY(20px); transition: opacity 0.8s ease, transform 0.8s ease; }
+  .in-view-target.visible { opacity: 1; transform: translateY(0); }
+  @media (prefers-reduced-motion: reduce) {
+    .in-view-target { opacity: 1; transform: none; transition: none; }
+    html { scroll-behavior: auto; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ========== NAV ========== -->
+<div class="nav-wrap">
+  <nav class="nav">
+    <div class="nav-brand">
+      <a href="../index.html"><img class="nav-brand-mark" src="../logo/logo.png" alt="Matchplay Ventures"></a>
+    </div>
+    <div class="nav-links">
+      <a href="../index.html#thesis" class="nav-link">Thesis</a>
+      <a href="../index.html#ecosystem" class="nav-link">Ecosystem</a>
+      <a href="../index.html#portfolio" class="nav-link">Portfolio</a>
+      <a href="./" class="nav-link" aria-current="page">Capital Partners</a>
+      <a href="../index.html#team" class="nav-link">Team</a>
+    </div>
+    <a href="#join" class="nav-cta">Join →</a>
+  </nav>
+</div>
+
+<!-- ========== HERO ========== -->
+<header class="cp-hero">
+  <div class="cp-hero-dots"></div>
+  <div class="cp-hero-glow"></div>
+  <div class="container">
+    <div class="section-label">Capital Partners</div>
+    <h1 class="cp-hero-title">Invest alongside <em>MatchPlay Ventures.</em></h1>
+    <p class="cp-hero-sub">
+      Capital Partners is our co-investment network. We source broadly, diligence deeply, and sponsor select opportunities where we have conviction. You choose which ones to join.
+    </p>
+    <div class="cp-hero-ctas">
+      <a href="#join" class="btn btn-primary">Join Capital Partners <span class="arrow">↗</span></a>
+      <a href="#how" class="btn btn-secondary">How it works</a>
+    </div>
+    <div class="cp-hero-for">
+      <span class="cp-hero-for-label">Built for</span>
+      <ul class="chips">
+        <li class="chip">Accredited investors</li>
+        <li class="chip">Family offices</li>
+        <li class="chip">Venture funds</li>
+        <li class="chip">Angel groups</li>
+        <li class="chip">Strategic investors</li>
+        <li class="chip">Independent investors</li>
+      </ul>
+    </div>
+  </div>
+</header>
+
+<!-- ========== WHY ========== -->
+<section class="section section-light" id="why">
+  <div class="container">
+    <div class="cp-header in-view-target">
+      <h2 class="cp-title">More than deal flow.<br><em>A better way to evaluate it.</em></h2>
+      <p class="cp-intro">Private-market investors don't need more companies in their inbox. They need clearer rationale and opportunities that fit their strategy.</p>
+    </div>
+    <div class="pillars in-view-target">
+      <div class="pillar">
+        <span class="num">01</span>
+        <h3>Curated, not a marketplace</h3>
+        <p>We only share opportunities MatchPlay Ventures has chosen to back. Most companies we evaluate never reach Capital Partners.</p>
+      </div>
+      <div class="pillar">
+        <span class="num">02</span>
+        <h3>Diligence-backed</h3>
+        <p>Every opportunity comes with our thesis, key findings, and the risks we see, not just a pitch deck.</p>
+      </div>
+      <div class="pillar">
+        <span class="num">03</span>
+        <h3>Your call, every time</h3>
+        <p>There is no obligation to invest. Review each opportunity on its own and participate only when it fits.</p>
+      </div>
+      <div class="pillar">
+        <span class="num">04</span>
+        <h3>Infrastructure handled</h3>
+        <p>Invest through MatchPlay-sponsored SPVs, with subscriptions, reporting, K-1s, and distributions managed for you.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== HOW IT WORKS ========== -->
+<section class="section" id="how">
+  <div class="container">
+    <div class="cp-header in-view-target">
+      <h2 class="cp-title">How it <em>works.</em></h2>
+      <p class="cp-intro">Five steps from sourcing to your decision. Only the last one is yours, and it's always optional.</p>
+    </div>
+    <ol class="steps in-view-target">
+      <li class="step">
+        <span class="num">01</span>
+        <h3>We source</h3>
+        <p>Broadly: founders, other funds, universities, accelerators, industry relationships, and MatchPlay Group.</p>
+      </li>
+      <li class="step">
+        <span class="num">02</span>
+        <h3>We diligence</h3>
+        <p>Team, market, technology, IP, regulatory, commercialization, financials, and valuation. Depth scales with sector, stage, and complexity.</p>
+      </li>
+      <li class="step">
+        <span class="num">03</span>
+        <h3>We decide</h3>
+        <p>Diligence informs the decision; it doesn't make it. MatchPlay Ventures decides independently, and being a MatchPlay Group client never guarantees our capital.</p>
+      </li>
+      <li class="step">
+        <span class="num">04</span>
+        <h3>We invest</h3>
+        <p>When we have conviction, we invest directly or sponsor an SPV, then invite Capital Partners to review the opportunity.</p>
+      </li>
+      <li class="step step-you">
+        <span class="num">05</span>
+        <h3>You decide</h3>
+        <p>Participation is optional, deal by deal, based on your own thesis, risk tolerance, and check size.</p>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<!-- ========== WHAT YOU SEE ========== -->
+<section class="section section-light" id="materials">
+  <div class="container">
+    <div class="cp-header in-view-target">
+      <h2 class="cp-title">What you see<br><em>before you invest.</em></h2>
+      <p class="cp-intro">Each opportunity arrives as a complete package, so you start with our full reasoning instead of a deck.</p>
+    </div>
+    <div class="items in-view-target">
+      <div class="item">
+        <span class="num">01</span>
+        <h3>Investment overview</h3>
+        <p>The company, the problem it solves, and the financing.</p>
+      </div>
+      <div class="item">
+        <span class="num">02</span>
+        <h3>Our thesis</h3>
+        <p>Why we believe the opportunity deserves your consideration.</p>
+      </div>
+      <div class="item">
+        <span class="num">03</span>
+        <h3>Diligence and risks</h3>
+        <p>Key findings from our review, and the issues we think you should weigh.</p>
+      </div>
+      <div class="item">
+        <span class="num">04</span>
+        <h3>Terms</h3>
+        <p>Round structure, valuation, security type, and SPV terms.</p>
+      </div>
+      <div class="item">
+        <span class="num">05</span>
+        <h3>Use of proceeds</h3>
+        <p>How the capital will be deployed and the milestones it should reach.</p>
+      </div>
+      <div class="item">
+        <span class="num">06</span>
+        <h3>Founder access</h3>
+        <p>Hear directly from management and ask questions before you commit.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== SPV + ECONOMICS ========== -->
+<section class="section" id="economics">
+  <div class="container">
+    <div class="cp-header in-view-target">
+      <h2 class="cp-title">One vehicle.<br><em>Clear economics.</em></h2>
+      <p class="cp-intro">Most opportunities are structured as a single MatchPlay-sponsored SPV, with every cost disclosed before you commit.</p>
+    </div>
+    <div class="split in-view-target">
+      <div class="panel">
+        <h3>Invest through an SPV</h3>
+        <p>Capital Partners invest together through one vehicle: one subscription and one position on the company's cap table.</p>
+        <ul class="ticks">
+          <li>Centralized subscriptions and reporting</li>
+          <li>K-1 administration</li>
+          <li>Follow-on coordination</li>
+          <li>Distribution management</li>
+        </ul>
+        <p class="footnote">Administrative, banking, tax, and compliance functions may be handled by specialized third-party providers.</p>
+      </div>
+      <div class="panel">
+        <h3>Economics disclosed up front</h3>
+        <p>Depending on the deal, economics may include:</p>
+        <ul class="terms">
+          <li><strong>SPV administration</strong><span>Costs to establish and maintain the vehicle.</span></li>
+          <li><strong>Management fee</strong><span>Applies to certain MatchPlay-sponsored investments.</span></li>
+          <li><strong>Carried interest</strong><span>A share of profits to MatchPlay Ventures, only after invested capital is returned.</span></li>
+          <li><strong>Third-party expenses</strong><span>Legal, filing, tax, and banking costs.</span></li>
+        </ul>
+        <p class="footnote">Terms vary by transaction and are disclosed before subscription.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== AFTER YOU INVEST ========== -->
+<section class="section section-light" id="after">
+  <div class="container">
+    <div class="cp-header in-view-target">
+      <h2 class="cp-title">After the<br><em>wire clears.</em></h2>
+      <p class="cp-intro">The relationship continues through the life of the investment.</p>
+    </div>
+    <div class="after in-view-target">
+      <ul class="after-list">
+        <li><strong>Company updates</strong><span>Operating, financing, commercial, regulatory, and clinical milestones.</span></li>
+        <li><strong>Portfolio reporting</strong><span>Investment documents and SPV information in one place.</span></li>
+        <li><strong>Investor events</strong><span>Founder sessions and portfolio updates.</span></li>
+        <li><strong>Distributions</strong><span>Exit proceeds coordinated through your investment vehicle.</span></li>
+      </ul>
+      <div class="callout">
+        <span class="num">Follow-ons</span>
+        <h3>Invest again, with context.</h3>
+        <p>When a portfolio company raises again, you'll see what we originally underwrote, what management delivered, what changed, and whether MatchPlay Ventures is investing again.</p>
+        <p>Your next decision starts with far more context than your first.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== FINAL CTA ========== -->
+<section class="cp-cta" id="join">
+  <div class="cp-cta-dots"></div>
+  <div class="container">
+    <h2 class="cp-cta-title in-view-target">Invest alongside <em>MatchPlay.</em></h2>
+    <p class="cp-cta-sub in-view-target">Tell us what you invest in. We'll only share the opportunities that fit your profile.</p>
+    <ul class="chips in-view-target" aria-label="What we'll ask about">
+      <li class="chip">Sectors</li>
+      <li class="chip">Stage: Pre-Seed to Series B</li>
+      <li class="chip">Check size</li>
+      <li class="chip">Geography</li>
+      <li class="chip">Lead, co-invest, or SPV</li>
+      <li class="chip">Follow-on interest</li>
+    </ul>
+    <div class="cp-cta-actions in-view-target">
+      <a href="#" class="btn btn-primary btn-large">Join Capital Partners <span class="arrow">↗</span></a>
+      <a href="../index.html#portfolio" class="btn btn-secondary">View our portfolio</a>
+    </div>
+  </div>
+</section>
+
+<!-- ========== FOOTER ========== -->
+<footer>
+  <div class="container">
+    <div class="footer-top">
+      <div>
+        <div class="footer-brand">MatchPlay Ventures</div>
+        <p class="footer-tag">An early-stage venture firm backing outliers in Life Sciences, FinTech, and Energy. Part of the MatchPlay Group ecosystem.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Ecosystem</h4>
+        <ul>
+          <li><a href="../index.html">Ventures</a></li>
+          <li><a href="./">Capital Partners</a></li>
+          <li><a href="https://www.matchplaygroup.com" target="_blank" rel="noopener">Group</a></li>
+          <li><a href="https://www.matchhouse.events" target="_blank" rel="noopener" style="text-transform:uppercase; letter-spacing:0.12em; font-weight:600;">MATCH HOUSE</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2026 MatchPlay Ventures. All rights reserved.</div>
+  </div>
+</footer>
+
+<script>
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+  document.querySelectorAll('.in-view-target').forEach(el => io.observe(el));
+</script>
+
+</body>
+</html>
