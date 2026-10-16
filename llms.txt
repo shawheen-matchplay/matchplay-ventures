@@ -1,0 +1,37 @@
+# MatchPlay Ventures
+
+> MatchPlay Ventures is an early-stage venture capital firm backing outliers in Life Sciences, FinTech, and Energy. It is part of the MatchPlay Group ecosystem. Website: https://matchplayventures.com/
+
+## How MatchPlay works
+
+- **MatchPlay Group** verifies qualified companies for investor and transaction-readiness. https://www.matchplaygroup.com/
+- **MatchPlay Ventures** makes direct investments in early-stage outliers across Life Sciences, FinTech, and Energy, backing conviction bets with capital and hands-on partnership.
+- **Capital Partners** is MatchPlay's co-investment network. Accredited investors, family offices, venture funds, angel groups, and strategic investors can invest alongside MatchPlay Ventures, typically through MatchPlay-sponsored SPVs. Participation is optional, deal by deal. https://matchplayventures.com/capital-partners/
+
+## For founders
+
+- Apply for funding: https://app.matchplaygroup.com
+
+## For investors
+
+- Join Capital Partners: https://app.matchplaygroup.com/#/auth/investor-signup
+
+## Portfolio
+
+- [Jeeva Clinical Trials](https://jeevatrials.com/): unified, FDA-ready digital infrastructure with embedded AI for clinical trials. Investment thesis: https://matchplayventures.com/portfolio/rebuilding-the-operating-system-for-clinical-trials/
+- [NeuroVRD](https://www.neurovrd.com/): Sentinel AI-IONM Platform, AI-enabled software that detects the onset of neurovascular irritation during high-risk surgeries. Investment thesis: https://matchplayventures.com/portfolio/bringing-real-time-intelligence-into-the-operating-room/
+- [Tenzr Health](https://www.tenzrhealth.com/): gamified care management platform that helps physical rehab clinics keep patients engaged. Investment thesis: https://matchplayventures.com/portfolio/building-the-engagement-layer-rehabilitation-has-been-missing/
+- [Geneial](https://www.geneial.com/): AI-powered, privacy-preserving data platform for precision medicine. Investment thesis: https://matchplayventures.com/portfolio/building-the-data-infrastructure-for-precision-medicine/
+- [SOLUtion Medical](https://www.solutionmedco.com/): TwistJECT point-of-care drug mixing platform for emergency treatment of adrenal crisis. Investment thesis: https://matchplayventures.com/portfolio/making-life-saving-drug-delivery-work-in-the-real-world/
+- [KBO Systems](https://kbosystems.com/): perioperative brain monitoring combining multi-region EEG, auditory evoked potentials, and machine learning. Investment thesis: https://matchplayventures.com/portfolio/rethinking-how-we-protect-the-brain-during-anesthesia/
+- [Guidant BioTherapeutics](https://www.guidantbio.com/): clinical-stage immuno-oncology biologics platform for targeted delivery into the tumor microenvironment.
+- [3DOS](https://3dorthobio.com/): customizable, 3D-printed biodegradable scaffolds for bone repair and regeneration.
+
+## Team
+
+- Mahesh Narayanan, Managing Partner
+- Steven Richer, Venture Partner
+- Shawheen Attar, Venture Partner
+- Hari Gopal, Venture Partner
+- Aakarsh Malhotra, Junior Venture Partner
+- Karim ReFaey, Junior Venture Partner
