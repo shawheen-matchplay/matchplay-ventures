@@ -1,0 +1,7 @@
+# All crawlers are welcome, including search engines and AI assistants
+# (Googlebot, Bingbot, GPTBot, ChatGPT-User, OAI-SearchBot, ClaudeBot,
+# PerplexityBot, Google-Extended, Applebot).
+User-agent: *
+Allow: /
+
+Sitemap: https://matchplayventures.com/sitemap.xml
