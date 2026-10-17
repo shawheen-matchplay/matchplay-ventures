@@ -1,0 +1,15 @@
+{
+  "key": "anduril-ventures",
+  "order": 9,
+  "name": "Anduril Ventures",
+  "site": "https://www.shawheen.com",
+  "tag": "AI",
+  "desc": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut consequat orci at ante venenatis pretium. Nullam eu dolor vitae ante laoreet mattis. Integer commodo justo eu massa gravida venenatis. Pellentesque urna tortor, elementum eget varius sed, blandit in risus. Aenean congue sodales odio, non bibendum ex ultrices sit amet. Maecenas ac sapien orci.",
+  "summary": "a really cool company",
+  "logo": "portco-logos/anduril-ventures.webp",
+  "founder": {
+    "name": "Shawheen Attar",
+    "title": "CEO",
+    "photo": "assets/founders/shawheen-attar.webp"
+  }
+}
