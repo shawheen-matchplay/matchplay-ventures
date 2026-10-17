@@ -1,0 +1,1297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Portfolio Editor | MatchPlay Ventures</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Internal tool: keep it out of search. -->
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600&family=Geist:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <!--
+    Portfolio editor. Adds and edits portfolio companies (the homepage grid
+    and popup) and their "Why we invested" theses, and publishes by
+    committing content/portfolio/<key>.json plus its images straight to the
+    repo. The build-portfolio workflow then runs tools/portfolio/build.py,
+    which regenerates the homepage portfolio, the thesis pages, the sitemap
+    and llms.txt, and GitHub Pages serves them.
+
+    There is no login. The page holds a GitHub token encrypted with a shared
+    password (AES-GCM, key from PBKDF2-SHA256); the password decrypts it in
+    the browser. To set or change the password or token, run:
+
+        node tools/portfolio/editor-setup.mjs
+  -->
+  <style>
+    :root {
+      --bg: #F5F2EC; --card: #FFFFFF; --ink: #0A0A0A; --ink-2: #4A4A4A; --ink-3: #8C8A85;
+      --line: #E4DFD5; --accent: #F97D4A; --accent-ink: #B24A1C; --danger: #C2362B; --ok: #1C7C46;
+      --radius: 14px;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.5 Geist, system-ui, sans-serif; }
+    [hidden] { display: none !important; }
+    h1, h2 { font-family: Sora, Geist, sans-serif; font-weight: 600; letter-spacing: -0.01em; margin: 0; }
+    label { display: block; font-weight: 500; font-size: 0.875rem; margin-bottom: 0.35rem; }
+    .hint { color: var(--ink-3); font-size: 0.8rem; font-weight: 400; }
+    input[type=text], input[type=url], input[type=password], input[type=date], select, textarea {
+      width: 100%; padding: 0.65rem 0.8rem; border: 1px solid var(--line); border-radius: 10px;
+      background: #fff; color: var(--ink); font: inherit;
+    }
+    input:focus, select:focus, textarea:focus { outline: 2px solid var(--accent); outline-offset: -1px; border-color: transparent; }
+    textarea { resize: vertical; }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem;
+      padding: 0.7rem 1.3rem; border: 0; border-radius: 999px; cursor: pointer; white-space: nowrap;
+      background: var(--ink); color: #fff; font: 500 0.9rem Geist, sans-serif; text-decoration: none;
+    }
+    .btn:hover { background: var(--accent); }
+    .btn:disabled { opacity: 0.55; cursor: progress; }
+    .btn--ghost { background: transparent; color: var(--ink); border: 1px solid var(--line); }
+    .btn--ghost:hover { background: #fff; border-color: var(--ink); }
+    .btn--danger { background: transparent; color: var(--danger); border: 1px solid var(--line); }
+    .btn--danger:hover { background: transparent; border-color: var(--danger); }
+    .btn--danger.is-armed { background: var(--danger); color: #fff; border-color: var(--danger); }
+    .btn--sm { padding: 0.45rem 0.85rem; font-size: 0.85rem; }
+    .btn--icon { padding: 0.45rem 0.6rem; min-width: 2.1rem; }
+    .err { color: var(--danger); font-size: 0.85rem; margin-top: 0.4rem; }
+    .err:empty { display: none; }
+
+    /* Lock screen */
+    .lock { min-height: 100vh; display: grid; place-items: center; padding: 24px 16px; }
+    .lock__card { width: min(400px, 100%); background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 2rem; display: grid; gap: 1rem; }
+    .lock__card p { margin: 0; color: var(--ink-2); }
+    .eyebrow { font: 500 11px/1 "JetBrains Mono", monospace; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent); }
+
+    /* Top bar */
+    .bar {
+      position: sticky; top: 0; z-index: 5; display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+      padding: 0.85rem max(16px, 2rem); background: rgba(245,242,236,0.92); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line);
+    }
+    .bar__title { font-size: 1.05rem; }
+    .bar__title span { color: var(--ink-3); font-weight: 400; }
+    .bar__left, .bar__right { display: flex; align-items: center; gap: 0.6rem; min-width: 0; }
+    .bar .btn { padding: 0.5rem 0.95rem; }
+
+    /* Forms */
+    .layout { display: grid; grid-template-columns: minmax(0, 520px) minmax(0, 1fr); gap: 1.5rem; padding: 1.5rem max(16px, 2rem) 3rem; }
+    .form { display: grid; gap: 1.1rem; align-content: start; }
+    .group { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 1.25rem; display: grid; gap: 1rem; }
+    .group > h2 { font: 500 11px/1 "JetBrains Mono", monospace; text-transform: uppercase; letter-spacing: 0.16em; color: var(--ink-3); }
+    .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .prefixed { display: flex; align-items: center; border: 1px solid var(--line); border-radius: 10px; background: #fff; }
+    .prefixed span { padding-left: 0.8rem; color: var(--ink-3); white-space: nowrap; }
+    .prefixed input { border: 0; padding-left: 0.2rem; }
+    .count { float: right; font-weight: 400; color: var(--ink-3); }
+    .count.is-off { color: var(--danger); }
+    .file-row { display: flex; gap: 1rem; align-items: center; }
+    .file-row input { flex: 1; min-width: 0; }
+    .thumb { width: 96px; height: 60px; border: 1px solid var(--line); border-radius: 10px; background: #fff; display: grid; place-items: center; padding: 8px; flex-shrink: 0; }
+    .thumb img { max-width: 100%; max-height: 100%; object-fit: contain; }
+    .thumb--round { width: 60px; border-radius: 50%; padding: 0; overflow: hidden; }
+    .thumb--round img { width: 100%; height: 100%; object-fit: cover; max-width: none; max-height: none; }
+    .og img, .og canvas { width: 100%; aspect-ratio: 1200 / 630; border-radius: 10px; border: 1px solid var(--line); background: #0A0A0A; display: block; }
+    .help { font-size: 0.8rem; color: var(--ink-2); background: var(--bg); border-radius: 10px; padding: 0.75rem 0.9rem; line-height: 1.7; }
+    .help code { font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 0.75rem; background: #fff; border: 1px solid var(--line); border-radius: 4px; padding: 0 0.3em; }
+    #a-body { min-height: 460px; font: 13.5px/1.6 "JetBrains Mono", ui-monospace, monospace; }
+    .publish { display: grid; gap: 0.6rem; }
+    .publish .btns { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    .status { font-size: 0.9rem; color: var(--ink-2); margin: 0; }
+    .status.is-ok { color: var(--ok); }
+    .status.is-err { color: var(--danger); }
+    .status a { color: inherit; }
+    .status:empty { display: none; }
+    input[readonly] { color: var(--ink-3); background: var(--bg); }
+    .check { display: flex; gap: 0.5rem; align-items: center; font-weight: 400; }
+
+    /* Preview */
+    .preview { position: sticky; top: 72px; height: calc(100vh - 96px); display: grid; grid-template-rows: auto 1fr; gap: 0.6rem; }
+    .preview__tabs { display: flex; gap: 0.4rem; align-items: center; }
+    .preview__tabs .hint { margin-left: auto; }
+    .tab { padding: 0.4rem 0.9rem; border-radius: 999px; border: 1px solid var(--line); background: transparent; font: 500 0.85rem Geist, sans-serif; cursor: pointer; }
+    .tab[aria-pressed=true] { background: var(--ink); color: #fff; border-color: var(--ink); }
+    .preview__frame { border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; background: #0A0A0A; }
+    .preview iframe { width: 100%; height: 100%; border: 0; display: block; }
+    @media (max-width: 1000px) {
+      .layout { grid-template-columns: 1fr; }
+      .preview { position: static; height: 85vh; }
+    }
+    @media (max-width: 520px) { .row2 { grid-template-columns: 1fr; } }
+
+    /* Company list */
+    .list-wrap { max-width: 1000px; margin: 0 auto; padding: 1.5rem max(16px, 2rem) 3rem; display: grid; gap: 1rem; }
+    .orderbar { display: flex; align-items: center; justify-content: space-between; gap: 1rem; background: #FFF4EE; border: 1px solid #F7C8B2; border-radius: var(--radius); padding: 0.75rem 1rem; }
+    .cos { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.6rem; }
+    .co {
+      display: grid; grid-template-columns: auto 104px minmax(0, 1fr) auto; gap: 1rem; align-items: center;
+      background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 0.75rem;
+    }
+    .co__move { display: grid; gap: 0.25rem; }
+    .co__move .btn { padding: 0.15rem 0.5rem; font-size: 0.75rem; }
+    .co__logo { width: 104px; height: 64px; display: grid; place-items: center; padding: 8px; border: 1px solid var(--line); border-radius: 10px; background: #fff; }
+    .co__logo img { max-width: 100%; max-height: 100%; object-fit: contain; }
+    .co__name { font-family: Sora, sans-serif; font-weight: 600; line-height: 1.3; }
+    .co__meta { color: var(--ink-3); font-size: 0.85rem; margin-top: 0.15rem; }
+    .co__meta a { color: inherit; }
+    .co__thesis { margin-top: 0.4rem; font-size: 0.85rem; display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
+    .co__thesis a { color: var(--ink-2); }
+    .co__actions { display: flex; gap: 0.4rem; flex-wrap: wrap; justify-content: flex-end; }
+    .co.is-busy { opacity: 0.55; pointer-events: none; }
+    .co.is-hidden { background: transparent; border-style: dashed; }
+    .co.is-hidden .co__logo { opacity: 0.45; }
+    .badge {
+      display: inline-block; padding: 0.15rem 0.5rem; border-radius: 999px; white-space: nowrap;
+      font: 500 10.5px/1.4 "JetBrains Mono", monospace; letter-spacing: 0.08em; text-transform: uppercase;
+      background: var(--bg); color: var(--ink-2); border: 1px solid var(--line);
+    }
+    .badge--live { background: #FFF1EA; color: var(--accent-ink); border-color: #F7C8B2; }
+    .badge--hidden { background: var(--ink-2); color: #fff; border-color: var(--ink-2); }
+    @media (max-width: 760px) {
+      .co { grid-template-columns: auto 72px minmax(0, 1fr); }
+      .co__logo { width: 72px; height: 48px; }
+      .co__actions { grid-column: 1 / -1; justify-content: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== Lock ===== -->
+  <main class="lock" id="lock">
+    <form class="lock__card" id="lock-form">
+      <span class="eyebrow">MatchPlay Ventures</span>
+      <h1>Portfolio editor</h1>
+      <p id="lock-note">Enter the editor password to add companies and publish investment theses.</p>
+      <div>
+        <label for="pw">Password</label>
+        <input type="password" id="pw" autocomplete="current-password" required>
+        <p class="err" id="lock-err" role="alert"></p>
+      </div>
+      <button class="btn" type="submit" id="unlock">Unlock</button>
+    </form>
+  </main>
+
+  <!-- ===== Companies (the first screen after unlocking) ===== -->
+  <div id="home" hidden>
+    <header class="bar">
+      <h1 class="bar__title">Portfolio <span id="list-count"></span></h1>
+      <div class="bar__right">
+        <a class="btn btn--ghost" href="../#portfolio" target="_blank" rel="noopener">View site</a>
+        <button class="btn" type="button" id="new-co">Add company</button>
+      </div>
+    </header>
+    <main class="list-wrap">
+      <p class="status" id="list-status" role="status"></p>
+      <div class="orderbar" id="orderbar" hidden>
+        <span>The order changed. Save it to update the homepage grid.</span>
+        <div class="bar__right">
+          <button class="btn btn--ghost btn--sm" type="button" id="order-reset">Undo</button>
+          <button class="btn btn--sm" type="button" id="order-save">Save order</button>
+        </div>
+      </div>
+      <ul class="cos" id="cos"></ul>
+    </main>
+  </div>
+
+  <!-- ===== Company form ===== -->
+  <div id="co-app" hidden>
+    <header class="bar">
+      <div class="bar__left">
+        <button class="btn btn--ghost" type="button" data-back>&larr; Portfolio</button>
+        <h1 class="bar__title" id="co-mode">New company</h1>
+      </div>
+    </header>
+    <div class="layout">
+      <form class="form" id="co-form" novalidate>
+        <section class="group">
+          <h2>Company</h2>
+          <div>
+            <label for="c-name">Name</label>
+            <input type="text" id="c-name" required>
+          </div>
+          <div class="row2">
+            <div>
+              <label for="c-site">Website</label>
+              <input type="url" id="c-site" placeholder="https://example.com/" required>
+            </div>
+            <div>
+              <label for="c-tag">Sector <span class="hint">(shown on hover and in the popup)</span></label>
+              <input type="text" id="c-tag" placeholder="Digital Health" required>
+            </div>
+          </div>
+          <div>
+            <label for="c-desc">Description <span class="count" id="c-desc-count"></span><br><span class="hint">Shown in the popup. Two sentences, about 45 to 55 words: what the company does, then why it matters.</span></label>
+            <textarea id="c-desc" rows="5" required></textarea>
+          </div>
+          <div>
+            <label for="c-summary">One-line summary <span class="hint">(for search engines and AI assistants)</span></label>
+            <input type="text" id="c-summary" placeholder="Gamified care management platform that helps physical rehab clinics keep patients engaged." required>
+          </div>
+        </section>
+
+        <section class="group">
+          <h2>Logo</h2>
+          <div class="file-row">
+            <div class="thumb"><img id="c-logo-img" alt="" hidden></div>
+            <input type="file" id="c-logo" accept="image/png,image/webp,image/svg+xml,image/avif,image/jpeg">
+          </div>
+          <p class="hint" style="margin:0">A transparent PNG, WebP or SVG works best. Large images are resized to 800 px.</p>
+        </section>
+
+        <section class="group">
+          <h2>Founder <span class="hint" style="text-transform:none;letter-spacing:0">(optional)</span></h2>
+          <div class="row2">
+            <div>
+              <label for="c-fname">Name</label>
+              <input type="text" id="c-fname">
+            </div>
+            <div>
+              <label for="c-ftitle">Title</label>
+              <input type="text" id="c-ftitle" placeholder="CEO">
+            </div>
+          </div>
+          <div class="file-row">
+            <div class="thumb thumb--round"><img id="c-photo-img" alt="" hidden></div>
+            <input type="file" id="c-photo" accept="image/*">
+          </div>
+          <p class="hint" style="margin:0">Cropped to a square from the centre.</p>
+        </section>
+
+        <section class="group publish">
+          <label class="check" id="c-visible-row"><input type="checkbox" id="c-visible" checked> Show on the site</label>
+          <div class="btns">
+            <button class="btn" type="submit" id="c-save">Add to portfolio</button>
+          </div>
+          <p class="status" id="c-status" role="status"></p>
+        </section>
+      </form>
+
+      <div class="preview" aria-label="Preview">
+        <div class="preview__tabs">
+          <button class="tab" type="button" data-view="modal" aria-pressed="true">Popup</button>
+          <button class="tab" type="button" data-view="grid" aria-pressed="false">Grid</button>
+          <span class="hint">The real homepage, with your changes</span>
+        </div>
+        <div class="preview__frame"><iframe id="c-preview" title="Homepage preview"></iframe></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Thesis form ===== -->
+  <div id="a-app" hidden>
+    <header class="bar">
+      <div class="bar__left">
+        <button class="btn btn--ghost" type="button" data-back>&larr; Portfolio</button>
+        <h1 class="bar__title"><span id="a-mode">New thesis</span> <span id="a-draft"></span></h1>
+      </div>
+      <div class="bar__right">
+        <button class="btn btn--ghost" type="button" id="a-clear">Start over</button>
+      </div>
+    </header>
+    <div class="layout">
+      <form class="form" id="a-form" novalidate>
+        <section class="group">
+          <h2>Why we invested in <span id="a-co"></span></h2>
+          <div>
+            <label for="a-title">Headline</label>
+            <input type="text" id="a-title" placeholder="Rebuilding the operating system for clinical trials" required>
+          </div>
+          <div>
+            <label for="a-subtitle">Subtitle</label>
+            <input type="text" id="a-subtitle" placeholder="Fixing an $80B infrastructure problem." required>
+          </div>
+          <div>
+            <label for="a-slug">Web address <span class="hint" id="a-slug-hint">(set from the headline)</span></label>
+            <div class="prefixed"><span>/portfolio/</span><input type="text" id="a-slug" required></div>
+          </div>
+          <div class="row2">
+            <div>
+              <label for="a-author">Author</label>
+              <select id="a-author"></select>
+              <div class="row2" id="a-other" hidden style="margin-top:0.5rem">
+                <input type="text" id="a-author-name" placeholder="Full name">
+                <input type="text" id="a-author-title" placeholder="Title">
+              </div>
+            </div>
+            <div>
+              <label for="a-date">Publish date</label>
+              <input type="date" id="a-date" required>
+            </div>
+          </div>
+        </section>
+
+        <section class="group">
+          <h2>Search and sharing</h2>
+          <div>
+            <label for="a-desc">Summary <span class="count" id="a-desc-count"></span><br><span class="hint">Shown in Google results and link previews. Aim for 140 to 160 characters.</span></label>
+            <textarea id="a-desc" rows="3" required></textarea>
+          </div>
+          <div class="og">
+            <label>Social image <span class="hint" id="a-og-hint">(made from the headline)</span></label>
+            <canvas id="a-og" width="1200" height="630"></canvas>
+          </div>
+        </section>
+
+        <section class="group">
+          <h2>Body</h2>
+          <div class="help">
+            Blank line between paragraphs. <code>## Section heading</code> <code>**bold**</code> <code>*italic*</code>
+            <code>[link text](https://…)</code> <code>- bullet</code> <code>1. numbered</code> <code>&gt; quote</code>
+            <br>Lines starting with <code>&lt;</code> are kept as HTML; leave them as they are.
+          </div>
+          <textarea id="a-body" required placeholder="## Why we invested&#10;&#10;At MatchPlay, we invest in…"></textarea>
+        </section>
+
+        <section class="group publish">
+          <div class="btns">
+            <button class="btn" type="submit" id="a-save">Publish thesis</button>
+            <button class="btn btn--ghost" type="button" id="a-hide" hidden>Take offline</button>
+            <button class="btn btn--danger" type="button" id="a-delete" hidden>Delete thesis</button>
+          </div>
+          <p class="hint" style="margin:0" id="a-draft-note">Your draft is saved on this computer as you type, so you can come back to it before publishing.</p>
+          <p class="status" id="a-status" role="status"></p>
+        </section>
+      </form>
+
+      <div class="preview" aria-label="Preview">
+        <div class="preview__tabs"><span class="hint" style="margin-left:0">Preview of the thesis page</span></div>
+        <div class="preview__frame"><iframe id="a-preview" title="Thesis preview"></iframe></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  (function () {
+    "use strict";
+
+    /* Set by tools/portfolio/editor-setup.mjs. Never edit by hand. */
+    /* VAULT:start */ var VAULT = null; /* VAULT:end */
+
+    var TEAM = [
+      ["Mahesh Narayanan", "Managing Partner"],
+      ["Steven Richer", "Venture Partner"],
+      ["Shawheen Attar", "Venture Partner"],
+      ["Hari Gopal", "Venture Partner"],
+      ["Aakarsh Malhotra", "Junior Venture Partner"],
+      ["Karim ReFaey", "Junior Venture Partner"]
+    ];
+    var DIR = "content/portfolio";
+    var DRAFT_KEY = "mpv:thesis-draft:";
+    var $ = function (id) { return document.getElementById(id); };
+    var cfg = null;                      // { token, owner, repo, branch } once unlocked
+    var companies = [];                  // every company, in grid order (hidden ones too)
+    var savedOrder = [];                 // keys in the order GitHub has them
+
+    /* ---------- small helpers ------------------------------------------ */
+    function esc(s) {
+      return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+    }
+    function b64ToBytes(s) {
+      var bin = atob(s), out = new Uint8Array(bin.length);
+      for (var i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
+      return out;
+    }
+    function blobToBase64(blob) {
+      return new Promise(function (resolve, reject) {
+        var r = new FileReader();
+        r.onload = function () { resolve(String(r.result).split(",")[1]); };
+        r.onerror = reject;
+        r.readAsDataURL(blob);
+      });
+    }
+    function textToBase64(s) { return blobToBase64(new Blob([s], { type: "text/plain" })); }
+    function slugify(s) {
+      return s.toLowerCase().normalize("NFKD").replace(/[̀-ͯ]/g, "")
+        .replace(/['’]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 90);
+    }
+    function today() {
+      var d = new Date();
+      return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+    }
+    function niceDate(iso) {
+      return iso ? new Date(iso.slice(0, 10) + "T12:00:00").toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" }) : "";
+    }
+    function siteLabel(url) { return String(url || "").replace(/^https?:\/\/(www\.)?/, "").replace(/\/+$/, ""); }
+    function sentence(s) { s = String(s || "").trim(); return /[.!?]$/.test(s) ? s : s + "."; }
+    function words(s) { return (String(s).match(/\S+/g) || []).length; }
+    function stamp() { return Date.now().toString(36); }
+    function ext(path) { return (String(path).match(/\.([a-z0-9]+)$/i) || [, ""])[1].toLowerCase(); }
+    // House style: no em-dashes anywhere in site copy.
+    function dashCheck(fields) {
+      for (var k in fields) if (/—/.test(fields[k] || "")) return "The " + k + " has an em-dash (—). Use a comma, period, colon or parentheses instead.";
+      return "";
+    }
+
+    /* ---------- unlock ---------------------------------------------------- */
+    async function decryptVault(password) {
+      var base = await crypto.subtle.importKey("raw", new TextEncoder().encode(password), "PBKDF2", false, ["deriveKey"]);
+      var key = await crypto.subtle.deriveKey(
+        { name: "PBKDF2", salt: b64ToBytes(VAULT.salt), iterations: VAULT.iterations, hash: "SHA-256" },
+        base, { name: "AES-GCM", length: 256 }, false, ["decrypt"]);
+      var plain = await crypto.subtle.decrypt({ name: "AES-GCM", iv: b64ToBytes(VAULT.iv) }, key, b64ToBytes(VAULT.data));
+      return JSON.parse(new TextDecoder().decode(plain));
+    }
+    if (!VAULT) {
+      $("lock-note").textContent = "The editor isn’t set up yet. Run node tools/portfolio/editor-setup.mjs in the repo to set its password.";
+      $("pw").disabled = true;
+      $("unlock").disabled = true;
+    }
+    $("lock-form").addEventListener("submit", async function (e) {
+      e.preventDefault();
+      $("lock-err").textContent = "";
+      $("unlock").disabled = true;
+      $("unlock").textContent = "Unlocking…";
+      try {
+        cfg = await decryptVault($("pw").value);
+        $("pw").value = "";
+        $("lock").hidden = true;
+        start();
+      } catch (err) {
+        $("lock-err").textContent = "That password didn’t work.";
+      }
+      $("unlock").disabled = false;
+      $("unlock").textContent = "Unlock";
+    });
+
+    /* ---------- images ---------------------------------------------------- */
+    function encode(canvas, type, quality) {
+      return new Promise(function (resolve) { canvas.toBlob(resolve, type, quality); });
+    }
+    // WebP where the browser can encode it, else PNG (keeps transparency) or JPEG.
+    async function bestEncoding(canvas, alpha) {
+      var webp = await encode(canvas, "image/webp", 0.86);
+      if (webp && webp.type === "image/webp") return { blob: webp, ext: "webp" };
+      return alpha ? { blob: await encode(canvas, "image/png"), ext: "png" } : { blob: await encode(canvas, "image/jpeg", 0.88), ext: "jpg" };
+    }
+    // Logo: SVGs as they are; anything else at most 800 px on its long side,
+    // transparency kept.
+    async function makeLogo(file) {
+      if (file.type === "image/svg+xml") return { blob: file, ext: "svg", url: URL.createObjectURL(file) };
+      var bmp = await createImageBitmap(file);
+      var scale = Math.min(1, 800 / Math.max(bmp.width, bmp.height));
+      var c = document.createElement("canvas");
+      c.width = Math.round(bmp.width * scale); c.height = Math.round(bmp.height * scale);
+      c.getContext("2d").drawImage(bmp, 0, 0, c.width, c.height);
+      var best = await bestEncoding(c, true);
+      return { blob: best.blob, ext: best.ext, url: URL.createObjectURL(best.blob) };
+    }
+    // Founder photo: centre-cropped square, 600 x 600.
+    async function makePhoto(file) {
+      var bmp = await createImageBitmap(file);
+      var side = Math.min(bmp.width, bmp.height);
+      var c = document.createElement("canvas");
+      c.width = c.height = 600;
+      var g = c.getContext("2d");
+      g.fillStyle = "#fff"; g.fillRect(0, 0, 600, 600);
+      g.drawImage(bmp, (bmp.width - side) / 2, (bmp.height - side) / 2, side, side, 0, 0, 600, 600);
+      var best = await bestEncoding(c, false);
+      return { blob: best.blob, ext: best.ext, url: URL.createObjectURL(best.blob) };
+    }
+
+    // The 1200 x 630 social image, in the style of the existing ones: dark
+    // field, orange glow, dot grid, "Why we invested in X" and the headline.
+    var markImg = new Image();
+    markImg.src = "../logo/logo.png";
+    async function drawOg(canvas, company, title) {
+      try { await Promise.all([document.fonts.load("600 64px Sora"), document.fonts.load("500 17px Sora")]); } catch (e) {}
+      if (!markImg.complete) await new Promise(function (r) { markImg.onload = markImg.onerror = r; });
+      var g = canvas.getContext("2d"), W = 1200, H = 630;
+      g.fillStyle = "#0A0A0A"; g.fillRect(0, 0, W, H);
+      var glow = g.createRadialGradient(330, 110, 0, 330, 110, 760);
+      glow.addColorStop(0, "rgba(78,38,22,0.9)"); glow.addColorStop(0.5, "rgba(44,22,14,0.5)"); glow.addColorStop(1, "rgba(10,10,10,0)");
+      g.fillStyle = glow; g.fillRect(0, 0, W, H);
+      var fade = g.createLinearGradient(700, 0, 900, 0);
+      fade.addColorStop(0, "rgba(10,10,10,0)"); fade.addColorStop(1, "rgba(10,10,10,1)");
+      g.fillStyle = fade; g.fillRect(700, 0, 500, H);
+      g.fillStyle = "rgba(255,255,255,0.85)";
+      for (var x = 761; x < W; x += 23.6) for (var y = 40; y < H; y += 23.6) { g.beginPath(); g.arc(x, y, 1.6, 0, 7); g.fill(); }
+      g.fillStyle = "#F97D4A"; g.beginPath(); g.arc(1114, 566, 6, 0, 7); g.fill();
+      if (markImg.naturalWidth) g.drawImage(markImg, 80, 70, 132, 132 * markImg.naturalHeight / markImg.naturalWidth);
+
+      g.textBaseline = "alphabetic";
+      g.fillStyle = "#F97D4A"; g.fillRect(80, 266, 32, 3);
+      g.font = "600 18px Sora, sans-serif";
+      if ("letterSpacing" in g) g.letterSpacing = "3.6px";
+      g.fillText(("Why we invested in " + (company || "…")).toUpperCase(), 128, 274);
+
+      g.fillStyle = "rgba(255,255,255,0.85)"; g.font = "500 17px Sora, sans-serif";
+      if ("letterSpacing" in g) g.letterSpacing = "3.4px";
+      g.fillText("MATCHPLAYVENTURES.COM", 80, 573);
+
+      if ("letterSpacing" in g) g.letterSpacing = "0px";
+      g.fillStyle = "#fff";
+      var size = 68, lines;
+      for (; size >= 40; size -= 4) {
+        g.font = "600 " + size + "px Sora, sans-serif";
+        lines = wrap(g, sentence(title || "Your headline"), 1060);
+        if (lines.length <= 3) break;
+      }
+      var lh = Math.round(size * 1.14), top = 380 - (lines.length - 2) * lh * 0.5;
+      lines.forEach(function (l, i) { g.fillText(l, 80, top + i * lh); });
+    }
+    function wrap(g, text, max) {
+      var out = [], line = "";
+      text.split(/\s+/).forEach(function (w) {
+        var test = line ? line + " " + w : w;
+        if (g.measureText(test).width > max && line) { out.push(line); line = w; } else line = test;
+      });
+      if (line) out.push(line);
+      return out;
+    }
+
+    /* ---------- Markdown to the thesis HTML the site uses ------------------ */
+    function inline(t) {
+      t = esc(t).replace(/&quot;/g, '"');
+      t = t.replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, function (m, text, url) {
+        var external = /^https?:\/\//.test(url) && !/^https?:\/\/(www\.)?matchplayventures\.com/.test(url);
+        return '<a href="' + url.replace(/"/g, "&quot;") + '"' + (external ? ' target="_blank" rel="noopener"' : "") + ">" + text + "</a>";
+      });
+      t = t.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+      t = t.replace(/(^|[^*])\*([^*]+)\*/g, "$1<em>$2</em>");
+      return t;
+    }
+    // Blocks one per line, a blank line before each section heading, like the
+    // hand-written theses.
+    function toHtml(md) {
+      var out = [], para = [], list = null, quote = [], raw = null;
+      function push(block) { if (/^<h2/.test(block) && out.length) out.push(""); out.push(block); }
+      function flushPara() { if (para.length) { push("<p>" + para.map(inline).join("<br>") + "</p>"); para = []; } }
+      function flushList() { if (list) { push("<" + list.tag + ">\n" + list.items.map(function (i) { return "  <li>" + i.split("\n").map(inline).join("<br>") + "</li>"; }).join("\n") + "\n</" + list.tag + ">"); list = null; } }
+      function flushQuote() { if (quote.length) { push("<blockquote><p>" + quote.map(inline).join("<br>") + "</p></blockquote>"); quote = []; } }
+      function flushRaw() { if (raw) { push(raw.join("\n")); raw = null; } }
+      function flushAll() { flushPara(); flushList(); flushQuote(); flushRaw(); }
+      md.replace(/\r\n?/g, "\n").split("\n").forEach(function (line) {
+        var m;
+        if (!line.trim()) { flushAll(); return; }
+        if (raw) { raw.push(line); return; }
+        if (/^\\/.test(line)) { flushList(); flushQuote(); para.push(line.slice(1).trim()); return; }
+        if (list && /^\s{2,}\S/.test(line) && !/^\s*([-*]|\d+[.)])\s/.test(line)) { list.items[list.items.length - 1] += "\n" + line.trim(); return; }
+        if (/^\s*</.test(line) && !para.length) { flushAll(); raw = [line.trim()]; return; }
+        if ((m = line.match(/^(#{2,4})\s+(.*)$/))) { flushAll(); push("<h" + m[1].length + ">" + inline(m[2]) + "</h" + m[1].length + ">"); return; }
+        if ((m = line.match(/^\s*[-*]\s+(.*)$/))) { flushPara(); flushQuote(); if (!list || list.tag !== "ul") { flushList(); list = { tag: "ul", items: [] }; } list.items.push(m[1]); return; }
+        if ((m = line.match(/^\s*\d+[.)]\s+(.*)$/))) { flushPara(); flushQuote(); if (!list || list.tag !== "ol") { flushList(); list = { tag: "ol", items: [] }; } list.items.push(m[1]); return; }
+        if ((m = line.match(/^>\s?(.*)$/))) { flushPara(); flushList(); quote.push(m[1]); return; }
+        flushList(); flushQuote();
+        para.push(line.trim());
+      });
+      flushAll();
+      return out.join("\n");
+    }
+
+    // The reverse, for editing a published thesis. Anything Markdown can't
+    // say (a styled paragraph, say) stays as one line of HTML.
+    function toMarkdown(html) {
+      var box = document.createElement("div");
+      box.innerHTML = html;
+      function inl(node) {
+        var s = "";
+        node.childNodes.forEach(function (n) {
+          if (n.nodeType === 3) { s += n.nodeValue.replace(/\s*\n\s*/g, " "); return; }
+          if (n.nodeType !== 1) return;
+          var t = n.tagName.toLowerCase(), inner = inl(n);
+          if (t === "br") s += "\n";
+          else if (t === "strong" || t === "b") s += wrapMark(inner, "**");
+          else if (t === "em" || t === "i") s += wrapMark(inner, "*");
+          else if (t === "a") s += "[" + inner + "](" + n.getAttribute("href") + ")";
+          else s += inner;
+        });
+        return s;
+      }
+      function wrapMark(inner, mark) {
+        return inner.split("\n").map(function (l) { return l.trim() ? mark + l + mark : l; }).join("\n");
+      }
+      function lines(text) {
+        return text.split("\n").map(function (l) { return /^\s*(#|>|<|\\|[-*]\s|\d+[.)]\s)/.test(l) ? "\\" + l.trim() : l; }).join("\n");
+      }
+      function rawLine(el) { return el.outerHTML.replace(/\s*\n\s*/g, " "); }
+      var out = [];
+      box.childNodes.forEach(function (el) {
+        if (el.nodeType === 3) { if (el.nodeValue.trim()) out.push(el.nodeValue.trim()); return; }
+        if (el.nodeType !== 1) return;
+        var t = el.tagName.toLowerCase(), m;
+        if (el.attributes.length) { out.push(rawLine(el)); return; }
+        if ((m = t.match(/^h([2-4])$/))) { out.push("#".repeat(+m[1]) + " " + inl(el).trim()); return; }
+        if (t === "p") { out.push(lines(inl(el).replace(/\n+$/, "").trim())); return; }
+        if (t === "ul" || t === "ol") {
+          var items = [], nested = false;
+          Array.prototype.forEach.call(el.children, function (li, i) {
+            if (li.querySelector("ul, ol, p")) nested = true;
+            items.push((t === "ul" ? "- " : (i + 1) + ". ") + inl(li).trim().split(/\s*\n\s*/).join("\n   "));
+          });
+          out.push(nested ? rawLine(el) : items.join("\n"));
+          return;
+        }
+        if (t === "blockquote") {
+          out.push(inl(el.querySelector("p") || el).trim().split("\n").map(function (l) { return "> " + l; }).join("\n"));
+          return;
+        }
+        out.push(rawLine(el));
+      });
+      return out.filter(function (b) { return b; }).join("\n\n") + "\n";
+    }
+
+    /* ---------- talking to GitHub ----------------------------------------- */
+    async function gh(path, opts) {
+      opts = opts || {};
+      var res = await fetch("https://api.github.com/repos/" + cfg.owner + "/" + cfg.repo + path, {
+        method: opts.method || "GET",
+        cache: "no-store",
+        headers: {
+          "Authorization": "Bearer " + cfg.token,
+          "Accept": opts.raw ? "application/vnd.github.raw+json" : "application/vnd.github+json",
+          "X-GitHub-Api-Version": "2022-11-28"
+        },
+        body: opts.body ? JSON.stringify(opts.body) : undefined
+      });
+      if (res.status === 404 && opts.allow404) return null;
+      if (!res.ok) {
+        var detail = "";
+        try { detail = (await res.json()).message || ""; } catch (e) {}
+        throw new Error("GitHub said " + res.status + (detail ? ": " + detail : ""));
+      }
+      return res.json();
+    }
+    // One commit on the branch. files: [{ path, blob | text }] to write,
+    // remove: [path] to delete (paths that don't exist are skipped).
+    async function commit(files, remove, message, say) {
+      var tree = [];
+      if (files.length) say("Uploading " + files.length + (files.length === 1 ? " file…" : " files…"));
+      for (var i = 0; i < files.length; i++) {
+        var content = files[i].blob ? await blobToBase64(files[i].blob) : await textToBase64(files[i].text);
+        var blob = await gh("/git/blobs", { method: "POST", body: { content: content, encoding: "base64" } });
+        tree.push({ path: files[i].path, mode: "100644", type: "blob", sha: blob.sha });
+      }
+      say("Publishing…");
+      var writing = {};
+      tree.forEach(function (t) { writing[t.path] = true; });
+      remove = remove.filter(function (p) { return p && !writing[p]; });
+      for (var attempt = 0; attempt < 2; attempt++) {    // retry once if main moved meanwhile
+        var head = await gh("/git/ref/heads/" + cfg.branch);
+        var base = await gh("/git/commits/" + head.object.sha);
+        var entries = tree;
+        if (remove.length) {
+          var all = await gh("/git/trees/" + base.tree.sha + "?recursive=1");
+          var have = {};
+          all.tree.forEach(function (t) { have[t.path] = true; });
+          entries = tree.concat(remove.filter(function (p) { return have[p]; }).map(function (p) {
+            return { path: p, mode: "100644", type: "blob", sha: null };
+          }));
+        }
+        var newTree = await gh("/git/trees", { method: "POST", body: { base_tree: base.tree.sha, tree: entries } });
+        var made = await gh("/git/commits", { method: "POST", body: { message: message, tree: newTree.sha, parents: [head.object.sha] } });
+        try {
+          await gh("/git/refs/heads/" + cfg.branch, { method: "PATCH", body: { sha: made.sha } });
+          return made.sha;
+        } catch (err) {
+          if (attempt === 1) throw err;
+        }
+      }
+    }
+    function commitLink(sha) {
+      return '<a href="https://github.com/' + cfg.owner + "/" + cfg.repo + "/commit/" + sha + '" target="_blank" rel="noopener">See the change</a>';
+    }
+    function companyFile(c) {
+      return { path: DIR + "/" + c.key + ".json", text: JSON.stringify(c, null, 2) + "\n" };
+    }
+    function say(el) {
+      return function (msg, kind) { el.className = "status" + (kind ? " is-" + kind : ""); el.innerHTML = msg; };
+    }
+    var listStatus = say($("list-status")), coStatus = say($("c-status")), aStatus = say($("a-status"));
+
+    // A button that needs a second click within three seconds.
+    function confirmClick(btn, ask) {
+      if (btn.dataset.confirm === "1") {
+        btn.dataset.confirm = "";
+        btn.classList.remove("is-armed");
+        btn.textContent = btn.dataset.label;
+        return true;
+      }
+      btn.dataset.label = btn.textContent;
+      btn.dataset.confirm = "1";
+      btn.classList.add("is-armed");
+      btn.textContent = ask;
+      setTimeout(function () {
+        if (btn.dataset.confirm !== "1") return;
+        btn.dataset.confirm = "";
+        btn.classList.remove("is-armed");
+        btn.textContent = btn.dataset.label;
+      }, 3000);
+      return false;
+    }
+
+    /* ---------- screens --------------------------------------------------- */
+    function show(id) {
+      ["home", "co-app", "a-app"].forEach(function (s) { $(s).hidden = s !== id; });
+      window.scrollTo(0, 0);
+    }
+
+    function start() {
+      setupCompanyForm();
+      setupThesisForm();
+      document.querySelectorAll("[data-back]").forEach(function (b) { b.addEventListener("click", function () { showList(); }); });
+      $("new-co").addEventListener("click", function () { openCompany(null); });
+      $("order-save").addEventListener("click", saveOrder);
+      $("order-reset").addEventListener("click", function () {
+        companies.sort(function (a, b) { return savedOrder.indexOf(a.key) - savedOrder.indexOf(b.key); });
+        renderList();
+      });
+      showList();
+    }
+
+    /* ---------- company list ---------------------------------------------- */
+    async function loadCompanies() {
+      var dir = await gh("/contents/" + DIR + "?ref=" + cfg.branch, { allow404: true }) || [];
+      var files = dir.filter(function (f) { return /\.json$/.test(f.name); });
+      var loaded = await Promise.all(files.map(function (f) { return gh("/contents/" + f.path + "?ref=" + cfg.branch, { raw: true }); }));
+      return loaded.sort(function (a, b) { return (a.order || 999) - (b.order || 999) || a.name.localeCompare(b.name); });
+    }
+    async function showList(note) {
+      show("home");
+      listStatus(note || "Loading the portfolio…", note ? "ok" : "");
+      try {
+        companies = await loadCompanies();
+        savedOrder = companies.map(function (c) { return c.key; });
+        renderList();
+        if (!note) listStatus("");
+      } catch (err) {
+        listStatus("Couldn’t load the portfolio. " + esc(err.message || String(err)), "err");
+      }
+    }
+    function hasDraft(key) {
+      try { return !!localStorage.getItem(DRAFT_KEY + key); } catch (e) { return false; }
+    }
+    function renderList() {
+      var shown = companies.filter(function (c) { return !c.hidden; }).length;
+      $("list-count").textContent = "· " + shown + " on the site" + (shown < companies.length ? ", " + (companies.length - shown) + " hidden" : "");
+      $("orderbar").hidden = companies.map(function (c) { return c.key; }).join() === savedOrder.join();
+      var ul = $("cos");
+      ul.innerHTML = "";
+      companies.forEach(function (c, i) {
+        var a = c.article, li = document.createElement("li");
+        li.className = "co" + (c.hidden ? " is-hidden" : "");
+        var thesis;
+        if (!a) thesis = '<span class="badge">No thesis yet</span>' + (hasDraft(c.key) ? ' <span class="hint">Draft on this computer</span>' : "");
+        else if (a.hidden) thesis = '<span class="badge badge--hidden">Thesis offline</span> <span class="hint">“' + esc(a.title) + "”</span>";
+        else thesis = '<span class="badge badge--live">Thesis live</span> <a href="../portfolio/' + esc(a.slug) + '/" target="_blank" rel="noopener">“' + esc(a.title) + "”</a>";
+        li.innerHTML =
+          '<div class="co__move"><button class="btn btn--ghost btn--icon" type="button" data-up aria-label="Move up"' + (i ? "" : " disabled") + '>↑</button>' +
+          '<button class="btn btn--ghost btn--icon" type="button" data-down aria-label="Move down"' + (i < companies.length - 1 ? "" : " disabled") + ">↓</button></div>" +
+          '<div class="co__logo"><img src="../' + esc(c.logo) + '" alt="" loading="lazy"></div>' +
+          '<div><div class="co__name">' + (c.hidden ? '<span class="badge badge--hidden">Hidden</span> ' : "") + esc(c.name) + "</div>" +
+          '<div class="co__meta">' + esc(c.tag) + ' · <a href="' + esc(c.site) + '" target="_blank" rel="noopener">' + esc(siteLabel(c.site)) + "</a></div>" +
+          '<div class="co__thesis">' + thesis + "</div></div>" +
+          '<div class="co__actions">' +
+          '<button class="btn btn--ghost btn--sm" type="button" data-edit>Edit</button>' +
+          '<button class="btn btn--sm" type="button" data-thesis>' + (a ? "Edit thesis" : hasDraft(c.key) ? "Continue thesis" : "Write thesis") + "</button>" +
+          '<button class="btn btn--ghost btn--sm" type="button" data-hide>' + (c.hidden ? "Show" : "Hide") + "</button>" +
+          '<button class="btn btn--danger btn--sm" type="button" data-delete>Delete</button></div>';
+        li.querySelector("[data-up]").addEventListener("click", function () { move(i, -1); });
+        li.querySelector("[data-down]").addEventListener("click", function () { move(i, 1); });
+        li.querySelector("[data-edit]").addEventListener("click", function () { openCompany(c); });
+        li.querySelector("[data-thesis]").addEventListener("click", function () { openThesis(c); });
+        li.querySelector("[data-hide]").addEventListener("click", function () { setHidden(c, !c.hidden, li); });
+        li.querySelector("[data-delete]").addEventListener("click", function (e) {
+          if (!confirmClick(e.currentTarget, "Delete for good?")) return;
+          deleteCompany(c, li);
+        });
+        ul.appendChild(li);
+      });
+      if (!companies.length) ul.innerHTML = '<li class="hint">No companies yet. Add the first one.</li>';
+    }
+    function move(i, by) {
+      var j = i + by, t = companies[i];
+      companies[i] = companies[j]; companies[j] = t;
+      renderList();
+    }
+    async function saveOrder() {
+      $("order-save").disabled = true;
+      try {
+        var files = [];
+        companies.forEach(function (c, i) {
+          if (c.order !== i + 1) { c.order = i + 1; files.push(companyFile(c)); }
+        });
+        var sha = await commit(files, [], "Portfolio: reorder\n\nReordered with the portfolio editor.", listStatus);
+        savedOrder = companies.map(function (c) { return c.key; });
+        renderList();
+        listStatus("Saved the new order. The homepage updates in a minute or two. " + commitLink(sha) + ".", "ok");
+      } catch (err) {
+        listStatus("Couldn’t save the order. " + esc(err.message || String(err)), "err");
+      }
+      $("order-save").disabled = false;
+    }
+    async function setHidden(c, hide, row) {
+      row.classList.add("is-busy");
+      try {
+        var next = Object.assign({}, c);
+        if (hide) next.hidden = true; else delete next.hidden;
+        var sha = await commit([companyFile(next)], [], "Portfolio: " + (hide ? "hide " : "show ") + c.name + "\n\n" + (hide ? "Hidden" : "Shown again") + " with the portfolio editor.", listStatus);
+        companies = companies.map(function (x) { return x.key === c.key ? next : x; });
+        renderList();
+        listStatus((hide ? c.name + " comes off the site in a minute or two (its thesis too). Show brings it back. " :
+          c.name + " is back on the site in a minute or two. ") + commitLink(sha) + ".", "ok");
+      } catch (err) {
+        row.classList.remove("is-busy");
+        listStatus("Couldn’t " + (hide ? "hide " : "show ") + esc(c.name) + ". " + esc(err.message || String(err)), "err");
+      }
+    }
+    function filesOf(c) {
+      var out = [c.logo];
+      if (c.founder && c.founder.photo) out.push(c.founder.photo);
+      if (c.article) out.push("assets/og/" + c.article.slug + ".jpg", "portfolio/" + c.article.slug + "/index.html");
+      return out;
+    }
+    async function deleteCompany(c, row) {
+      row.classList.add("is-busy");
+      try {
+        var others = {};
+        companies.forEach(function (x) { if (x.key !== c.key) filesOf(x).forEach(function (p) { others[p] = true; }); });
+        var remove = [DIR + "/" + c.key + ".json"].concat(filesOf(c).filter(function (p) { return !others[p]; }));
+        var sha = await commit([], remove, "Portfolio: delete " + c.name + "\n\nRemoved with the portfolio editor.", listStatus);
+        try { localStorage.removeItem(DRAFT_KEY + c.key); } catch (e) {}
+        companies = companies.filter(function (x) { return x.key !== c.key; });
+        savedOrder = savedOrder.filter(function (k) { return k !== c.key; });
+        renderList();
+        listStatus("Deleted " + esc(c.name) + ". The homepage updates in a minute or two. " + commitLink(sha) + ".", "ok");
+      } catch (err) {
+        row.classList.remove("is-busy");
+        listStatus("Couldn’t delete " + esc(c.name) + ". " + esc(err.message || String(err)), "err");
+      }
+    }
+
+    /* ---------- company form ---------------------------------------------- */
+    var editingCo = null;                // the company as on GitHub, or null for a new one
+    var newLogo = null, newPhoto = null; // from makeLogo() / makePhoto()
+    var coView = "modal";
+    var coFrame = null;                  // { win, doc, opener } once the homepage preview loads
+
+    function coFields() {
+      return {
+        name: $("c-name").value.trim(), site: $("c-site").value.trim(), tag: $("c-tag").value.trim(),
+        desc: $("c-desc").value.trim().replace(/\s+/g, " "), summary: $("c-summary").value.trim(),
+        fname: $("c-fname").value.trim(), ftitle: $("c-ftitle").value.trim(), visible: $("c-visible").checked
+      };
+    }
+    function coKey() { return editingCo ? editingCo.key : slugify($("c-name").value) || "new-company"; }
+    function logoSrc() { return newLogo ? newLogo.url : editingCo ? editingCo.logo : ""; }
+    function photoSrc() { return newPhoto ? newPhoto.url : editingCo && editingCo.founder ? editingCo.founder.photo : ""; }
+
+    function setupCompanyForm() {
+      $("co-form").addEventListener("input", coChanged);
+      $("co-form").addEventListener("submit", function (e) { e.preventDefault(); saveCompany(); });
+      $("c-logo").addEventListener("change", async function () {
+        var f = $("c-logo").files[0];
+        if (!f) return;
+        newLogo = await makeLogo(f);
+        setThumb("c-logo-img", newLogo.url);
+        coChanged();
+      });
+      $("c-photo").addEventListener("change", async function () {
+        var f = $("c-photo").files[0];
+        if (!f) return;
+        newPhoto = await makePhoto(f);
+        setThumb("c-photo-img", newPhoto.url);
+        coChanged();
+      });
+      document.querySelectorAll("#co-app .tab").forEach(function (t) {
+        t.addEventListener("click", function () {
+          coView = t.dataset.view;
+          document.querySelectorAll("#co-app .tab").forEach(function (x) { x.setAttribute("aria-pressed", String(x === t)); });
+          renderCoPreview(true);
+        });
+      });
+      // The real homepage, so the preview is exactly what visitors see.
+      var frame = $("c-preview");
+      frame.addEventListener("load", function () {
+        var win = frame.contentWindow, doc = frame.contentDocument;
+        if (!doc || !doc.querySelector(".portfolio-grid")) return;
+        var st = doc.createElement("style");
+        st.textContent = ".in-view-target{opacity:1!important;transform:none!important;transition:none!important}html{scroll-behavior:auto!important}" +
+          ".portfolio-cell.is-previewed{box-shadow:inset 0 0 0 2px #F97D4A}.portfolio-cell.is-previewed .portfolio-meta{opacity:1}";
+        doc.head.appendChild(st);
+        coFrame = { win: win, doc: doc, opener: doc.querySelector(".portfolio-cell[data-company]") };
+        renderCoPreview(true);
+      });
+    }
+    function setThumb(id, url) {
+      $(id).hidden = !url;
+      if (url) $(id).src = url.indexOf("blob:") === 0 ? url : "../" + url;
+    }
+    var coPending;
+    function coChanged() {
+      clearTimeout(coPending);
+      coPending = setTimeout(function () { renderCoPreview(false); }, 120);
+      var n = words($("c-desc").value);
+      $("c-desc-count").textContent = n + " words";
+      $("c-desc-count").classList.toggle("is-off", n > 0 && (n < 40 || n > 60));
+    }
+    function renderCoPreview(scroll) {
+      if (!coFrame) return;
+      var f = coFields(), key = coKey(), doc = coFrame.doc, win = coFrame.win, P;
+      try { P = win.eval("PORTCOS"); } catch (e) { return; }
+      var a = editingCo && editingCo.article && !editingCo.article.hidden ? editingCo.article : null;
+      var d = { name: f.name || "Company name", site: f.site || "#", siteLabel: siteLabel(f.site) || "website.com",
+        logo: logoSrc(), tag: f.tag || "Sector", desc: f.desc || "The company description appears here." };
+      if (f.fname) d.founder = { name: f.fname, title: f.ftitle, photo: photoSrc() };
+      if (a) d.blog = "portfolio/" + a.slug + "/";
+      P[key] = d;
+
+      var cell = doc.querySelector('.portfolio-cell[data-company="' + key + '"]');
+      doc.querySelectorAll(".portfolio-cell.is-previewed").forEach(function (x) { if (x !== cell) x.classList.remove("is-previewed"); });
+      if (!cell) {
+        doc.querySelectorAll(".portfolio-cell[data-new]").forEach(function (x) { x.remove(); });
+        var grid = doc.querySelector(".portfolio-grid");
+        cell = doc.createElement("button");
+        cell.type = "button";
+        cell.dataset.new = "1";
+        cell.dataset.company = key;
+        cell.className = "portfolio-cell cell-" + (grid.querySelectorAll(".portfolio-cell[data-company]").length % 8 + 1);
+        cell.innerHTML = '<div class="portfolio-logo"><img alt=""></div><div class="portfolio-meta"><span class="portfolio-meta-tag">●</span> <span></span></div>';
+        var blank = grid.querySelector(".portfolio-cell-empty");
+        grid.insertBefore(cell, blank);
+        if (blank) blank.remove();
+      }
+      cell.classList.add("is-previewed");
+      var img = cell.querySelector(".portfolio-logo img");
+      if (d.logo) img.src = d.logo; else img.removeAttribute("src");
+      img.alt = d.name;
+      var meta = cell.querySelector(".portfolio-meta");
+      meta.innerHTML = '<span class="portfolio-meta-tag">●</span> ' + esc(d.tag);
+
+      var modal = doc.getElementById("portco-modal");
+      if (coView === "modal") {
+        // The page's own open(), reached through a cell it wired up: point
+        // that cell at this company for one click.
+        var opener = coFrame.opener, was = opener.dataset.company;
+        opener.dataset.company = key;
+        opener.click();
+        opener.dataset.company = was;
+      } else {
+        if (modal.classList.contains("is-open")) modal.querySelector("[data-close]").click();
+        if (scroll) win.scrollTo(0, cell.getBoundingClientRect().top + win.scrollY - 140);
+      }
+    }
+
+    function openCompany(c) {
+      editingCo = c;
+      newLogo = newPhoto = null;
+      $("c-logo").value = ""; $("c-photo").value = "";
+      coStatus("");
+      $("co-mode").textContent = c ? "Editing " + c.name : "New company";
+      $("c-save").textContent = c ? "Save changes" : "Add to portfolio";
+      $("c-visible-row").hidden = !!c;
+      $("c-visible").checked = true;
+      $("c-name").value = c ? c.name : "";
+      $("c-site").value = c ? c.site : "";
+      $("c-tag").value = c ? c.tag : "";
+      $("c-desc").value = c ? c.desc : "";
+      $("c-summary").value = c ? c.summary || "" : "";
+      $("c-fname").value = c && c.founder ? c.founder.name : "";
+      $("c-ftitle").value = c && c.founder ? c.founder.title : "";
+      setThumb("c-logo-img", logoSrc());
+      setThumb("c-photo-img", photoSrc());
+      show("co-app");
+      coChanged();
+      // Fresh homepage each time, so earlier previews don't linger.
+      coFrame = null;
+      $("c-preview").src = "../?preview=" + stamp() + "#portfolio";
+    }
+
+    function validateCo(f) {
+      if (!f.name) return "Add the company name.";
+      if (!/^https?:\/\/\S+\.\S+/.test(f.site)) return "Add the website, starting with https://";
+      if (!f.tag) return "Add a sector, e.g. Digital Health.";
+      if (!f.desc) return "Add a description.";
+      if (!f.summary) return "Add a one-line summary.";
+      if (!editingCo && !newLogo) return "Add a logo.";
+      if (!editingCo && companies.some(function (c) { return c.key === coKey(); })) return "There’s already a company called " + f.name + ".";
+      if (f.fname && !f.ftitle) return "Add the founder’s title, e.g. CEO.";
+      if ((newPhoto || (editingCo && editingCo.founder)) && !f.fname) return "Add the founder’s name, or remove the photo by clearing the name and title.";
+      return dashCheck({ name: f.name, sector: f.tag, description: f.desc, summary: f.summary, "founder title": f.ftitle });
+    }
+    async function saveCompany() {
+      var f = coFields();
+      if (!f.fname && !f.ftitle) newPhoto = null;
+      var problem = validateCo(f);
+      if (problem) { coStatus(esc(problem), "err"); return; }
+      var old = editingCo, key = coKey(), files = [], remove = [];
+      $("c-save").disabled = true;
+      try {
+        if (!old) {
+          coStatus("Checking the name…");
+          if (await gh("/contents/" + DIR + "/" + key + ".json?ref=" + cfg.branch, { allow404: true })) throw new Error("A company file " + key + ".json already exists. Change the name, or edit that company.");
+        }
+        var c = Object.assign({}, old || {}, {
+          key: key, order: old ? old.order : companies.reduce(function (m, x) { return Math.max(m, x.order || 0); }, 0) + 1,
+          name: f.name, site: f.site, tag: f.tag, desc: f.desc, summary: f.summary
+        });
+        // New files get a fresh name when editing, so a replaced picture never
+        // overwrites one the live page still shows.
+        var suffix = old ? "-" + stamp() : "";
+        if (newLogo) {
+          c.logo = "portco-logos/" + key + suffix + "." + newLogo.ext;
+          files.push({ path: c.logo, blob: newLogo.blob });
+          if (old && old.logo !== c.logo) remove.push(old.logo);
+        }
+        if (f.fname) {
+          var photo = old && old.founder ? old.founder.photo : "";
+          if (newPhoto) {
+            photo = "assets/founders/" + slugify(f.fname) + suffix + "." + newPhoto.ext;
+            files.push({ path: photo, blob: newPhoto.blob });
+            if (old && old.founder && old.founder.photo && old.founder.photo !== photo) remove.push(old.founder.photo);
+          }
+          if (!photo) throw new Error("Add a photo of " + f.fname + ", or clear the founder fields.");
+          c.founder = { name: f.fname, title: f.ftitle, photo: photo };
+        } else {
+          if (old && old.founder && old.founder.photo) remove.push(old.founder.photo);
+          delete c.founder;
+        }
+        if (!old && !f.visible) c.hidden = true;
+        files.push(companyFile(c));
+        var sha = await commit(files, remove,
+          (old ? "Portfolio: edit " : "Portfolio: add ") + f.name + "\n\n" + (old ? "Edited" : "Added") + " with the portfolio editor.", coStatus);
+        var note = old ? "Saved " + esc(f.name) + ". The homepage updates in a minute or two. " :
+          (c.hidden ? "Added " + esc(f.name) + " as hidden. Show puts it on the site. " : "Added " + esc(f.name) + ". It’s on the homepage in a minute or two. ") +
+          "Write its thesis whenever it’s ready. ";
+        showList(note + commitLink(sha) + ".");
+      } catch (err) {
+        coStatus(esc(err.message || String(err)), "err");
+      }
+      $("c-save").disabled = false;
+    }
+
+    /* ---------- thesis form ----------------------------------------------- */
+    var thesisCo = null;                 // the company whose thesis is open
+    var slugTouched = false;
+    var aDoc = null;
+
+    function setupThesisForm() {
+      var sel = $("a-author");
+      TEAM.forEach(function (t) { var o = document.createElement("option"); o.value = t[0]; o.textContent = t[0]; sel.appendChild(o); });
+      var o = document.createElement("option"); o.value = ""; o.textContent = "Someone else…"; sel.appendChild(o);
+      sel.addEventListener("change", function () { $("a-other").hidden = sel.value !== ""; });
+
+      $("a-form").addEventListener("input", function (e) { aChanged(true); });
+      $("a-title").addEventListener("input", function () {
+        if (!slugTouched) $("a-slug").value = slugify($("a-title").value);
+      });
+      $("a-slug").addEventListener("input", function () {
+        slugTouched = true;
+        $("a-slug").value = $("a-slug").value.toLowerCase().replace(/[^a-z0-9-]/g, "-");
+      });
+      $("a-form").addEventListener("submit", function (e) { e.preventDefault(); saveThesis(); });
+      $("a-clear").addEventListener("click", function () {
+        if (!confirmClick($("a-clear"), thesisCo.article ? "Discard changes?" : "Clear everything?")) return;
+        dropDraft();
+        openThesis(thesisCo);
+      });
+      $("a-hide").addEventListener("click", function () { setThesisHidden(!thesisCo.article.hidden); });
+      $("a-delete").addEventListener("click", function (e) {
+        if (!confirmClick(e.currentTarget, "Delete for good?")) return;
+        deleteThesis();
+      });
+
+      var frame = $("a-preview");
+      frame.srcdoc = '<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">' +
+        '<link href="https://fonts.googleapis.com/css2?family=Sora:wght@100;200;300;400;500;600;700;800&family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">' +
+        '<link rel="stylesheet" href="../portfolio/_shared.css"></head><body>' +
+        '<div class="nav-wrap"><nav class="nav"><div class="nav-brand"><a><img class="nav-brand-mark" src="../logo/logo.png" alt=""></a></div>' +
+        '<div class="nav-links"><a class="nav-link">Thesis</a><a class="nav-link">Ecosystem</a><a class="nav-link">Portfolio</a><a class="nav-link">Team</a></div>' +
+        '<div class="nav-aux"><a class="nav-link">Capital Partners</a></div><a class="nav-cta">Apply →</a></nav></div>' +
+        '<div class="container"><a class="back-link">← Back to portfolio</a><h1 id="p-title"></h1><p class="subtitle" id="p-sub"></p>' +
+        '<div class="meta"><span id="p-by"></span><time id="p-date"></time></div><article id="p-body"></article>' +
+        '<a class="footer-link">← Back to portfolio</a></div></body></html>';
+      frame.addEventListener("load", function () { aDoc = frame.contentDocument; renderThesisPreview(); });
+    }
+    function author() {
+      var name = $("a-author").value;
+      if (name) return { name: name, title: TEAM.filter(function (t) { return t[0] === name; })[0][1] };
+      return { name: $("a-author-name").value.trim(), title: $("a-author-title").value.trim() };
+    }
+    function setAuthor(name, title) {
+      var inTeam = TEAM.some(function (t) { return t[0] === name; });
+      $("a-author").value = !name ? TEAM[0][0] : inTeam ? name : "";
+      $("a-other").hidden = !name || inTeam;
+      $("a-author-name").value = name && !inTeam ? name : "";
+      $("a-author-title").value = name && !inTeam ? title || "" : "";
+    }
+    function aFields() {
+      var who = author();
+      return { title: $("a-title").value.trim(), subtitle: $("a-subtitle").value.trim(), slug: $("a-slug").value.trim(),
+        author: who.name, authorTitle: who.title, date: $("a-date").value, desc: $("a-desc").value.trim(), body: $("a-body").value };
+    }
+    function aFill(f) {
+      $("a-title").value = f.title || ""; $("a-subtitle").value = f.subtitle || ""; $("a-slug").value = f.slug || "";
+      $("a-date").value = f.date || today(); $("a-desc").value = f.desc || ""; $("a-body").value = f.body || "";
+      setAuthor(f.author, f.authorTitle);
+    }
+    function draftKey() { return DRAFT_KEY + thesisCo.key; }
+    function saveDraft() {
+      var f = aFields(); f.slugTouched = slugTouched;
+      try { localStorage.setItem(draftKey(), JSON.stringify(f)); $("a-draft").textContent = "· draft saved on this computer"; } catch (e) {}
+    }
+    function loadDraft() {
+      var f = null;
+      try { f = JSON.parse(localStorage.getItem(draftKey()) || "null"); } catch (e) {}
+      if (!f) return false;
+      if (thesisCo.article) f.slug = thesisCo.article.slug;
+      aFill(f);
+      slugTouched = !!f.slugTouched;
+      $("a-draft").textContent = thesisCo.article ? "· unsaved changes restored" : "· draft restored";
+      return true;
+    }
+    function dropDraft() { try { localStorage.removeItem(draftKey()); } catch (e) {} }
+
+    var aPending, ogPending;
+    function aChanged(byUser) {
+      clearTimeout(aPending);
+      aPending = setTimeout(function () { renderThesisPreview(); if (byUser) saveDraft(); }, 150);
+      var n = $("a-desc").value.trim().length;
+      $("a-desc-count").textContent = n + " characters";
+      $("a-desc-count").classList.toggle("is-off", n > 0 && (n < 120 || n > 170));
+      clearTimeout(ogPending);
+      ogPending = setTimeout(renderOg, 250);
+    }
+    // A published thesis keeps its social image unless the headline changes.
+    function ogIsNew() {
+      var a = thesisCo.article;
+      return !a || a.title !== $("a-title").value.trim() || thesisCo.name !== (a.ogCompany || thesisCo.name);
+    }
+    function renderOg() {
+      var canvas = $("a-og");
+      if (ogIsNew()) {
+        $("a-og-hint").textContent = "(made from the headline)";
+        drawOg(canvas, thesisCo.name, $("a-title").value.trim());
+      } else {
+        $("a-og-hint").textContent = "(the current one; changing the headline makes a new one)";
+        var img = new Image();
+        img.onload = function () { canvas.getContext("2d").drawImage(img, 0, 0, 1200, 630); };
+        img.onerror = function () { drawOg(canvas, thesisCo.name, $("a-title").value.trim()); };
+        img.src = "../assets/og/" + thesisCo.article.slug + ".jpg?" + stamp();
+      }
+    }
+    function renderThesisPreview() {
+      if (!aDoc || !aDoc.getElementById("p-body")) return;
+      var f = aFields();
+      aDoc.getElementById("p-title").textContent = sentence(f.title || "Your headline");
+      aDoc.getElementById("p-sub").textContent = f.subtitle || "Your subtitle.";
+      aDoc.getElementById("p-by").textContent = (f.author || "Author") + (f.authorTitle ? ", " + f.authorTitle : "");
+      aDoc.getElementById("p-date").textContent = niceDate(f.date);
+      aDoc.getElementById("p-body").innerHTML = toHtml(f.body) || "<p>Your thesis appears here as you write.</p>";
+    }
+
+    function openThesis(c) {
+      thesisCo = c;
+      var a = c.article;
+      slugTouched = false;
+      aStatus("");
+      $("a-draft").textContent = "";
+      $("a-co").textContent = c.name;
+      $("a-mode").textContent = a ? (a.hidden ? "Thesis (offline)" : "Editing thesis") : "New thesis";
+      $("a-save").textContent = a ? "Save changes" : "Publish thesis";
+      $("a-clear").textContent = a ? "Discard changes" : "Start over";
+      $("a-hide").hidden = $("a-delete").hidden = !a;
+      if (a) $("a-hide").textContent = a.hidden ? "Put back online" : "Take offline";
+      $("a-slug").readOnly = !!a;
+      $("a-slug-hint").textContent = a ? "(fixed once published, so links keep working)" : "(set from the headline)";
+      $("a-draft-note").textContent = a ? "Unsaved changes are kept on this computer until you save or discard them." :
+        "Your draft is saved on this computer as you type, so you can come back to it before publishing.";
+      if (a) {
+        aFill({ title: a.title, subtitle: a.subtitle, slug: a.slug, author: a.author, authorTitle: a.authorTitle,
+          date: a.datePublished, desc: a.description, body: toMarkdown(a.body) });
+        slugTouched = true;
+      } else {
+        aFill({ date: today() });
+      }
+      loadDraft();
+      show("a-app");
+      aChanged(false);
+    }
+
+    function validateThesis(f) {
+      if (!f.title) return "Add a headline.";
+      if (!f.subtitle) return "Add a subtitle.";
+      if (!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(f.slug)) return "The web address can only use lowercase letters, numbers and single dashes.";
+      if (!f.author || !f.authorTitle) return "Add the author’s name and title.";
+      if (!f.date) return "Pick a publish date.";
+      if (!f.desc) return "Add a summary.";
+      if (!f.body.trim()) return "Write the thesis.";
+      var clash = companies.filter(function (c) { return c.key !== thesisCo.key && c.article && c.article.slug === f.slug; })[0];
+      if (clash) return "The thesis for " + clash.name + " already uses /portfolio/" + f.slug + "/. Change the web address.";
+      return dashCheck({ headline: f.title, subtitle: f.subtitle, summary: f.desc, body: f.body });
+    }
+    async function saveThesis() {
+      var f = aFields(), problem = validateThesis(f);
+      if (problem) { aStatus(esc(problem), "err"); return; }
+      var c = thesisCo, old = c.article, files = [];
+      $("a-save").disabled = true;
+      try {
+        if (ogIsNew()) {
+          var canvas = document.createElement("canvas");
+          canvas.width = 1200; canvas.height = 630;
+          await drawOg(canvas, c.name, f.title);
+          files.push({ path: "assets/og/" + f.slug + ".jpg", blob: await encode(canvas, "image/jpeg", 0.9) });
+        }
+        var a = Object.assign({}, old || {}, {
+          slug: f.slug, title: f.title, subtitle: f.subtitle, description: f.desc,
+          author: f.author, authorTitle: f.authorTitle, datePublished: f.date,
+          dateModified: old ? today() : f.date, body: toHtml(f.body)
+        });
+        if (files.length) a.ogCompany = c.name;
+        var next = Object.assign({}, c, { article: a });
+        files.push(companyFile(next));
+        var sha = await commit(files, [],
+          (old ? "Portfolio: edit the " : "Portfolio: publish the ") + c.name + " thesis\n\n" + (old ? "Edited" : "Published") + " with the portfolio editor by " + f.author + ".", aStatus);
+        dropDraft();
+        var live = '<a href="../portfolio/' + esc(f.slug) + '/" target="_blank" rel="noopener">/portfolio/' + esc(f.slug) + "/</a>";
+        showList(a.hidden ? "Saved the " + esc(c.name) + " thesis. It’s still offline; Put back online publishes it. " + commitLink(sha) + "." :
+          c.hidden ? "Saved the " + esc(c.name) + " thesis. It goes live with the company when you Show " + esc(c.name) + ". " + commitLink(sha) + "." :
+          (old ? "Saved. The page updates in a minute or two at " : "Published. The site rebuilds in a minute or two, then the thesis is live at ") + live +
+          " and linked from the " + esc(c.name) + " popup. " + commitLink(sha) + ".");
+      } catch (err) {
+        aStatus(esc(err.message || String(err)), "err");
+      }
+      $("a-save").disabled = false;
+    }
+    async function setThesisHidden(hide) {
+      var c = thesisCo;
+      $("a-hide").disabled = true;
+      try {
+        var a = Object.assign({}, c.article);
+        if (hide) a.hidden = true; else delete a.hidden;
+        var sha = await commit([companyFile(Object.assign({}, c, { article: a }))], [],
+          "Portfolio: " + (hide ? "take the " + c.name + " thesis offline" : "put the " + c.name + " thesis back online") + "\n\nWith the portfolio editor.", aStatus);
+        showList((hide ? "Took the " + esc(c.name) + " thesis offline. The page and the popup button go in a minute or two. " :
+          "The " + esc(c.name) + " thesis is back online in a minute or two. ") + commitLink(sha) + ".");
+      } catch (err) {
+        aStatus(esc(err.message || String(err)), "err");
+      }
+      $("a-hide").disabled = false;
+    }
+    async function deleteThesis() {
+      var c = thesisCo, a = c.article;
+      try {
+        var next = Object.assign({}, c);
+        delete next.article;
+        var sha = await commit([companyFile(next)], ["assets/og/" + a.slug + ".jpg", "portfolio/" + a.slug + "/index.html"],
+          "Portfolio: delete the " + c.name + " thesis\n\nRemoved with the portfolio editor.", aStatus);
+        dropDraft();
+        showList("Deleted the " + esc(c.name) + " thesis. The company stays in the portfolio. " + commitLink(sha) + ".");
+      } catch (err) {
+        aStatus(esc(err.message || String(err)), "err");
+      }
+    }
+
+    // For testing without a password: ?debug=1 exposes the converters, the
+    // social image and a way in with a config of your own (stub fetch for
+    // api.github.com; never test against the real repo).
+    if (/[?&]debug=1/.test(location.search)) {
+      window.portfolioEditor = {
+        toHtml: toHtml, toMarkdown: toMarkdown, drawOg: drawOg,
+        unlockWith: function (c) { cfg = c; $("lock").hidden = true; start(); }
+      };
+    }
+  })();
+  </script>
+</body>
+</html>

@@ -22,9 +22,9 @@ The repo is public and GitHub Pages serves every file in it (`.nojekyll` is set 
 
 ## Structure
 
-- `index.html`: the homepage, including all of its CSS and JS. Sections: hero, `#thesis`, `#ecosystem` (cards: Group, Ventures, Capital Partners), `#portfolio`, stats, `#team`, final CTA, footer.
+- `index.html`: the homepage, including all of its CSS and JS (the portfolio parts are generated). Sections: hero, `#thesis`, `#ecosystem` (cards: Group, Ventures, Capital Partners), `#portfolio`, stats, `#team`, final CTA, footer.
 - `capital-partners/index.html`: the investor-facing Capital Partners page, with its own inline CSS that mirrors the site tokens. Its CTAs ("Join") go to `https://app.matchplaygroup.com/#/auth/investor-signup` and open in a new tab.
-- `portfolio/<article-slug>/index.html`: "Why we invested" posts, one per company that has one. All of them share `portfolio/_shared.css`. The back link returns to `../../#portfolio`, or closes the tab if the post was opened from the homepage modal.
+- `portfolio/<article-slug>/index.html`: "Why we invested" posts, generated from `content/portfolio/` (see Portfolio). All of them share `portfolio/_shared.css`. The back link returns to `../../#portfolio`, or closes the tab if the post was opened from the homepage modal.
 - `assets/team/`, `assets/founders/`, `portco-logos/`, `logo/logo.png`, `assets/og/` (1200x630 social images, one per page).
 - SEO/AEO/GEO files: `favicon.ico` (16/32/48), `apple-touch-icon.png`, `assets/icon-192.png`, `assets/icon-512.png`, `site.webmanifest`, `robots.txt`, `sitemap.xml`, `llms.txt`.
 
@@ -37,23 +37,18 @@ Logo | Thesis, Ecosystem, Portfolio, Team | divider | Capital Partners | Apply â
 
 ## Portfolio
 
-Grid of 8 companies, in this order: Jeeva, NeuroVRD, Tenzr, Geneial, SOLUtion, KBO, Guidant BioTherapeutics, 3DOS. Each cell is a `<button class="portfolio-cell cell-N" data-company="key">` that opens a modal. The modal is driven by the `PORTCOS` object in `index.html`:
+The portfolio is **generated**. Each company is one file, `content/portfolio/<key>.json`, holding what the grid and modal show plus an optional `article` (the "Why we invested" thesis):
 
 ```js
-key: { name, site, siteLabel, logo, tag, desc, founder: { name, title, photo }, blog }
+{ key, order, name, site, tag, desc, summary, logo, founder?: { name, title, photo }, hidden?,
+  article?: { slug, title, subtitle, description, author, authorTitle, datePublished, dateModified, body (HTML), hidden?, ogCompany? } }
 ```
 
-The modal shows "Read our thesis" only when `blog` is set. "Visit website" always shows.
+`python3 tools/portfolio/build.py` regenerates, from those files: the grid cells (between the `portfolio-grid` markers, last row padded with blank cells), the "Investments to date" number (`data-portfolio-count`), the `PORTCOS` modal object (between the `PORTCOS` markers), the JSON-LD `ItemList`, every `portfolio/<slug>/index.html` (and removes pages of deleted or hidden theses), the thesis entries in `sitemap.xml`, and the Portfolio section of `llms.txt`. **Never hand-edit those generated parts:** change the JSON or `build.py`, then rebuild. `summary` is the one-liner used in the JSON-LD and `llms.txt`; `siteLabel` and the modal's `blog` link are derived. `"hidden": true` on a company takes it (and its thesis) off the site; on an article, it drops just the thesis.
 
-**To add a company, update all of these:**
-1. A grid cell in `#portfolio` (logos use `loading="lazy" decoding="async"`).
-2. A `PORTCOS` entry. Rewrite the user's description to match the tone and length of the others.
-3. The logo in `portco-logos/` (transparent background preferred) and the founder photo in `assets/founders/` (square crop).
-4. The JSON-LD `ItemList` in the `index.html` head.
-5. `llms.txt`.
-6. The "Investments to date" stat, if the count changed.
+**The editor** (`/editor/`, `editor/index.html`, noindex and disallowed in robots.txt) is how the team adds companies and theses. A company can go live with no thesis; the thesis is written and published later from the same row. Thesis drafts are kept in the browser's localStorage until published. It works like the Group site's blog editor: a shared password decrypts a GitHub token stored AES-GCM encrypted in the page (the owner sets it with `node tools/portfolio/editor-setup.mjs`, using a fine-grained token with Contents read/write on this repo only), and saving commits straight to `main`. `.github/workflows/build-portfolio.yml` then runs the build, commits the output and requests a Pages build. The editor also makes each thesis's 1200x630 `assets/og/<slug>.jpg` (canvas, styled like the originals), crops founder photos to 600x600, resizes logos, and refuses em-dashes. `?debug=1` exposes `portfolioEditor.toHtml/toMarkdown/drawOg/unlockWith(cfg)` for testing; stub `fetch` for api.github.com and never test against the real repo.
 
-**To add a blog post:** create `portfolio/<title-slug>/index.html` by copying an existing post. Update the title ("Why We Invested in X | MatchPlay Ventures"), meta description, canonical, OG/Twitter tags plus a new `assets/og/<slug>.jpg`, the JSON-LD BlogPosting and BreadcrumbList, and the `<time datetime>`. Then set `blog` in `PORTCOS`, and add the URL to `sitemap.xml` and `llms.txt`.
+When the user asks Claude to add a company directly, write the JSON (rewrite the description to match the others: 2 sentences, about 45 to 55 words), add the logo to `portco-logos/` and founder photo to `assets/founders/`, run the build, and commit the JSON and generated files together.
 
 ## Team (in display order)
 
