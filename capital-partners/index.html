@@ -453,10 +453,10 @@
     padding: 40px 36px;
     overflow: hidden;
   }
-  .callout::before {
-    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
-    background: var(--ventures);
-  }
+  /* Accent line, glow and tilt come from data-tilt (assets/fx.css); a dark
+     box on a light band, so its lift reads through a soft shadow. */
+  .callout[data-tilt]:hover,
+  .callout[data-tilt].is-active { box-shadow: 0 22px 44px -24px rgba(10,10,10,0.45); }
   .callout h3 {
     font-family: var(--font-display);
     font-size: 28px; font-weight: 500; letter-spacing: -0.02em;
@@ -749,7 +749,7 @@
         <li><strong>Investor events</strong><span>Founder sessions and portfolio updates.</span></li>
         <li><strong>Distributions</strong><span>Exit proceeds coordinated through your investment vehicle.</span></li>
       </ul>
-      <div class="callout">
+      <div class="callout" data-tilt>
         <span class="num">Follow-ons</span>
         <h3>Invest again, with context.</h3>
         <p>When a portfolio company raises again, you'll see what we originally underwrote, what management delivered, what changed, and whether MatchPlay Ventures is investing again.</p>
