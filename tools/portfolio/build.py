@@ -95,7 +95,7 @@ def grid(companies):
     cells = []
     for i, c in enumerate(companies):
         cells.append(
-            '      <button type="button" class="portfolio-cell cell-%d" data-company="%s">\n'
+            '      <button type="button" class="portfolio-cell cell-%d" data-company="%s" data-glow data-fx-light>\n'
             '        <div class="portfolio-logo"><img loading="lazy" decoding="async" src="%s" alt="%s"></div>\n'
             '        <div class="portfolio-meta"><span class="portfolio-meta-tag">●</span> %s</div>\n'
             "      </button>" % (i % CELLS + 1, esc(c["key"]), esc(c["logo"]), esc(c["name"]), esc(c["tag"])))
@@ -245,8 +245,9 @@ def article_page(c, a):
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@100;200;300;400;500;600;700;800&family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="../_shared.css" />
+<link rel="stylesheet" href="../../assets/fx.css" />
 </head>
-<body>
+<body data-light-page>
 <div class="nav-wrap">
   <nav class="nav">
     <div class="nav-brand">
@@ -274,6 +275,7 @@ def article_page(c, a):
     </article>
     <a class="footer-link" %(back)s>← Back to portfolio</a>
   </div>
+<script src="../../assets/fx.js" defer></script>
 </body>
 </html>
 """ % v

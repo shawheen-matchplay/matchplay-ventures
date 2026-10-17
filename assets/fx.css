@@ -1,0 +1,215 @@
+/* Shared effects for every page, ported from the MatchPlay Group site
+   (matchplaygroup.com: css/glass.css and the "Pointer cards" in styles.css).
+   Loaded after each page's own styles; assets/fx.js drives the moving parts.
+
+   1. Liquid-glass nav pill, with a lens that slides between the links
+   2. Pointer boxes ([data-tilt], [data-glow]): accent rule, glow, tilt
+   3. Page transitions between the site's pages */
+
+:root { --fx-ease: cubic-bezier(.2, .8, .2, 1); }
+
+/* 1. Liquid-glass nav ------------------------------------------------------
+   The pill's glass is a layer of its own (::before), with a sheen (::after)
+   that drifts as the page scrolls. In Chromium browsers fx.js also bends
+   the backdrop at the rim with an SVG displacement map (--lg-filter); other
+   browsers get the same glass without the bend. The tint deepens over light
+   sections (body.glass-on-light) so the white type holds. */
+.nav {
+  position: relative;
+  isolation: isolate;
+  background: none;
+  -webkit-backdrop-filter: none;
+          backdrop-filter: none;
+  border-color: transparent;
+  box-shadow: 0 10px 34px rgba(0, 0, 0, 0.28), 0 2px 6px rgba(0, 0, 0, 0.12);
+  --glass-tint: 0.69;
+}
+.glass-on-light .nav { --glass-tint: 0.8; }
+.nav::before,
+.nav::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  pointer-events: none;
+}
+.nav::before {
+  background: rgba(24, 24, 28, var(--glass-tint));
+  -webkit-backdrop-filter: blur(10px) saturate(1.7) brightness(1.05);
+          backdrop-filter: var(--lg-filter, blur(10px) saturate(1.7) brightness(1.05));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.15),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.06),
+    inset 1px 0 0 rgba(255, 255, 255, 0.07),
+    inset -1px 0 0 rgba(255, 255, 255, 0.07),
+    inset 0 12px 22px -16px rgba(255, 255, 255, 0.18);
+  transition: background-color 0.4s ease;
+}
+.nav::after {
+  background: linear-gradient(110deg,
+    rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0) 22%,
+    rgba(255, 255, 255, 0) 70%, rgba(255, 255, 255, 0.06) 86%, rgba(255, 255, 255, 0) 100%);
+  background-size: 220% 100%;
+  background-position: var(--sheen, 40%) 0;
+}
+
+/* The lens: one glass drop that slides between the links you point at,
+   stretching as it goes, in place of each link's own hover. */
+.nav__lens {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  border-radius: 999px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  background: rgba(255, 255, 255, 0.07);
+  -webkit-backdrop-filter: saturate(1.4) brightness(1.15);
+          backdrop-filter: saturate(1.4) brightness(1.15);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.14),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.09),
+    0 4px 14px rgba(0, 0, 0, 0.22);
+  will-change: transform, width;
+}
+.nav__lens.is-on { opacity: 1; }
+.nav-brand, .nav-links, .nav-aux, .nav-cta { position: relative; z-index: 1; }
+.nav-link { color: rgba(255, 255, 255, 0.92); }
+.nav-link:hover { color: #fff; }
+.has-lens .nav-link:hover { background: transparent; }
+.nav-link[aria-current="page"] { color: var(--ventures); }
+
+/* Apply / Join: solid orange with a soft inner glow (no rim, no outer glow).
+   Hovering drains the fill to clear glass inside an orange outline. */
+.nav-cta {
+  background: var(--ventures);
+  border: 1.5px solid var(--ventures);
+  padding: 7.5px 16.5px;   /* the border inside its old size */
+  box-shadow: inset 3px 8px 14px -10px rgba(255, 255, 255, 0.4);
+  color: #fff;
+  font-weight: 600;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.18);
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease,
+              box-shadow 0.3s ease, text-shadow 0.3s ease;
+}
+.nav-cta:hover {
+  background: color-mix(in srgb, var(--ventures) 6%, transparent);
+  border-color: var(--ventures);
+  color: var(--ventures);
+  text-shadow: none;
+  box-shadow: inset 0 0 14px -4px color-mix(in srgb, var(--ventures) 45%, transparent);
+}
+
+/* 2. Pointer boxes ---------------------------------------------------------
+   [data-tilt]: fx.js gives the box a decorative .fx layer (an accent rule
+   along the top that draws across on hover, a resting glow low right, and
+   a glow under the pointer) and, for a mouse or pen, tilts it toward the
+   pointer, drifting and lifting a little. [data-glow] gets the layer
+   without the movement, for boxes that sit edge to edge in a grid. On touch
+   screens the box crossing a line just above the middle of the screen takes
+   the hover look as you scroll. Each box picks its colour with --fx-accent. */
+[data-tilt], [data-glow] {
+  --fx-accent: var(--ventures);
+  --fx-rest: 0.08;        /* glow opacity at rest, on hover, while tracking */
+  --fx-hover: 0.18;
+  --fx-track: 0.24;
+  position: relative;
+  isolation: isolate;
+}
+[data-tilt] {
+  transition: transform 0.4s var(--fx-ease), background-color 0.4s var(--fx-ease),
+              border-color 0.4s var(--fx-ease), box-shadow 0.4s var(--fx-ease);
+}
+[data-tilt]:hover { transform: translateY(-4px); }
+.fx {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  border-radius: inherit;
+  pointer-events: none;
+}
+.fx::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--fx-accent);
+  transform: scaleX(0.15);
+  transform-origin: left;
+  transition: transform 0.5s var(--fx-ease);
+}
+:is([data-tilt], [data-glow]):hover > .fx::before,
+:is([data-tilt], [data-glow]).is-active > .fx::before { transform: scaleX(1); }
+/* Soft radial gradients fitted to a 216px disc under blur(80px): they look
+   like the old blurred orbs but are drawn once, and the pointer's glow moves
+   by transform only (fx.js sets --gx/--gy in px). */
+.fx__orb {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 560px;
+  height: 560px;
+  border-radius: 50%;
+  background: radial-gradient(closest-side,
+    color-mix(in srgb, var(--fx-accent) 59.6%, transparent) 0.0%,
+    color-mix(in srgb, var(--fx-accent) 58.4%, transparent) 7.1%,
+    color-mix(in srgb, var(--fx-accent) 54.9%, transparent) 14.3%,
+    color-mix(in srgb, var(--fx-accent) 50.2%, transparent) 21.4%,
+    color-mix(in srgb, var(--fx-accent) 43.9%, transparent) 28.6%,
+    color-mix(in srgb, var(--fx-accent) 36.9%, transparent) 35.7%,
+    color-mix(in srgb, var(--fx-accent) 29.4%, transparent) 42.9%,
+    color-mix(in srgb, var(--fx-accent) 22.7%, transparent) 50.0%,
+    color-mix(in srgb, var(--fx-accent) 16.9%, transparent) 57.1%,
+    color-mix(in srgb, var(--fx-accent) 11.8%, transparent) 64.3%,
+    color-mix(in srgb, var(--fx-accent) 7.8%, transparent) 71.4%,
+    color-mix(in srgb, var(--fx-accent) 4.7%, transparent) 78.6%,
+    color-mix(in srgb, var(--fx-accent) 2.7%, transparent) 85.7%,
+    color-mix(in srgb, var(--fx-accent) 1.6%, transparent) 92.9%,
+    transparent 100%);
+  transition: opacity 0.4s var(--fx-ease);
+}
+.fx__orb--rest {
+  left: calc(100% - 54px);
+  top: 100%;
+  transform: translate(-50%, -50%);
+  opacity: var(--fx-rest);
+}
+.fx__orb--pointer {
+  transform: translate3d(calc(var(--gx, 0px) - 50%), calc(var(--gy, 0px) - 50%), 0);
+  opacity: 0;
+}
+:is([data-tilt], [data-glow]):hover .fx__orb--rest { opacity: var(--fx-hover); }
+:is([data-tilt], [data-glow]).is-tracking .fx__orb--rest { opacity: 0; }
+:is([data-tilt], [data-glow]).is-tracking .fx__orb--pointer {
+  opacity: var(--fx-track);
+  will-change: transform;
+  transition: opacity 0.4s var(--fx-ease), transform 0.12s ease-out;
+}
+/* White boxes have less to glow against: stronger glow, and the lift reads
+   through a soft shadow and a firmer edge. */
+[data-fx-light] { --fx-rest: 0.06; --fx-hover: 0.18; --fx-track: 0.28; }
+[data-fx-light][data-tilt]:hover,
+[data-fx-light][data-tilt].is-active {
+  border-color: rgba(10, 10, 10, 0.14);
+  box-shadow: 0 18px 40px -22px rgba(10, 10, 10, 0.28);
+}
+
+/* 3. Page transitions ------------------------------------------------------
+   Moving between the site's pages cross-fades instead of flashing white,
+   and the nav pill stays put (browsers with cross-document view
+   transitions; others load pages as before). */
+@view-transition { navigation: auto; }
+.nav-wrap { view-transition-name: site-nav; }
+::view-transition-old(root) { animation: 0.25s ease both fx-fade-out; }
+::view-transition-new(root) { animation: 0.35s ease both fx-fade-in; }
+@keyframes fx-fade-out { to { opacity: 0; } }
+@keyframes fx-fade-in { from { opacity: 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  [data-tilt]:hover { transform: none; }
+  ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }
+}

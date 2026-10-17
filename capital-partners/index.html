@@ -526,7 +526,20 @@
     .in-view-target { opacity: 1; transform: none; transition: none; }
     html { scroll-behavior: auto; }
   }
+  /* Hero load-in, as on the homepage: each line fades up in turn */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .reveal { opacity: 0; animation: fadeUp 0.8s cubic-bezier(.2,.8,.2,1) forwards; }
+  .reveal-1 { animation-delay: 0.1s; }
+  .reveal-2 { animation-delay: 0.25s; }
+  .reveal-3 { animation-delay: 0.4s; }
+  .reveal-4 { animation-delay: 0.55s; }
+  .reveal-5 { animation-delay: 0.7s; }
+  @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; animation: none; } }
 </style>
+<link rel="stylesheet" href="../assets/fx.css" />
 </head>
 <body>
 
@@ -554,16 +567,16 @@
   <div class="cp-hero-dots"></div>
   <div class="cp-hero-glow"></div>
   <div class="container">
-    <div class="section-label">Capital Partners</div>
-    <h1 class="cp-hero-title">Invest alongside <em>MatchPlay Ventures.</em></h1>
-    <p class="cp-hero-sub">
+    <div class="section-label reveal reveal-1">Capital Partners</div>
+    <h1 class="cp-hero-title reveal reveal-2">Invest alongside <em>MatchPlay Ventures.</em></h1>
+    <p class="cp-hero-sub reveal reveal-3">
       Capital Partners is our co-investment network. We source broadly, diligence deeply, and sponsor select opportunities where we have conviction. You choose which ones to join.
     </p>
-    <div class="cp-hero-ctas">
+    <div class="cp-hero-ctas reveal reveal-4">
       <a href="https://app.matchplaygroup.com/#/auth/investor-signup" target="_blank" rel="noopener" class="btn btn-primary">Join Capital Partners <span class="arrow">↗</span></a>
       <a href="#how" class="btn btn-secondary">How it works</a>
     </div>
-    <div class="cp-hero-for">
+    <div class="cp-hero-for reveal reveal-5">
       <span class="cp-hero-for-label">Built for</span>
       <ul class="chips">
         <li class="chip">Accredited investors</li>
@@ -654,32 +667,32 @@
       <p class="cp-intro">Each opportunity arrives as a complete package, so you start with our full reasoning instead of a deck.</p>
     </div>
     <div class="items in-view-target">
-      <div class="item">
+      <div class="item" data-tilt data-fx-light>
         <span class="num">01</span>
         <h3>Investment overview</h3>
         <p>The company, the problem it solves, and the financing.</p>
       </div>
-      <div class="item">
+      <div class="item" data-tilt data-fx-light>
         <span class="num">02</span>
         <h3>Our thesis</h3>
         <p>Why we believe the opportunity deserves your consideration.</p>
       </div>
-      <div class="item">
+      <div class="item" data-tilt data-fx-light>
         <span class="num">03</span>
         <h3>Diligence and risks</h3>
         <p>Key findings from our review, and the issues we think you should weigh.</p>
       </div>
-      <div class="item">
+      <div class="item" data-tilt data-fx-light>
         <span class="num">04</span>
         <h3>Terms</h3>
         <p>Round structure, valuation, security type, and SPV terms.</p>
       </div>
-      <div class="item">
+      <div class="item" data-tilt data-fx-light>
         <span class="num">05</span>
         <h3>Use of proceeds</h3>
         <p>How the capital will be deployed and the milestones it should reach.</p>
       </div>
-      <div class="item">
+      <div class="item" data-tilt data-fx-light>
         <span class="num">06</span>
         <h3>Founder access</h3>
         <p>Hear directly from management and ask questions before you commit.</p>
@@ -696,7 +709,7 @@
       <p class="cp-intro">Most opportunities are structured as a single MatchPlay-sponsored SPV, with every cost disclosed before you commit.</p>
     </div>
     <div class="split in-view-target">
-      <div class="panel">
+      <div class="panel" data-tilt>
         <h3>Invest through an SPV</h3>
         <p>Capital Partners invest together through one vehicle: one subscription and one position on the company's cap table.</p>
         <ul class="ticks">
@@ -707,7 +720,7 @@
         </ul>
         <p class="footnote">Administrative, banking, tax, and compliance functions may be handled by specialized third-party providers.</p>
       </div>
-      <div class="panel">
+      <div class="panel" data-tilt>
         <h3>Economics disclosed up front</h3>
         <p>Depending on the deal, economics may include:</p>
         <ul class="terms">
@@ -801,5 +814,6 @@
   document.querySelectorAll('.in-view-target').forEach(el => io.observe(el));
 </script>
 
+<script src="../assets/fx.js" defer></script>
 </body>
 </html>
