@@ -11,5 +11,17 @@
     "name": "Shawheen Attar",
     "title": "CEO",
     "photo": "assets/founders/shawheen-attar.webp"
+  },
+  "article": {
+    "slug": "anduril-ventures",
+    "title": "EFASfasdfsdFSD",
+    "subtitle": "ASDFASDFSDFSD",
+    "description": "SUMMARY TEST",
+    "author": "Shawheen Attar",
+    "authorTitle": "Venture Partner",
+    "datePublished": "2026-10-17",
+    "dateModified": "2026-10-17",
+    "body": "<p>ASDFASD<br>ADF<br>ASD<br>F<br>ADSF<br>ASD<br>FDFASDFASDF</p>",
+    "ogCompany": "Anduril Ventures"
   }
 }
