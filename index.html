@@ -1337,10 +1337,26 @@
   }
   .portco-modal-website:hover { border-color: var(--ink); background: rgba(0,0,0,0.03); }
 
+  /* Phones: a compact card. The logo sits beside the name, and the type,
+     spacing, founder photo and buttons all step down. */
   @media (max-width: 560px) {
-    .portco-modal-card { padding: 40px 24px 32px; }
-    .portco-modal-header { flex-direction: column; align-items: flex-start; gap: 16px; }
-    .portco-modal-logo { width: 72px; height: 72px; }
+    .portco-modal { padding: 16px; }
+    .portco-modal-card { padding: 22px 20px 20px; border-radius: 18px; max-height: 92vh; max-height: 92svh; }
+    .portco-modal-close { top: 12px; right: 12px; width: 32px; height: 32px; font-size: 18px; }
+    .portco-modal-header { flex-direction: row; align-items: center; gap: 14px; margin-bottom: 16px; padding-right: 36px; }
+    .portco-modal-logo { width: 56px; height: 56px; padding: 8px; border-radius: 12px; }
+    .portco-modal-headings h3 { font-size: 21px; margin-bottom: 4px; }
+    .portco-modal-meta { gap: 8px; font-size: 10px; letter-spacing: 0.12em; flex-wrap: wrap; }
+    .portco-modal-body { font-size: 14px; line-height: 1.55; }
+    .portco-modal-body p { margin-bottom: 12px; }
+    .portco-modal-subhead { margin: 16px 0 8px; font-size: 10px; }
+    .portco-modal-founder { gap: 12px; }
+    .portco-modal-founder-photo { width: 44px; height: 44px; }
+    .portco-modal-founder-name { font-size: 15px; }
+    .portco-modal-founder-title { font-size: 10px; }
+    .portco-modal-ctas { margin-top: 20px; gap: 8px; }
+    .portco-modal-cta, .portco-modal-website { padding: 10px 16px; font-size: 13px; }
+    .portco-modal-website { padding: 9px 15px; }
   }
 </style>
 <link rel="stylesheet" href="assets/fx.css" />
