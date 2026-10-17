@@ -444,6 +444,12 @@
   @media (max-width: 720px) {
     .hero-sub-row { gap: 24px; }
   }
+  /* Phones: a bigger mark and title, a smaller description (it was 17px). */
+  @media (max-width: 880px) {
+    .hero-logo { width: clamp(120px, min(40vw, 22vh), 200px); }
+    .hero-title { font-size: clamp(44px, min(15vw, 9vh), 72px); }
+    .hero-sub { font-size: 15px; line-height: 1.5; }
+  }
 
   /* ---------- TICKER BAND ---------- */
   .ticker {
