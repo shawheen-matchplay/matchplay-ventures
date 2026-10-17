@@ -118,7 +118,8 @@
    screens the box crossing a line just above the middle of the screen takes
    the hover look as you scroll. Each box picks its colour with --fx-accent. */
 [data-tilt], [data-glow] {
-  --fx-accent: var(--ventures);
+  --fx-accent: var(--ventures);   /* the top rule's colour */
+  --fx-glow: var(--ventures);     /* every glow is orange, whatever the rule */
   --fx-rest: 0.08;        /* glow opacity at rest, on hover, while tracking */
   --fx-hover: 0.18;
   --fx-track: 0.24;
@@ -161,20 +162,20 @@
   height: 560px;
   border-radius: 50%;
   background: radial-gradient(closest-side,
-    color-mix(in srgb, var(--fx-accent) 59.6%, transparent) 0.0%,
-    color-mix(in srgb, var(--fx-accent) 58.4%, transparent) 7.1%,
-    color-mix(in srgb, var(--fx-accent) 54.9%, transparent) 14.3%,
-    color-mix(in srgb, var(--fx-accent) 50.2%, transparent) 21.4%,
-    color-mix(in srgb, var(--fx-accent) 43.9%, transparent) 28.6%,
-    color-mix(in srgb, var(--fx-accent) 36.9%, transparent) 35.7%,
-    color-mix(in srgb, var(--fx-accent) 29.4%, transparent) 42.9%,
-    color-mix(in srgb, var(--fx-accent) 22.7%, transparent) 50.0%,
-    color-mix(in srgb, var(--fx-accent) 16.9%, transparent) 57.1%,
-    color-mix(in srgb, var(--fx-accent) 11.8%, transparent) 64.3%,
-    color-mix(in srgb, var(--fx-accent) 7.8%, transparent) 71.4%,
-    color-mix(in srgb, var(--fx-accent) 4.7%, transparent) 78.6%,
-    color-mix(in srgb, var(--fx-accent) 2.7%, transparent) 85.7%,
-    color-mix(in srgb, var(--fx-accent) 1.6%, transparent) 92.9%,
+    color-mix(in srgb, var(--fx-glow) 59.6%, transparent) 0.0%,
+    color-mix(in srgb, var(--fx-glow) 58.4%, transparent) 7.1%,
+    color-mix(in srgb, var(--fx-glow) 54.9%, transparent) 14.3%,
+    color-mix(in srgb, var(--fx-glow) 50.2%, transparent) 21.4%,
+    color-mix(in srgb, var(--fx-glow) 43.9%, transparent) 28.6%,
+    color-mix(in srgb, var(--fx-glow) 36.9%, transparent) 35.7%,
+    color-mix(in srgb, var(--fx-glow) 29.4%, transparent) 42.9%,
+    color-mix(in srgb, var(--fx-glow) 22.7%, transparent) 50.0%,
+    color-mix(in srgb, var(--fx-glow) 16.9%, transparent) 57.1%,
+    color-mix(in srgb, var(--fx-glow) 11.8%, transparent) 64.3%,
+    color-mix(in srgb, var(--fx-glow) 7.8%, transparent) 71.4%,
+    color-mix(in srgb, var(--fx-glow) 4.7%, transparent) 78.6%,
+    color-mix(in srgb, var(--fx-glow) 2.7%, transparent) 85.7%,
+    color-mix(in srgb, var(--fx-glow) 1.6%, transparent) 92.9%,
     transparent 100%);
   transition: opacity 0.4s var(--fx-ease);
 }

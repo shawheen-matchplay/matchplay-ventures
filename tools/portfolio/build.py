@@ -95,9 +95,9 @@ def grid(companies):
     cells = []
     for i, c in enumerate(companies):
         cells.append(
-            '      <button type="button" class="portfolio-cell cell-%d" data-company="%s">\n'
+            '      <button type="button" class="portfolio-cell cell-%d" data-company="%s" data-glow data-fx-noline data-fx-light>\n'
             '        <div class="portfolio-logo"><img loading="lazy" decoding="async" src="%s" alt="%s"></div>\n'
-            '        <div class="portfolio-meta"><span class="portfolio-meta-tag">●</span> %s</div>\n'
+            '        <div class="portfolio-meta">%s</div>\n'
             "      </button>" % (i % CELLS + 1, esc(c["key"]), esc(c["logo"]), esc(c["name"]), esc(c["tag"])))
     # Fill out the last row (4 across, 2 on phones) so the grid has no hole
     while len(cells) % 4:
