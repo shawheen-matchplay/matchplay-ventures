@@ -95,7 +95,7 @@ def grid(companies):
     cells = []
     for i, c in enumerate(companies):
         cells.append(
-            '      <button type="button" class="portfolio-cell cell-%d" data-company="%s" data-glow data-fx-light>\n'
+            '      <button type="button" class="portfolio-cell cell-%d" data-company="%s">\n'
             '        <div class="portfolio-logo"><img loading="lazy" decoding="async" src="%s" alt="%s"></div>\n'
             '        <div class="portfolio-meta"><span class="portfolio-meta-tag">●</span> %s</div>\n'
             "      </button>" % (i % CELLS + 1, esc(c["key"]), esc(c["logo"]), esc(c["name"]), esc(c["tag"])))
