@@ -444,8 +444,10 @@
   @media (max-width: 720px) {
     .hero-sub-row { gap: 24px; }
   }
-  /* Phones: a bigger mark and title, a smaller description (it was 17px). */
+  /* Phones: a bigger mark and title, a smaller description (it was 17px),
+     and no divider line above the description. */
   @media (max-width: 880px) {
+    .hero-sub-row { border-top: 0; padding-top: 0; }
     .hero-logo { width: clamp(120px, min(40vw, 22vh), 200px); }
     .hero-title { font-size: clamp(44px, min(15vw, 9vh), 72px); }
     .hero-sub { font-size: 15px; line-height: 1.5; }
