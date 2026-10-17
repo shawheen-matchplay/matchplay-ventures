@@ -29,7 +29,7 @@
 .nav::after {
   content: "";
   position: absolute;
-  inset: 0;
+  inset: -1px;   /* out over the pill's 1px (transparent) border, or a ring of bare page shows round it */
   z-index: -1;
   border-radius: inherit;
   pointer-events: none;
