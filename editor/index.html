@@ -946,7 +946,7 @@
         cell.dataset.new = "1";
         cell.dataset.company = key;
         cell.className = "portfolio-cell cell-" + (grid.querySelectorAll(".portfolio-cell[data-company]").length % 8 + 1);
-        cell.innerHTML = '<div class="portfolio-logo"><img alt=""></div><div class="portfolio-meta"><span class="portfolio-meta-tag">●</span> <span></span></div>';
+        cell.innerHTML = '<div class="portfolio-logo"><img alt=""></div><div class="portfolio-meta"></div>';
         var blank = grid.querySelector(".portfolio-cell-empty");
         grid.insertBefore(cell, blank);
         if (blank) blank.remove();
@@ -956,7 +956,7 @@
       if (d.logo) img.src = d.logo; else img.removeAttribute("src");
       img.alt = d.name;
       var meta = cell.querySelector(".portfolio-meta");
-      meta.innerHTML = '<span class="portfolio-meta-tag">●</span> ' + esc(d.tag);
+      meta.textContent = d.tag;
 
       var modal = doc.getElementById("portco-modal");
       if (coView === "modal") {
