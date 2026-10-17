@@ -366,6 +366,7 @@
   }
   .step p { font-size: 16.5px; line-height: 1.6; color: rgba(255,255,255,0.72); max-width: 640px; }
   .step-you h3 { color: var(--ventures); }
+  .step[data-glow] { --fx-rest: 0; }   /* glow (assets/fx.css) only on hover */
   @media (max-width: 760px) {
     .step { grid-template-columns: 48px 1fr; gap: 8px 16px; }
     .step p { grid-column: 2; }
