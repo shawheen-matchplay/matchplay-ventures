@@ -13,6 +13,27 @@
   var still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var fine = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 
+  /* ---- The wobble (from the Group site's glass-motion reference) -------
+     Wide, then tall, a faint echo, back to its own size: even steps, eased
+     as a whole. Values are for a 2% peak and scaled to the one asked for. */
+  var WOBBLE_MS = 450;
+  var WOBBLE = [[0, 0], [0.02, -0.015], [-0.015, 0.02], [0.005, -0.004], [0, 0]];
+  var easeInOut = function (t) { return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; };
+  var wobbleAt = function (ms, peak) {          // [scaleX, scaleY] at ms into the wobble
+    var p = easeInOut(Math.min(1, Math.max(0, ms / WOBBLE_MS))) * (WOBBLE.length - 1);
+    var i = Math.min(WOBBLE.length - 2, Math.floor(p)), f = p - i, k = peak / 0.02;
+    return [1 + k * (WOBBLE[i][0] + (WOBBLE[i + 1][0] - WOBBLE[i][0]) * f),
+            1 + k * (WOBBLE[i][1] + (WOBBLE[i + 1][1] - WOBBLE[i][1]) * f)];
+  };
+  var wobbleFrames = function (peak) {          // the same wobble as Web Animations keyframes
+    var out = [];
+    for (var i = 0; i <= 90; i++) {
+      var s = wobbleAt(WOBBLE_MS * i / 90, peak);
+      out.push({ transform: "scale(" + s[0].toFixed(4) + "," + s[1].toFixed(4) + ")" });
+    }
+    return out;
+  };
+
   /* ---- 1. Glass nav --------------------------------------------------- */
   var nav = document.querySelector(".nav");
   if (nav) {
@@ -93,7 +114,7 @@
       nav.insertBefore(lens, nav.firstChild);
       nav.classList.add("has-lens");
       var x = 0, w = 0, vx = 0, vw = 0, tx = 0, tw = 0, ty = 0, th = 0, on = false, raf = 0, last = 0;
-      var onCta = false;
+      var onCta = false, popAt = -1;             // popAt: when the 103% wobble-in started
       var draw = function (sx, sy) {
         var dx = x, dw = w;
         // Arriving on Apply / Join, the spring's overshoot never carries the
@@ -114,9 +135,11 @@
         var ax = 420 * (tx - x) - 30 * vx, aw = 420 * (tw - w) - 30 * vw;
         vx += ax * dt; vw += aw * dt; x += vx * dt; w += vw * dt;
         var s = Math.min(0.14, Math.abs(vx) / 3500);
-        draw(1 + s, 1 - s * 0.8);
-        if (Math.abs(tx - x) > 0.3 || Math.abs(vx) > 2 || Math.abs(tw - w) > 0.3 || Math.abs(vw) > 2) raf = requestAnimationFrame(tick);
-        else { x = tx; w = tw; vx = vw = 0; draw(1, 1); raf = 0; }
+        var popping = popAt >= 0 && now - popAt < WOBBLE_MS;
+        var wb = popping ? wobbleAt(now - popAt, 0.03) : [1, 1];
+        draw((1 + s) * wb[0], (1 - s * 0.8) * wb[1]);
+        if (popping || Math.abs(tx - x) > 0.3 || Math.abs(vx) > 2 || Math.abs(tw - w) > 0.3 || Math.abs(vw) > 2) raf = requestAnimationFrame(tick);
+        else { x = tx; w = tw; vx = vw = 0; popAt = -1; draw(1, 1); raf = 0; }
       };
       var target = function (link) {
         var a = link.getBoundingClientRect(), b = nav.getBoundingClientRect();
@@ -129,6 +152,10 @@
         onCta = cta;
         lens.classList.toggle("is-on-cta", cta);
         if (!on || still) { x = tx; w = tw; vx = vw = 0; draw(1, 1); }
+        // The first link of a visit: the drop wobbles in (103%). Never on
+        // Apply / Join, which stay as they are.
+        if (cta) popAt = -1;
+        else if (!on && !still) popAt = performance.now();
         on = true;
         lens.classList.add("is-on");
         if (!still && !raf) { last = performance.now(); raf = requestAnimationFrame(tick); }
@@ -160,6 +187,19 @@
     };
     window.addEventListener("scroll", function () { if (!pending) pending = requestAnimationFrame(onScroll); }, { passive: true });
     onScroll();
+  }
+
+  /* ---- Main calls to action wobble -------------------------------------
+     One soft wobble on hover (101%), half that when the pointer leaves. */
+  if (fine && !still) {
+    var ENTER = wobbleFrames(0.01), LEAVE = wobbleFrames(0.005);
+    Array.prototype.forEach.call(document.querySelectorAll(".btn-primary"), function (btn) {
+      if (!btn.animate) return;
+      var run = null;
+      var play = function (frames, ms) { if (run) run.cancel(); run = btn.animate(frames, { duration: ms, composite: "add" }); };
+      btn.addEventListener("pointerenter", function () { play(ENTER, WOBBLE_MS); });
+      btn.addEventListener("pointerleave", function () { play(LEAVE, WOBBLE_MS * 0.85); });
+    });
   }
 
   /* ---- Page transitions ---------------------------------------------- */
