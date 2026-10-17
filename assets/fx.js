@@ -117,13 +117,11 @@
         if (!still && !raf) { last = performance.now(); raf = requestAnimationFrame(tick); }
       };
       var off = function () { on = false; lens.classList.remove("is-on"); };
-      Array.prototype.forEach.call(nav.querySelectorAll(".nav-link"), function (link) {
+      // Apply / Join too: its fill drains on hover, so the lens shows through.
+      Array.prototype.forEach.call(nav.querySelectorAll(".nav-link, .nav-cta"), function (link) {
         link.addEventListener("pointerenter", function () { target(link); });
         link.addEventListener("focus", function () { target(link); });
       });
-      // The orange button has its own hover; the lens steps aside for it.
-      var cta = nav.querySelector(".nav-cta");
-      if (cta) cta.addEventListener("pointerenter", off);
       nav.addEventListener("pointerleave", off);
       nav.addEventListener("focusout", function (e) { if (!nav.contains(e.relatedTarget)) off(); });
     }
