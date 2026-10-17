@@ -3,5 +3,6 @@
 # PerplexityBot, Google-Extended, Applebot).
 User-agent: *
 Allow: /
+Disallow: /editor/
 
 Sitemap: https://matchplayventures.com/sitemap.xml

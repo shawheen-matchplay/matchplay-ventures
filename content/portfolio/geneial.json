@@ -1,0 +1,26 @@
+{
+  "key": "geneial",
+  "order": 4,
+  "name": "Geneial",
+  "site": "https://www.geneial.com/",
+  "tag": "Genomics",
+  "desc": "Geneial is an AI-powered data platform for precision medicine, uniting patients, clinicians, and researchers through secure, privacy-preserving infrastructure. Our architecture combines genetics expertise, privacy-enhancing technology, and AI-driven standardization to transform messy data into interoperable, research-ready evidence, creating a trusted foundation for accelerating science and clinical innovation.",
+  "summary": "AI-powered, privacy-preserving data platform for precision medicine.",
+  "logo": "portco-logos/geneial.svg",
+  "founder": {
+    "name": "Adam Hansen",
+    "title": "CEO",
+    "photo": "assets/founders/adam-hansen.png"
+  },
+  "article": {
+    "slug": "building-the-data-infrastructure-for-precision-medicine",
+    "title": "Building the data infrastructure for precision medicine",
+    "subtitle": "Building the data layer precision medicine needs.",
+    "description": "Why MatchPlay Ventures invested in Geneial, the AI-powered data layer turning fragmented patient data into reusable, research-ready evidence for precision medicine.",
+    "author": "Mahesh Narayanan",
+    "authorTitle": "Managing Partner",
+    "datePublished": "2026-05-07",
+    "dateModified": "2026-05-07",
+    "body": "<h2>Why we invested</h2>\n<p>At MatchPlay, we invest in companies solving problems that don't look urgent on the surface but are foundational to everything that follows.</p>\n<p>Precision medicine is one of those areas.</p>\n<p>AI is expected to unlock breakthroughs in genetic disorders, drug discovery, and personalized care. But there is a more fundamental constraint:</p>\n<p>AI in healthcare doesn't fail because of models. It fails because of data.</p>\n\n<h2>The team</h2>\n<p>Geneial is led by <a href=\"https://www.linkedin.com/in/awhansen/\" target=\"_blank\" rel=\"noopener\">Adam Hansen</a>, whose background spans computational genetics, AI, and large-scale research systems.</p>\n<p>What stood out to us was not just technical depth, but clarity of direction. The team understands that the bottleneck in precision medicine is not model capability, but how data is captured, structured, and reused across systems.</p>\n<p>That perspective shows up clearly in how Geneial is being built.</p>\n\n<h2>Our perspective</h2>\n<p>Healthcare doesn't have a data shortage. It has a usable data shortage.</p>\n<p>Patient data today is:</p>\n<ul>\n  <li>fragmented across institutions and formats</li>\n  <li>unstructured and inconsistent</li>\n  <li>locked inside systems that don't communicate</li>\n</ul>\n<p>As a result, most datasets cannot be reused, and even advanced AI systems are limited by poor input quality.</p>\n<p>The industry has responded by building better analytics and models. But without fixing the underlying data layer, progress remains constrained.</p>\n<p>We see this as a foundational infrastructure gap.</p>\n\n<h2>What convinced us</h2>\n<p>Geneial is not building another analytics tool. It is building the data layer that makes analytics possible.</p>\n<p>The platform standardizes and structures patient-generated and clinical data across studies, systems, and time, turning fragmented inputs into reusable datasets.</p>\n<p>This creates a fundamentally different model:</p>\n<ul>\n  <li>data becomes reusable instead of one-time</li>\n  <li>studies no longer start from zero</li>\n  <li>participation improves as workflows simplify</li>\n  <li>insights compound as datasets grow</li>\n</ul>\n<p>Incumbents treat data as a byproduct of studies. Geneial treats it as the product.</p>\n<p>This is where we see long-term leverage. Every deployment adds structured data to the system, making future studies faster, cheaper, and more valuable. Over time, this creates a compounding network effect that is difficult to replicate.</p>\n<p>What reinforced our conviction was early traction: NIH-backed funding, contracted research revenue, and active deployments across global patient communities.</p>\n<p>More importantly, the platform is already showing materially higher participation and engagement compared to legacy systems, which directly translates into better data quality.</p>\n\n<h2>Why now</h2>\n<p>The timing is critical.</p>\n<p>AI in healthcare is moving from experimentation to application, but the data layer has not kept pace.</p>\n<p>At the same time:</p>\n<ul>\n  <li>rare disease research is expanding globally</li>\n  <li>patient-driven data is becoming central to discovery</li>\n  <li>regulators and payers are demanding stronger real-world evidence</li>\n</ul>\n<p>This sits within a multi-billion dollar ecosystem spanning registries, real-world data, and biopharma data infrastructure.</p>\n<p>As these forces converge, the need for structured, reusable data becomes unavoidable.</p>\n\n<h2>Our conviction</h2>\n<p>We believe platforms that structure and scale healthcare data will become the backbone of precision medicine.</p>\n<p>If Geneial succeeds, it won't just support research. It will define how patient data is captured, structured, and exchanged across the healthcare ecosystem.</p>\n<p>Geneial is not just building better data pipelines.</p>\n<p>It is building the data layer precision medicine depends on.</p>"
+  }
+}

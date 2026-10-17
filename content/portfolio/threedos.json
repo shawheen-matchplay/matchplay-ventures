@@ -1,0 +1,15 @@
+{
+  "key": "threedos",
+  "order": 8,
+  "name": "3DOS",
+  "site": "https://3dorthobio.com/",
+  "tag": "Orthobiologics",
+  "desc": "3DOS is developing customizable, 3D-printed scaffolds that repair and regenerate bone in oral, maxillofacial, and orthopedic trauma surgery. Its biodegradable scaffolds use biocompatible materials and structures optimized to maximize bone regrowth, in an easy-to-use format designed to outperform existing products.",
+  "summary": "Customizable, 3D-printed biodegradable scaffolds for bone repair and regeneration.",
+  "logo": "portco-logos/3dos.webp",
+  "founder": {
+    "name": "Prakash Kolli",
+    "title": "CEO",
+    "photo": "assets/founders/prakash-kolli.jpg"
+  }
+}

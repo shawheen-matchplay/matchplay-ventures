@@ -1,0 +1,15 @@
+{
+  "key": "guidant",
+  "order": 7,
+  "name": "Guidant BioTherapeutics",
+  "site": "https://www.guidantbio.com/",
+  "tag": "Immuno-Oncology",
+  "desc": "Guidant BioTherapeutics is a clinical-stage immuno-oncology company tackling the toxicity problem in cancer therapy delivery. Its biologics platform delivers therapeutic molecules into the tumor microenvironment and keeps them there, reducing systemic toxicity while enhancing the efficacy of the payload.",
+  "summary": "Clinical-stage immuno-oncology biologics platform for targeted delivery into the tumor microenvironment.",
+  "logo": "portco-logos/guidant.png",
+  "founder": {
+    "name": "Raghu Rao",
+    "title": "CEO",
+    "photo": "assets/founders/raghu-rao.webp"
+  }
+}
