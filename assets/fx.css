@@ -109,6 +109,107 @@
   box-shadow: inset 0 0 14px -4px color-mix(in srgb, var(--ventures) 45%, transparent);
 }
 
+/* Phone menu (880px and below; fx.js builds it from the nav). The pill
+   collapses to the logo and a hamburger; the menu opens as a glass panel
+   under it with the same items, centred: the links, a divider, Capital
+   Partners, then Apply / Join. Without the script the old row stays. */
+.nav-burger { display: none; }
+@media (max-width: 880px) {
+  .has-menu .nav-links,
+  .has-menu .nav-aux,
+  .has-menu .nav-cta { display: none; }
+  .has-menu .nav-brand { border-right: 0; padding-right: 6px; }
+  .has-menu { padding: 6px 6px 6px 16px; gap: 6px; }
+  .nav-burger {
+    position: relative; z-index: 1;
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 40px; height: 40px; padding: 0;
+    border: 0; border-radius: 999px; background: transparent;
+    color: #fff; cursor: pointer;
+  }
+  .nav-burger span {
+    position: absolute; left: 12px; right: 12px; height: 1.5px; border-radius: 2px;
+    background: currentColor;
+    transition: transform 0.3s var(--fx-ease), opacity 0.2s ease;
+  }
+  .nav-burger span:nth-child(1) { transform: translateY(-5px); }
+  .nav-burger span:nth-child(3) { transform: translateY(5px); }
+  .nav-burger[aria-expanded="true"] span:nth-child(1) { transform: rotate(45deg); }
+  .nav-burger[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+  .nav-burger[aria-expanded="true"] span:nth-child(3) { transform: rotate(-45deg); }
+}
+.nav-menu {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 50%;
+  width: min(320px, calc(100vw - 32px));
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  padding: 14px;
+  border-radius: 24px;
+  pointer-events: auto;
+  isolation: isolate;
+  background: rgba(24, 24, 28, var(--glass-tint, 0.69));
+  -webkit-backdrop-filter: blur(14px) saturate(1.7) brightness(1.05);
+          backdrop-filter: blur(14px) saturate(1.7) brightness(1.05);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.15),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.06),
+    inset 1px 0 0 rgba(255, 255, 255, 0.07),
+    inset -1px 0 0 rgba(255, 255, 255, 0.07),
+    inset 0 12px 22px -16px rgba(255, 255, 255, 0.18),
+    0 18px 44px rgba(0, 0, 0, 0.36);
+  transform-origin: 50% 0;
+  transform: translate(-50%, -6px) scale(0.96);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.22s ease, transform 0.3s cubic-bezier(0.34, 1.25, 0.64, 1), visibility 0.3s;
+}
+.glass-on-light .nav-menu { --glass-tint: 0.8; }
+.nav-menu.is-open { opacity: 1; visibility: visible; transform: translate(-50%, 0) scale(1); }
+.nav-menu a:not(.nav-cta) {
+  display: block; width: 100%;
+  padding: 12px 16px;
+  border-radius: 999px;
+  text-align: center;
+  font-size: 15px; font-weight: 500;
+  color: rgba(255, 255, 255, 0.92);
+}
+.nav-menu a:not(.nav-cta):active { background: rgba(255, 255, 255, 0.07); }
+.nav-menu a[aria-current="page"] { color: var(--ventures); }
+.nav-menu hr { width: 40%; height: 1px; margin: 8px auto; border: 0; background: rgba(255, 255, 255, 0.14); }
+.nav-menu .nav-cta { display: inline-flex; margin: 10px 0 2px; padding: 11px 26px; font-size: 15px; }
+@media (min-width: 881px) { .nav-menu { display: none; } }
+@media (prefers-reduced-motion: reduce) { .nav-menu, .nav-burger span { transition: none; } }
+
+/* Main calls to action (.btn-primary: Apply for funding, Begin your
+   application, Join Capital Partners): solid orange with a soft inner glow;
+   on hover the fill drains to clear glass inside an orange border and the
+   text turns orange, with a bouncy wobble (fx.js). The border is an inset
+   ring, so the buttons keep their size. The nav's Apply / Join keep their
+   own look above. */
+.btn-primary {
+  position: relative;
+  background: var(--ventures);
+  color: #fff;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.18);
+  -webkit-backdrop-filter: blur(8px) saturate(1.5);
+          backdrop-filter: blur(8px) saturate(1.5);
+  box-shadow:
+    inset 0 0 0 1.5px var(--ventures),
+    inset 3px 8px 14px -10px rgba(255, 255, 255, 0.4);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease, color 0.3s ease, text-shadow 0.3s ease;
+}
+.btn-primary:hover {
+  background: color-mix(in srgb, var(--ventures) 6%, transparent);
+  color: var(--ventures);
+  text-shadow: none;
+  transform: none;
+  box-shadow:
+    inset 0 0 0 1.5px var(--ventures),
+    inset 0 2px 0 rgba(255, 255, 255, 0.14),
+    inset 0 0 14px -4px color-mix(in srgb, var(--ventures) 45%, transparent);
+}
+
 /* 2. Pointer boxes ---------------------------------------------------------
    [data-tilt]: fx.js gives the box a decorative .fx layer (an accent rule
    along the top that draws across on hover, a resting glow low right, and

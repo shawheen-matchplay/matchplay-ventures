@@ -303,10 +303,13 @@
   }
 
   /* ---------- HERO ---------- */
+  /* One screen tall: padding just clears the nav, and the logo, title and
+     spacing scale with the screen's height as well as its width. */
   .hero {
     position: relative;
     min-height: 100vh;
-    padding: 160px 0 80px;
+    min-height: 100svh;
+    padding: 96px 0 clamp(20px, 3vh, 48px);
     display: flex; flex-direction: column; justify-content: center;
     overflow: hidden;
   }
@@ -319,6 +322,7 @@
     mask-image: radial-gradient(ellipse 80% 70% at 50% 45%, #000 30%, transparent 80%);
     -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 45%, #000 30%, transparent 80%);
   }
+  .hero-dots.is-live { background-image: none; }   /* assets/hero-dots.js draws the moving grid */
   .hero-glow {
     position: absolute; z-index: 0;
     width: 800px; height: 800px;
@@ -352,9 +356,9 @@
 
   .hero-logo {
     display: block;
-    width: clamp(100px, 18vw, 260px);
+    width: clamp(100px, min(18vw, 22vh), 260px);
     height: auto;
-    margin: 0 0 28px;
+    margin: 0 0 clamp(14px, 3vh, 28px);
   }
   .hero-eyebrow {
     font-family: var(--font-display);
@@ -362,7 +366,7 @@
     font-weight: 400;
     font-size: clamp(18px, 2vw, 22px);
     color: rgba(255,255,255,0.78);
-    margin: 24px 0 0;
+    margin: clamp(12px, 2.5vh, 24px) 0 0;
     letter-spacing: -0.01em;
   }
   .hero-eyebrow span { color: var(--ventures); font-style: normal; font-family: var(--font-body); font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; padding: 6px 14px; border: 1px solid var(--ventures); border-radius: 999px; vertical-align: middle; display: inline-block; transition: background-color 0.25s ease, border-color 0.25s ease; }
@@ -372,7 +376,7 @@
   .hero-title {
     font-family: var(--font-display);
     font-weight: 600;
-    font-size: clamp(48px, 9vw, 120px);
+    font-size: clamp(44px, min(9vw, 12vh), 120px);
     line-height: 1.02;
     letter-spacing: -0.04em;
     margin: 0;
@@ -391,9 +395,9 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 32px;
-    margin-top: 56px;
-    padding-top: 32px;
+    gap: clamp(16px, 3vh, 32px);
+    margin-top: clamp(20px, 5vh, 56px);
+    padding-top: clamp(18px, 3.5vh, 32px);
     border-top: 1px solid var(--line);
     width: 100%;
   }
@@ -937,6 +941,11 @@
   }
   .portfolio-cell:hover .portfolio-meta { opacity: 1; }
   .portfolio-cell[data-glow] { --fx-rest: 0; }   /* glow (assets/fx.css) only on hover, no line */
+  /* Phones and tablets: no glow on the logos (touch screens light a box as it
+     scrolls past, which read as noise across the grid), and the logos 25%
+     bigger in the smaller cells. */
+  @media (hover: none) { .portfolio-cell > .fx { display: none; } }
+  @media (max-width: 880px) { .portfolio-logo img { max-width: 93.75%; max-height: 87.5%; } }
 
   .portfolio-cta {
     margin-top: 32px;
@@ -1955,5 +1964,6 @@
 </script>
 
 <script src="assets/fx.js" defer></script>
+<script src="assets/hero-dots.js" defer></script>
 </body>
 </html>
