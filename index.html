@@ -941,6 +941,11 @@
   }
   .portfolio-cell:hover .portfolio-meta { opacity: 1; }
   .portfolio-cell[data-glow] { --fx-rest: 0; }   /* glow (assets/fx.css) only on hover, no line */
+  /* Phones and tablets: no glow on the logos (touch screens light a box as it
+     scrolls past, which read as noise across the grid), and the logos 25%
+     bigger in the smaller cells. */
+  @media (hover: none) { .portfolio-cell > .fx { display: none; } }
+  @media (max-width: 880px) { .portfolio-logo img { max-width: 93.75%; max-height: 87.5%; } }
 
   .portfolio-cta {
     margin-top: 32px;

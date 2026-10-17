@@ -33,6 +33,7 @@ The repo is public and GitHub Pages serves every file in it (`.nojekyll` is set 
 
 Logo | Thesis, Ecosystem, Portfolio, Team | divider | Capital Partners | Apply → (far right, links to https://app.matchplaygroup.com).
 - The divider is a `.nav-aux::before` pseudo-element, 1px x 22px, so it matches the logo divider. It is hidden at 880px and below.
+- At 880px and below the pill collapses to the logo and a hamburger; `assets/fx.js` builds a centred glass menu under it from the nav's own links (links, a divider, Capital Partners, then Apply / Join), so nav markup changes carry over automatically.
 - On the homepage, the logo links to `#top`.
 - Subpages use relative links (`../#thesis`, `../../capital-partners/`, etc.). The Capital Partners page marks its own link with `aria-current="page"` and shows "Join →" in place of "Apply →".
 

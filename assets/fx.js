@@ -170,6 +170,47 @@
       nav.addEventListener("focusout", function (e) { if (!nav.contains(e.relatedTarget)) off(); });
     }
 
+    // The phone menu (assets/fx.css, 880px and below): a hamburger in the
+    // pill and a glass panel under it, built from the nav's own links so
+    // every page gets the same menu: the links, a divider, Capital
+    // Partners, then Apply / Join, all centred.
+    var navWrap = nav.closest(".nav-wrap");
+    if (navWrap) {
+      var burger = document.createElement("button");
+      burger.type = "button";
+      burger.className = "nav-burger";
+      burger.setAttribute("aria-label", "Menu");
+      burger.setAttribute("aria-expanded", "false");
+      burger.setAttribute("aria-controls", "nav-menu");
+      burger.innerHTML = "<span></span><span></span><span></span>";
+      nav.appendChild(burger);
+      var menu = document.createElement("div");
+      menu.className = "nav-menu";
+      menu.id = "nav-menu";
+      var copy = function (a) { var c = a.cloneNode(true); c.removeAttribute("id"); menu.appendChild(c); return c; };
+      Array.prototype.forEach.call(nav.querySelectorAll(".nav-links a"), copy);
+      menu.appendChild(document.createElement("hr"));
+      Array.prototype.forEach.call(nav.querySelectorAll(".nav-aux a"), copy);
+      var navCta = nav.querySelector(".nav-cta");
+      if (navCta) copy(navCta);
+      navWrap.appendChild(menu);
+      nav.classList.add("has-menu");
+      var setMenu = function (open) {
+        menu.classList.toggle("is-open", open);
+        burger.setAttribute("aria-expanded", String(open));
+        burger.setAttribute("aria-label", open ? "Close menu" : "Menu");
+      };
+      burger.addEventListener("click", function () { setMenu(!menu.classList.contains("is-open")); });
+      menu.addEventListener("click", function (e) { if (e.target.closest("a")) setMenu(false); });
+      document.addEventListener("click", function (e) {
+        if (menu.classList.contains("is-open") && !menu.contains(e.target) && !burger.contains(e.target)) setMenu(false);
+      });
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape" && menu.classList.contains("is-open")) { setMenu(false); burger.focus(); }
+      });
+      window.matchMedia("(min-width: 881px)").addEventListener("change", function (m) { if (m.matches) setMenu(false); });
+    }
+
     // Deeper tint over light sections (pages marked data-light-page are
     // light all the way down); the sheen slides as the page scrolls.
     var lights = document.querySelectorAll(".section-light");
