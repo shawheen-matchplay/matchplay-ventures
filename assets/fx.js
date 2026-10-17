@@ -104,9 +104,9 @@
           dx = Math.min(x, tx + tw - dw);
           sx = sy = 1;
         }
-        lens.style.width = dw.toFixed(1) + "px";
-        lens.style.height = th + "px";
-        lens.style.transform = "translate(" + dx.toFixed(1) + "px," + ty + "px) scale(" + sx.toFixed(3) + "," + sy.toFixed(3) + ")";
+        lens.style.width = dw.toFixed(2) + "px";
+        lens.style.height = th.toFixed(2) + "px";
+        lens.style.transform = "translate(" + dx.toFixed(2) + "px," + ty.toFixed(2) + "px) scale(" + sx.toFixed(3) + "," + sy.toFixed(3) + ")";
       };
       var tick = function (now) {
         var dt = Math.min(1 / 30, Math.max(0, now - last) / 1000);
@@ -120,10 +120,12 @@
       };
       var target = function (link) {
         var a = link.getBoundingClientRect(), b = nav.getBoundingClientRect();
-        // On Apply / Join the drop sits inside the orange border, not over it.
-        var cta = link.classList.contains("nav-cta"), inset = cta ? 2.5 : 0;
-        tx = a.left - b.left + inset; tw = a.width - 2 * inset;
-        ty = Math.round(a.top - b.top + inset); th = Math.round(a.height - 2 * inset);
+        // On Apply / Join the drop is exactly the button's box, so its edge
+        // runs under the orange border (drawn on top) with no gap.
+        var cta = link.classList.contains("nav-cta");
+        // (offsets from inside the nav's own border, where the drop is placed)
+        tx = a.left - b.left - nav.clientLeft; tw = a.width;
+        ty = a.top - b.top - nav.clientTop; th = a.height;
         onCta = cta;
         lens.classList.toggle("is-on-cta", cta);
         if (!on || still) { x = tx; w = tw; vx = vw = 0; draw(1, 1); }
