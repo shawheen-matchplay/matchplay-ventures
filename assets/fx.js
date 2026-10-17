@@ -93,10 +93,20 @@
       nav.insertBefore(lens, nav.firstChild);
       nav.classList.add("has-lens");
       var x = 0, w = 0, vx = 0, vw = 0, tx = 0, tw = 0, ty = 0, th = 0, on = false, raf = 0, last = 0;
+      var onCta = false;
       var draw = function (sx, sy) {
-        lens.style.width = w.toFixed(1) + "px";
+        var dx = x, dw = w;
+        // Arriving on Apply / Join, the spring's overshoot never carries the
+        // drop past the button's border.
+        // (It comes in from the left, so only its right edge needs holding.)
+        if (onCta && x + w > tx) {
+          dw = Math.min(w, tw);
+          dx = Math.min(x, tx + tw - dw);
+          sx = sy = 1;
+        }
+        lens.style.width = dw.toFixed(1) + "px";
         lens.style.height = th + "px";
-        lens.style.transform = "translate(" + x.toFixed(1) + "px," + ty + "px) scale(" + sx.toFixed(3) + "," + sy.toFixed(3) + ")";
+        lens.style.transform = "translate(" + dx.toFixed(1) + "px," + ty + "px) scale(" + sx.toFixed(3) + "," + sy.toFixed(3) + ")";
       };
       var tick = function (now) {
         var dt = Math.min(1 / 30, Math.max(0, now - last) / 1000);
@@ -110,7 +120,12 @@
       };
       var target = function (link) {
         var a = link.getBoundingClientRect(), b = nav.getBoundingClientRect();
-        tx = a.left - b.left; tw = a.width; ty = Math.round(a.top - b.top); th = Math.round(a.height);
+        // On Apply / Join the drop sits inside the orange border, not over it.
+        var cta = link.classList.contains("nav-cta"), inset = cta ? 2.5 : 0;
+        tx = a.left - b.left + inset; tw = a.width - 2 * inset;
+        ty = Math.round(a.top - b.top + inset); th = Math.round(a.height - 2 * inset);
+        onCta = cta;
+        lens.classList.toggle("is-on-cta", cta);
         if (!on || still) { x = tx; w = tw; vx = vw = 0; draw(1, 1); }
         on = true;
         lens.classList.add("is-on");
@@ -143,6 +158,21 @@
     };
     window.addEventListener("scroll", function () { if (!pending) pending = requestAnimationFrame(onScroll); }, { passive: true });
     onScroll();
+  }
+
+  /* ---- Page transitions ---------------------------------------------- */
+  // Keep the nav still while pages cross-fade (assets/fx.css): it carries a
+  // view-transition-name only for the length of the transition.
+  var wrap = document.querySelector(".nav-wrap");
+  if (wrap) {
+    window.addEventListener("pageswap", function (e) { if (e.viewTransition) wrap.classList.add("fx-vt-nav"); });
+    window.addEventListener("pagereveal", function (e) {
+      if (!e.viewTransition) return;
+      wrap.classList.add("fx-vt-nav");
+      e.viewTransition.finished.finally(function () { wrap.classList.remove("fx-vt-nav"); });
+    });
+    // Back/forward cache: a page restored after its swap would keep the name.
+    window.addEventListener("pageshow", function (e) { if (e.persisted) wrap.classList.remove("fx-vt-nav"); });
   }
 
   /* ---- 2. Pointer boxes ------------------------------------------------ */

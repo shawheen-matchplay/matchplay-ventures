@@ -76,6 +76,12 @@
   will-change: transform, width;
 }
 .nav__lens.is-on { opacity: 1; }
+.nav__lens.is-on-cta {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.14),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.09);
+}
 .nav-brand, .nav-links, .nav-aux, .nav-cta { position: relative; z-index: 1; }
 .nav-link { color: rgba(255, 255, 255, 0.92); }
 .nav-link:hover { color: #fff; }
@@ -189,6 +195,8 @@
   will-change: transform;
   transition: opacity 0.4s var(--fx-ease), transform 0.12s ease-out;
 }
+/* data-fx-noline: the glow without the accent rule. */
+[data-fx-noline] > .fx::before { content: none; }
 /* White boxes have less to glow against: stronger glow, and the lift reads
    through a soft shadow and a firmer edge. */
 [data-fx-light] { --fx-rest: 0.06; --fx-hover: 0.18; --fx-track: 0.28; }
@@ -203,7 +211,10 @@
    and the nav pill stays put (browsers with cross-document view
    transitions; others load pages as before). */
 @view-transition { navigation: auto; }
-.nav-wrap { view-transition-name: site-nav; }
+/* fx.js names the nav only while a transition runs: a view-transition-name
+   cuts the nav off from the page behind it (it becomes a backdrop root), so
+   the glass would have nothing to bend. */
+.fx-vt-nav { view-transition-name: site-nav; }
 ::view-transition-old(root) { animation: 0.25s ease both fx-fade-out; }
 ::view-transition-new(root) { animation: 0.35s ease both fx-fade-in; }
 @keyframes fx-fade-out { to { opacity: 0; } }
