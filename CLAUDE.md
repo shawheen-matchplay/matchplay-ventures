@@ -7,7 +7,7 @@ The repo is public and GitHub Pages serves every file in it (`.nojekyll` is set 
 ## Workflow
 
 - The user asks for a change. Make it, verify it in the preview, commit, push a branch, open a PR, and merge it so it goes live. For large or design-heavy changes, leave the PR open for review until the user says "merge".
-- Preview: use the `npx-serve` config in `.claude/launch.json` (port 3000). The `python-static` config has failed with a PermissionError in Claude Code's sandbox.
+- Preview: use the `npx-serve` config in `.claude/launch.json` (port 4321; 3000 is the user's MatchPlay platform Next.js app, so never use or stop it). The `python-static` config has failed with a PermissionError in Claude Code's sandbox.
 - Screenshots of the preview can lag behind scrolling, catch the scroll-in fade animations mid-way, or garble `backdrop-filter`. Check layout with DOM/JS queries too, and turn off `.in-view-target` transitions when capturing.
 - Use the `gh` CLI for PRs. Commit messages are short and imperative ("Add 3DOS to the portfolio").
 - When showing design options, build a temporary review page, keep it out of git, and delete it once the user picks one.

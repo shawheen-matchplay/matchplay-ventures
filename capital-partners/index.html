@@ -438,9 +438,10 @@
   .after-list { border-top: 1px solid var(--line-dark); }
   .after-list li {
     display: grid; grid-template-columns: 200px 1fr; gap: 16px;
-    padding: 22px 0;
+    padding: 22px 24px;
     border-bottom: 1px solid var(--line-dark);
   }
+  .after-list li[data-glow] { --fx-rest: 0; }   /* glow (assets/fx.css) only on hover, as in How it works */
   .after-list strong {
     font-family: var(--font-display);
     font-size: 18px; font-weight: 500; letter-spacing: -0.01em;
@@ -466,7 +467,7 @@
   .callout p { font-size: 16px; line-height: 1.6; color: rgba(255,255,255,0.75); }
   .callout p + p { margin-top: 16px; color: #fff; font-family: var(--font-display); font-style: italic; font-size: 18px; }
   @media (max-width: 960px) { .after { grid-template-columns: 1fr; gap: 40px; } }
-  @media (max-width: 520px) { .after-list li { grid-template-columns: 1fr; gap: 6px; } }
+  @media (max-width: 520px) { .after-list li { grid-template-columns: 1fr; gap: 6px; padding: 20px; } }
 
   /* ---------- FINAL CTA ---------- */
   .cp-cta {
@@ -745,10 +746,10 @@
     </div>
     <div class="after in-view-target">
       <ul class="after-list">
-        <li><strong>Company updates</strong><span>Operating, financing, commercial, regulatory, and clinical milestones.</span></li>
-        <li><strong>Portfolio reporting</strong><span>Investment documents and SPV information in one place.</span></li>
-        <li><strong>Investor events</strong><span>Founder sessions and portfolio updates.</span></li>
-        <li><strong>Distributions</strong><span>Exit proceeds coordinated through your investment vehicle.</span></li>
+        <li data-glow data-fx-noline data-fx-light><strong>Company updates</strong><span>Operating, financing, commercial, regulatory, and clinical milestones.</span></li>
+        <li data-glow data-fx-noline data-fx-light><strong>Portfolio reporting</strong><span>Investment documents and SPV information in one place.</span></li>
+        <li data-glow data-fx-noline data-fx-light><strong>Investor events</strong><span>Founder sessions and portfolio updates.</span></li>
+        <li data-glow data-fx-noline data-fx-light><strong>Distributions</strong><span>Exit proceeds coordinated through your investment vehicle.</span></li>
       </ul>
       <div class="callout" data-tilt>
         <span class="num">Follow-ons</span>
