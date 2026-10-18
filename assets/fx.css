@@ -196,6 +196,14 @@
 @media (min-width: 881px) { .nav-menu { display: none; } }
 @media (prefers-reduced-motion: reduce) { .nav-menu, .nav-burger span { transition: none; } }
 
+/* Chips and tags turn orange on hover: chips (.chip, Capital Partners'
+   "Built for" and "what we'll ask about" rows) fill orange with white
+   text, as on the Group site; the portfolio grid's sector label, shown on
+   hover, is orange. */
+.chip { transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease; }
+.chip:hover { background: var(--ventures); border-color: var(--ventures); color: #fff; }
+.portfolio-meta { color: var(--ventures); }
+
 /* Main calls to action (.btn-primary: Apply for funding, Begin your
    application, Join Capital Partners): solid orange with a soft inner glow;
    on hover the fill drains to clear glass inside an orange border and the
