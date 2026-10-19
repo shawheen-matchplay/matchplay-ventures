@@ -25,7 +25,7 @@
 - [SOLUtion Medical](https://www.solutionmedco.com/): TwistJECT point-of-care drug mixing platform for emergency treatment of adrenal crisis. Investment thesis: https://matchplayventures.com/portfolio/making-life-saving-drug-delivery-work-in-the-real-world/
 - [KBO Systems](https://kbosystems.com/): Perioperative brain monitoring combining multi-region EEG, auditory evoked potentials, and machine learning. Investment thesis: https://matchplayventures.com/portfolio/rethinking-how-we-protect-the-brain-during-anesthesia/
 - [Guidant BioTherapeutics](https://www.guidantbio.com/): Clinical-stage immuno-oncology biologics platform for targeted delivery into the tumor microenvironment.
-- [3DOS](https://3dorthobio.com/): Customizable, 3D-printed biodegradable scaffolds for bone repair and regeneration. Investment thesis: https://matchplayventures.com/portfolio/teskltjseklkajdlfkajdlfajsdlkjfkldsf/
+- [3DOS](https://3dorthobio.com/): Customizable, 3D-printed biodegradable scaffolds for bone repair and regeneration.
 
 ## Team
 
