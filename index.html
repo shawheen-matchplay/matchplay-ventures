@@ -322,7 +322,6 @@
     mask-image: radial-gradient(ellipse 80% 70% at 50% 45%, #000 30%, transparent 80%);
     -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 45%, #000 30%, transparent 80%);
   }
-  .hero-dots.is-live { background-image: none; }   /* assets/hero-dots.js draws the moving grid */
   .hero-glow {
     position: absolute; z-index: 0;
     width: 800px; height: 800px;
@@ -1386,7 +1385,7 @@
 
 <!-- ========== HERO ========== -->
 <header class="hero">
-  <div class="hero-dots"></div>
+  <div class="hero-dots" data-dot-wave></div>
   <div class="hero-glow"></div>
 
   <div class="container">
@@ -1706,7 +1705,7 @@
 
 <!-- ========== FINAL CTA ========== -->
 <section id="apply" class="final-cta section-dark">
-  <div class="final-cta-dots"></div>
+  <div class="final-cta-dots" data-dot-wave data-gap="28" data-alpha="0.08"></div>
   <div class="container final-cta-content">
     <h2 class="final-cta-title in-view-target">
       Ready to <em>apply?</em>
@@ -1989,6 +1988,6 @@
 </script>
 
 <script src="assets/fx.js" defer></script>
-<script src="assets/hero-dots.js" defer></script>
+<script src="assets/dot-wave.js" defer></script>
 </body>
 </html>

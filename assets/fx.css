@@ -196,6 +196,10 @@
 @media (min-width: 881px) { .nav-menu { display: none; } }
 @media (prefers-reduced-motion: reduce) { .nav-menu, .nav-burger span { transition: none; } }
 
+/* Moving dot grids (assets/dot-wave.js): the still CSS dots step aside once
+   the canvas is drawing. */
+[data-dot-wave].is-live { background-image: none; }
+
 /* Chips and tags turn orange on hover: chips (.chip, Capital Partners'
    "Built for" and "what we'll ask about" rows) fill orange with white
    text, as on the Group site; the portfolio grid's sector label, shown on
