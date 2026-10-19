@@ -355,7 +355,7 @@
 
   .hero-logo {
     display: block;
-    width: clamp(100px, min(18vw, 22vh), 260px);
+    width: clamp(100px, min(20vw, 26vh), 300px);
     height: auto;
     margin: 0 0 clamp(14px, 3vh, 28px);
   }
@@ -376,7 +376,7 @@
   .hero-title {
     font-family: var(--font-display);
     font-weight: 600;
-    font-size: clamp(44px, min(9vw, 12vh), 120px);
+    font-size: clamp(44px, min(10vw, 14vh), 140px);
     line-height: 1.02;
     letter-spacing: -0.04em;
     margin: 0;
@@ -416,7 +416,7 @@
     font-weight: 500;
     color: #fff;
   }
-  .hero-cta-stack { display: flex; flex-direction: column; gap: 12px; align-items: center; }
+  .hero-cta-stack { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 12px 28px; }   /* side by side, as on Capital Partners */
 
   .btn {
     display: inline-flex; align-items: center; gap: 10px;
