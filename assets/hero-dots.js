@@ -1,5 +1,5 @@
 /* The homepage hero's dot grid, moving: every dot sways a few pixels in a
-   slow, shifting breeze, and every few seconds a warm orange gust drifts
+   shifting breeze, and every few seconds a warm orange gust drifts
    through with it ("Wind + orange gusts", picked from six drafts in Oct 2026).
 
    It draws the same grid as the CSS dots (one 1.2px dot every 32px, white at
@@ -15,7 +15,15 @@
 
   var GAP = 32;                         // px between dots, as in the CSS grid
   var ORANGE = [249, 125, 74];          // --ventures
-  var GUST_EVERY = 11;                  // seconds between orange gusts
+  // Tuning (Oct 2026: livelier than the first cut: 4px/2px sway, 1x speed,
+  // gusts every 11s at +0.2 opacity)
+  var SWAY_X = 5.5;                     // px the breeze moves a dot sideways, at most
+  var SWAY_Y = 3;                       // px up and down
+  var SPEED = 1.5;                      // how fast the breeze moves (1 = the first cut)
+  var GUST_EVERY = 8;                   // seconds between orange gusts
+  var GUST_WIDTH = 170;                 // px: how broad the orange band is
+  var GUST_GLOW = 0.34;                 // extra opacity at the heart of a gust
+  var GUST_GROW = 1.0;                  // extra px of dot radius there
 
   var canvas = document.createElement("canvas");
   canvas.setAttribute("aria-hidden", "true");
@@ -35,14 +43,15 @@
   // One dot at (x, y), t seconds in: its offset, size, opacity and how
   // orange it is (0..1).
   function dot(x, y, t) {
-    // the breeze: smooth, slowly shifting sways of up to about 4px
-    var dx = 4.0 * Math.sin(y / 170 + t * 0.55 + Math.sin(x / 260 + t * 0.25) * 1.4);
-    var dy = 2.2 * Math.sin(x / 210 - t * 0.42 + Math.cos(y / 300) * 0.8);
+    // the breeze: smooth, shifting sways
+    var s = t * SPEED;
+    var dx = SWAY_X * Math.sin(y / 170 + s * 0.55 + Math.sin(x / 260 + s * 0.25) * 1.4);
+    var dy = SWAY_Y * Math.sin(x / 210 - s * 0.42 + Math.cos(y / 300) * 0.8);
     // the gust: a soft band crossing left to right, its front bent by the breeze
     var front = ((t % GUST_EVERY) / GUST_EVERY) * (w + 1000) - 500;
-    var d = x + Math.sin(y / 140 + t * 0.5) * 60 - front;
-    var k = Math.max(0, Math.exp(-(d * d) / (2 * 150 * 150)) * (0.6 + 0.4 * Math.sin(y / 230 + t * 0.3)));
-    return { x: x + dx * (1 + k), y: y + dy, r: 1.2 + k * 0.7, a: 0.10 + k * 0.2, o: Math.min(1, k) };
+    var d = x + Math.sin(y / 140 + s * 0.5) * 60 - front;
+    var k = Math.max(0, Math.exp(-(d * d) / (2 * GUST_WIDTH * GUST_WIDTH)) * (0.75 + 0.25 * Math.sin(y / 230 + s * 0.3)));
+    return { x: x + dx * (1 + k), y: y + dy, r: 1.2 + k * GUST_GROW, a: 0.10 + k * GUST_GLOW, o: Math.min(1, k * 1.15) };
   }
 
   var raf = 0, start = performance.now(), visible = true, live = false;
