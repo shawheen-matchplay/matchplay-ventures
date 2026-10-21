@@ -1,8 +1,8 @@
 # MatchPlay Ventures site
 
-Marketing site for MatchPlay Ventures (https://matchplayventures.com), the early-stage venture arm of MatchPlay Group. The owner is Shawheen Attar, a Venture Partner at MatchPlay. Plain static HTML, CSS, and vanilla JS with no build step, hosted on GitHub Pages from `main` (repo `shawheen-matchplay/matchplay-ventures`, custom domain in `CNAME`).
+Marketing site for MatchPlay Ventures (https://matchplayventures.com), the early-stage venture arm of MatchPlay Group. The owner is Shawheen Attar, a Venture Partner at MatchPlay. Plain static HTML, CSS, and vanilla JS (repo `shawheen-matchplay/matchplay-ventures`). Hosting is moving from GitHub Pages (from `main`, custom domain in `CNAME`) to Cloudflare Pages: see Hosting below.
 
-The repo is public and GitHub Pages serves every file in it (`.nojekyll` is set so `_shared.css` is served), including this one. Keep secrets and internal-only notes out of the repo.
+GitHub Pages serves every file in the repo (`.nojekyll` is set so `_shared.css` is served), including this one, the company JSON and the build scripts. Cloudflare Pages will serve only `dist/`. Keep secrets and internal-only notes out of the repo either way.
 
 ## Workflow
 
@@ -46,9 +46,9 @@ The portfolio is **generated**. Each company is one file, `content/portfolio/<ke
   article?: { slug, title, subtitle, description, author, authorTitle, datePublished, dateModified, body (HTML), hidden?, ogCompany? } }
 ```
 
-`python3 tools/portfolio/build.py` regenerates, from those files: the grid cells (between the `portfolio-grid` markers, last row padded with blank cells), the "Investments to date" number (`data-portfolio-count`), the `PORTCOS` modal object (between the `PORTCOS` markers), the JSON-LD `ItemList`, every `portfolio/<slug>/index.html` (and removes pages of deleted or hidden theses), the thesis entries in `sitemap.xml`, and the Portfolio section of `llms.txt`. **Never hand-edit those generated parts:** change the JSON or `build.py`, then rebuild. `summary` is the one-liner used in the JSON-LD and `llms.txt`; `siteLabel` and the modal's `blog` link are derived. `"hidden": true` on a company takes it (and its thesis) off the site; on an article, it drops just the thesis.
+`python3 tools/portfolio/build.py` regenerates, from those files: the grid cells (between the `portfolio-grid` markers, last row padded with blank cells), the "Investments to date" number (`data-portfolio-count`), the `PORTCOS` modal object (between the `PORTCOS` markers), the JSON-LD `ItemList`, every `portfolio/<slug>/index.html` (and removes pages of deleted or hidden theses), and the Portfolio section of `llms.txt` (the sitemap comes from the hosting build). **Never hand-edit those generated parts:** change the JSON or `build.py`, then rebuild. `summary` is the one-liner used in the JSON-LD and `llms.txt`; `siteLabel` and the modal's `blog` link are derived. `"hidden": true` on a company takes it (and its thesis) off the site; on an article, it drops just the thesis.
 
-**The editor** (`/editor/`, `editor/index.html`, noindex and disallowed in robots.txt) is how the team adds companies and theses. A company can go live with no thesis; the thesis is written and published later from the same row. Thesis drafts are kept in the browser's localStorage until published. It works like the Group site's blog editor: a shared password decrypts a GitHub token stored AES-GCM encrypted in the page (the owner sets it with `node tools/portfolio/editor-setup.mjs`, using a fine-grained token with Contents read/write on this repo only), and saving commits straight to `main`. `.github/workflows/build-portfolio.yml` then runs the build, commits the output and requests a Pages build. The editor also makes each thesis's 1200x630 `assets/og/<slug>.jpg` (canvas, styled like the originals), crops founder photos to 600x600, resizes logos, and refuses em-dashes. `?debug=1` exposes `portfolioEditor.toHtml/toMarkdown/drawOg/unlockWith(cfg)` for testing; stub `fetch` for api.github.com and never test against the real repo.
+**The editor** (`/editor/`, `editor/index.html`, noindex and disallowed in robots.txt) is how the team adds companies and theses. A company can go live with no thesis; the thesis is written and published later from the same row. Thesis drafts are kept in the browser's localStorage until published. It works like the Group site's blog editor: a shared password decrypts a GitHub token stored AES-GCM encrypted in the page (the owner sets it with `node tools/portfolio/editor-setup.mjs`, using a fine-grained token with Contents read/write on this repo only), and saving commits straight to `main`. `.github/workflows/site.yml` then runs the hosting build (which runs the portfolio build), commits the output and requests a GitHub Pages build; Cloudflare Pages rebuilds on its own. The editor also makes each thesis's 1200x630 `assets/og/<slug>.jpg` (canvas, styled like the originals), crops founder photos to 600x600, resizes logos, and refuses em-dashes. `?debug=1` exposes `portfolioEditor.toHtml/toMarkdown/drawOg/unlockWith(cfg)` for testing; stub `fetch` for api.github.com and never test against the real repo.
 
 When the user asks Claude to add a company directly, write the JSON (rewrite the description to match the others: 2 sentences, about 45 to 55 words), add the logo to `portco-logos/` and founder photo to `assets/founders/`, run the build, and commit the JSON and generated files together.
 
@@ -58,9 +58,18 @@ Mahesh Narayanan (Managing Partner), Steven Richer (Venture Partner), Shawheen A
 
 If the team changes, also update the Organization `employee` list in the JSON-LD and `llms.txt`.
 
+## Hosting (Cloudflare Pages, prepared Oct 2026)
+
+- `python3 tools/hosting/build.py` is Cloudflare's build command (output `dist`, gitignored). It runs the portfolio build, copies only the public files (`PUBLISH_FILES` and `PUBLISH_DIRS`: pages, `assets/`, `logo/`, `portco-logos/`, `portfolio/`, `capital-partners/`, `editor/`; never `content/`, `tools/`, `.github`, `.claude`, `CLAUDE.md`, `CNAME`), writes `_redirects` from `tools/hosting/redirects.json`, `_headers` (security headers, 30-day cache on logos and photos only, noindex on `/editor/*` and on `*.pages.dev`), and `sitemap.xml` (thesis pages dated by their `dateModified`, other pages by their last commit, today if this build changed them; with a shallow clone it falls back to the repo's `sitemap.xml`), then fails if any local link in a page is broken.
+- `.github/workflows/site.yml` (every push to main) runs the same build and commits the regenerated pages, `llms.txt` and the built `sitemap.xml`. Its GitHub Pages republish step goes once the domain is on Cloudflare.
+- Cloudflare Pages serves `/x/` for `x/index.html` and 308s `/x`, `/x/index.html` and `/index.html` to it, so keep links and canonicals in the `/x/` form. `404.html` (root-relative links) is required: without it Cloudflare answers unknown URLs with the homepage and a 200.
+- Thesis web addresses must never change: the Group site redirects its old `/investment-stories/*` pages to `/portfolio/<slug>/` here.
+- Tested locally with `npx wrangler pages dev dist` (Cloudflare's emulator: redirects, headers, 404, trailing slashes).
+- DNS (GoDaddy today) carries live email: Microsoft 365 via GoDaddy (MX priority 0, autodiscover, msoid, lyncdiscover, sip, two SRV, the `NETORGFT…onmicrosoft.com` TXT) and Google Workspace (MX, `google._domainkey`), SPF, DMARC and a Google verification TXT. Copy all of them exactly when moving DNS.
+
 ## SEO checklist for new pages
 
-Unique `<title>` and meta description, a canonical URL (trailing slash, never `/index.html`), OG and Twitter tags with an image, JSON-LD, the favicon `<link>` set, an entry in `sitemap.xml` (update `lastmod`), and an entry in `llms.txt`. Internal links use directory-style URLs.
+Unique `<title>` and meta description, a canonical URL (trailing slash, never `/index.html`), OG and Twitter tags with an image, JSON-LD, the favicon `<link>` set, an entry in `llms.txt`, and its folder in `PUBLISH_DIRS` (or file in `PUBLISH_FILES`) in `tools/hosting/build.py` so it ships; the sitemap picks up every public page by itself. Internal links use directory-style URLs.
 
 ## Open items (only start these when the user asks)
 
