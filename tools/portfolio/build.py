@@ -12,7 +12,8 @@ It regenerates, and only touches:
     modal data and the portfolio ItemList in the JSON-LD (between markers)
   - portfolio/<slug>/index.html for every published article, and removes the
     folders of articles that were deleted, hidden or renamed
-  - sitemap.xml (article entries) and the Portfolio section of llms.txt
+  - the Portfolio section of llms.txt
+(sitemap.xml is written by tools/hosting/build.py, from every public page)
 
 "hidden": true on a company leaves it off the site; on an article, it keeps
 the company but drops the article (no page, no "Read our thesis" button).
@@ -296,20 +297,7 @@ def articles(companies):
             print("removed portfolio/%s/" % slug)
 
 
-# ---- sitemap.xml and llms.txt ------------------------------------------------
-def sitemap(companies):
-    old = read("sitemap.xml")
-    keep = re.findall(r"  <url>\n    <loc>(?!%s/portfolio/)[\s\S]*?</url>\n" % re.escape(SITE), old)
-    posts = []
-    for c in companies:
-        a = article(c)
-        if a:
-            posts.append("  <url>\n    <loc>%s/portfolio/%s/</loc>\n    <lastmod>%s</lastmod>\n  </url>\n"
-                         % (SITE, a["slug"], (a.get("dateModified") or a["datePublished"])[:10]))
-    write("sitemap.xml", '<?xml version="1.0" encoding="UTF-8"?>\n'
-          '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "".join(keep + posts) + "</urlset>\n")
-
-
+# ---- llms.txt ----------------------------------------------------------------
 def llms(companies):
     lines = []
     for c in companies:
@@ -327,5 +315,4 @@ if __name__ == "__main__":
     companies = load()
     homepage(companies)
     articles(companies)
-    sitemap(companies)
     llms(companies)

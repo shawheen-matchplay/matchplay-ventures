@@ -1,0 +1,68 @@
+# On every push to main: rebuild the portfolio pages, commit them if they
+# changed, and check the site assembles for Cloudflare Pages.
+#
+# 1. Assemble the public site (tools/hosting/build.py into dist/), the same
+#    build Cloudflare Pages runs: it regenerates the portfolio from
+#    content/portfolio/*.json first, so a broken link or build error shows up
+#    here as a failed check.
+# 2. Commit what it regenerated if anything changed: the portfolio pages
+#    and llms.txt, plus its sitemap.xml (dated from the full git history
+#    this checkout has; Cloudflare falls back to it if its clone is
+#    shallow). The portfolio editor (/editor/) commits company and thesis
+#    JSON straight to main, so this keeps the repo's pages in step with it.
+# 3. Ask GitHub Pages to republish. Only while matchplayventures.com is still
+#    served from GitHub Pages: delete this step after the move to Cloudflare.
+#
+# Cloudflare Pages builds and deploys by itself on every push (its own Git
+# connection runs tools/hosting/build.py, which also regenerates the
+# portfolio), so an editor save is live without waiting for step 2.
+# Pushes made with GITHUB_TOKEN don't start workflows, so the commit in
+# step 2 cannot loop; Cloudflare still sees it and redeploys.
+name: Build site
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+
+concurrency:
+  group: site
+  cancel-in-progress: false
+
+jobs:
+  site:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0          # full history: the sitemap's last-modified dates come from it
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Assemble the public site (as Cloudflare Pages does)
+        run: python3 tools/hosting/build.py
+
+      - name: Commit the generated files
+        run: |
+          cp dist/sitemap.xml sitemap.xml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A index.html portfolio sitemap.xml llms.txt
+          if git diff --cached --quiet; then
+            echo "Generated files already up to date."
+          else
+            git commit -m "Portfolio: rebuild pages"
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
+
+      - name: Republish GitHub Pages (until the move to Cloudflare)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh api -X POST "repos/${{ github.repository }}/pages/builds" || echo "Pages build request skipped."

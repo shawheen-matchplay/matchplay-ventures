@@ -1,0 +1,13 @@
+{
+  "_about": "Permanent (301) redirects, kept here once for any host. tools/hosting/build.py turns them into dist/_redirects (Cloudflare Pages). 'from' is a path on matchplayventures.com; a trailing /* matches everything under it. 'to' is a path on this site or a full URL. Checked October 2026: every URL the live site (GitHub Pages) has served is still served at the same address, and the only earlier capture of the domain (Wayback Machine, March 2024) is GoDaddy's parked page, which sent visitors to /lander. The MatchPlay Group site redirects its old /investment-stories/<story> pages to /portfolio/<slug>/ here, so thesis web addresses must never change (the editor fixes them once published). /portfolio/ (the folder the theses live in, with no page of its own) goes to the homepage grid. Cloudflare itself turns /page/index.html and /index.html into the clean form, and adds the trailing slash to folder URLs.",
+  "redirects": [
+    {
+      "from": "/lander",
+      "to": "/"
+    },
+    {
+      "from": "/portfolio",
+      "to": "/#portfolio"
+    }
+  ]
+}
